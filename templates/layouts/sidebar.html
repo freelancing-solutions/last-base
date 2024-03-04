@@ -14,11 +14,16 @@
                     <li><a class="sidebar-sub-toggle"><i class="ti-dashboard"></i> Dashboard <span
                             class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
-                            <li><a href="#"><i class="ti-user"></i> Profile</a>
-                            <li><a href="#"><i class="ti-desktop"></i> Accounts</a>
+                            <li><a href="{{ url_for('profile.get_profile')}}"><i class="ti-user"></i> Profile</a>
+                        </ul>
+                    </li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-dashboard"></i> Market <span
+                            class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="{{ url_for('market.get_game_accounts')}}"><i class="ti-desktop"></i> Accounts</a>
                             </li>
-                            <li><a href="#"><i class="ti-user"></i> Skins</a></li>
-                            <li><a href="#"><i class="ti-files"></i> Farms</a>
+                            <li><a href="{{ url_for('market.get_lss_skins')}}"><i class="ti-user"></i> Skins</a></li>
+                            <li><a href="{{ url_for('market.get_farm_accounts')}}"><i class="ti-files"></i> Farms</a>
                             </li>
                         </ul>
                     </li>

@@ -16,9 +16,13 @@ def _add_blue_prints(app: Flask):
     """
     from src.routes.home import home_route
     from src.routes.auth import auth_route
+    from src.routes.market import market_route
+    from src.routes.profile import profile_route
 
-    app.register_blueprint(home_route)
     app.register_blueprint(auth_route)
+    app.register_blueprint(home_route)
+    app.register_blueprint(profile_route)
+    app.register_blueprint(market_route)
 
 
 def _add_filters(app: Flask):
