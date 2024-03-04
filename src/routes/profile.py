@@ -37,9 +37,6 @@ async def do_verification():
     context = {}
     try:
         game_auth = GameAuth(**request.form)
-
-        print("Game Auth")
-        print(game_auth)
     except ValidationError as e:
         pass
 
