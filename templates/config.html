@@ -12,9 +12,18 @@
         </div>
 
         <ul class="list-group">
-            <li class="list-group-item">Request Account Verification <a href="#" class="btn btn-sm btn-primary"> Verification Request </a></li>
-            <li class="list-group-item">Activate Automatic Gift Code Redemption <a href="#" class="btn btn-sm btn-primary"> Activate </a></li>
-            <li class="list-group-item">List Account on Market <a href="#" class="btn btn-sm btn-primary"> Start Market Listing </a></li>
+            <li class="list-group-item">
+                Request Account Verification <a href="{{ url_for('profile.get_verification') }}" class="btn btn-sm btn-primary">
+                <i class="ti-announcement"> </i> Verification Request </a>
+            </li>
+            <li class="list-group-item">
+                Activate Automatic Gift Code Redemption <a href="#" class="btn btn-sm btn-primary">
+                <i class="ti-server"> </i> Auto Gift Codes </a>
+            </li>
+            <li class="list-group-item">
+                List Account on Market <a href="#" class="btn btn-sm btn-primary">
+                <i class="ti-briefcase"></i> Start Market Listing </a>
+            </li>
         </ul>
     </div>
 
