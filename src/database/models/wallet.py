@@ -13,7 +13,7 @@ class WalletTransaction(BaseModel):
     """
     Transaction model represents an individual transaction.
     """
-    user_id: str
+    game_id: str
     date: datetime = Field(default_factory=datetime.utcnow)
     transaction_type: str
     pay_to_wallet: str
@@ -30,7 +30,7 @@ class Wallet(WalletConst):
     """
     Wallet class represents a user's wallet with balance and transaction operations.
     """
-    user_id: str
+    game_id: str
     balance: int = Field(default=0, description="Balance in Cents")
     transactions: list[WalletTransaction] = Field(default=[], description="List of transaction details")
 
@@ -107,7 +107,7 @@ class Wallet(WalletConst):
                                   pay_to_wallet: str | None = None):
 
         transaction = WalletTransaction(
-            user_id=self.user_id,
+            game_id=self.game_id,
             amount=amount,
             transaction_type=transaction_type,
             pay_to_wallet=pay_to_wallet,

@@ -40,6 +40,8 @@ def create_app(config):
     app.config['BASE_URL'] = "https://move-it.site"
 
     with app.app_context():
+        from src.main.bootstrapping import bootstrapper
+        bootstrapper()
         _add_blue_prints(app)
         _add_filters(app)
         pass

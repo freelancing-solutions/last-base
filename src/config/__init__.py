@@ -59,7 +59,7 @@ class PayPalSettings(BaseSettings):
 
 class Settings(BaseSettings):
     APP_NAME: str = Field(default='Last Base')
-    LOGO_URL: str = Field(default="https://move-it.site/static/images/custom/logo.png")
+    LOGO_URL: str = Field(default="https://last-shelter.vip/static/images/custom/logo.png")
     SECRET_KEY: str = Field(..., env="SECRET_KEY")
     CLIENT_SECRET: str = Field(..., env="CLIENT_SECRET")
     MYSQL_SETTINGS: MySQLSettings = MySQLSettings()

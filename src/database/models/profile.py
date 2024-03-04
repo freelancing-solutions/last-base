@@ -8,22 +8,18 @@ class Profile(BaseModel):
             such us - deposit multiplier
 
     """
-    user_id: str
-    deposit_multiplier: int = Field(default="2")
+    game_id: str
     currency: str = Field(default="R")
-    tax_rate: int = Field(default=0)
 
     def __eq__(self, other):
         if not isinstance(other, Profile):
             return False
-        return self.user_id == other.user_id
+        return self.game_id == other.game_id
 
 
 class ProfileUpdate(BaseModel):
-    user_id: str
-    deposit_multiplier: int = Field(default=2)
+    game_id: str
     currency: str = Field(default="R")
-    tax_rate: int = Field(default=0)
 
     class Config:
         extra = Extra.ignore

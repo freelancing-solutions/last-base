@@ -7,7 +7,7 @@ from src.database.sql import Base, engine
 class NotificationORM(Base):
     __tablename__ = 'notifications'
     id = Column(String(ID_LEN), primary_key=True)
-    user_id = Column(String(ID_LEN))
+    game_id = Column(String(ID_LEN))
     title = Column(String(ID_LEN))
     message = Column(String(ID_LEN))
     category = Column(String(ID_LEN))

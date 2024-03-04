@@ -71,7 +71,7 @@ class CompaniesController(Controllers):
         """
         with self.get_session() as session:
             user_company_data = session.query(UserCompanyORM).filter().all()
-            self.company_user = {user_company.company_id: user_company.user_id for user_company in user_company_data}
+            self.company_user = {user_company.company_id: user_company.game_id for user_company in user_company_data}
             try:
                 self.companies = [Company(**company.to_dict()) for company in session.query(CompanyORM).filter().all()]
             except ValidationError as e:
@@ -97,21 +97,21 @@ class CompaniesController(Controllers):
             return self.company_user.get(company_id) == user_id
 
         result: UserCompanyORM = session.query(UserCompanyORM).filter(
-            UserCompanyORM.user_id == user_id, UserCompanyORM.company_id == company_id).first()
+            UserCompanyORM.game_id == user_id, UserCompanyORM.company_id == company_id).first()
 
-        return result and result.user_id == user_id
+        return result and result.game_id == user_id
 
     @error_handler
     async def get_user_companies(self, user_id: str) -> list[Company]:
         if self.company_user and self.company_user:
-            # Get the list of company IDs associated with the given user_id
+            # Get the list of company IDs associated with the given game_id
             company_ids = [company_id for company_id, user in self.company_user.items() if user == user_id]
             # Filter the companies list based on the company IDs then return
             return [company for company in self.companies if company.company_id in company_ids]
 
         with self.get_session() as session:
             company_list: list[UserCompanyORM] = session.query(UserCompanyORM).filter(
-                UserCompanyORM.user_id == user_id).all()
+                UserCompanyORM.game_id == user_id).all()
 
             response = []
             for user_company in company_list:
@@ -485,7 +485,7 @@ class CompaniesController(Controllers):
                     if isinstance(unit_, UnitORM)] if property_units else []
 
     async def check_ownership(self, property_id, session, user):
-        user_id = user.user_id
+        user_id = user.game_id
         _property: PropertyORM = session.query(PropertyORM).filter(
             PropertyORM.property_id == property_id).first()
         is_company_member: bool = await self.is_company_member(user_id=user_id,

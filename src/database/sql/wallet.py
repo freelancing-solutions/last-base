@@ -30,7 +30,7 @@ class WalletTransactionORM(Base):
         """
         return {
             "transaction_id": self.transaction_id,
-            "user_id": self.user_id,
+            "game_id": self.user_id,
             "date": self.date,
             "transaction_type": self.transaction_type,
             "pay_to_wallet": self.pay_to_wallet,
@@ -40,13 +40,13 @@ class WalletTransactionORM(Base):
 
     def __eq__(self, other):
         """
-        Override the equality dunder method to compare WalletTransaction instances based on transaction_id and user_id.
+        Override the equality dunder method to compare WalletTransaction instances based on transaction_id and game_id.
 
         Args:
             other (WalletTransaction): The other instance to compare with.
 
         Returns:
-            bool: True if the two instances have the same transaction_id and user_id, False otherwise.
+            bool: True if the two instances have the same transaction_id and game_id, False otherwise.
         """
         if not isinstance(other, WalletTransactionORM):
             return False

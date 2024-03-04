@@ -1,4 +1,3 @@
-
 import uuid
 from enum import Enum
 
@@ -9,7 +8,7 @@ from src.controller.encryptor import encryptor
 
 class UserType(str, Enum):
     ADMIN = 'admin'
-    TENANT = 'tenant'
+    GAMER = 'gamer'
 
 
 class User(BaseModel):
@@ -17,7 +16,7 @@ class User(BaseModel):
     Represents the details of a user.
 
     Attributes:
-    - user_id (str): The ID of the user.
+    - game_id (str): The ID of the user.
     - company_id (str): The ID of the company_id associated with the user.
     - is_tenant (bool): Indicates if the user is a tenant.
     - tenant_id (str): The ID of the tenant associated with the user.
@@ -28,9 +27,7 @@ class User(BaseModel):
     - full_name (str): The full name of the user.
     - contact_number (str): The contact number of the user.
     """
-    user_id: str
-    is_tenant: bool = Field(default=False)
-    tenant_id: str | None
+    game_id: str
     username: str
     password_hash: str
     email: str
@@ -43,7 +40,7 @@ class User(BaseModel):
         orm_mode = True
 
     def __bool__(self) -> bool:
-        return bool(self.user_id) and bool(self.username) and bool(self.password_hash)
+        return bool(self.game_id) and bool(self.username) and bool(self.password_hash)
 
     def is_login(self, password: str) -> bool:
         """
@@ -55,19 +52,18 @@ class User(BaseModel):
 
     def __eq__(self, other):
         """
-        Compare two User instances based on their user_id only.
+        Compare two User instances based on their game_id only.
 
         :param other: The other User instance to compare.
-        :return: True if user_id of both instances is the same, False otherwise.
+        :return: True if game_id of both instances is the same, False otherwise.
         """
         if not isinstance(other, User):
             return False
-        return self.user_id == other.user_id
+        return self.game_id == other.game_id
+
 
 class CreateUser(BaseModel):
-    user_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    is_tenant: bool = Field(default=False)
-    tenant_id: str | None
+    game_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     username: str
     password: str
     email: str
@@ -88,9 +84,7 @@ class CreateUser(BaseModel):
 
 
 class PasswordResetUser(BaseModel):
-    user_id: str
-    is_tenant: bool
-    tenant_id: str | None
+    game_id: str
     username: str
     password: str
     email: str
@@ -111,9 +105,7 @@ class PasswordResetUser(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    user_id: str
-    is_tenant: bool | None
-    tenant_id: str | None
+    game_id: str
     username: str
     email: str
     full_name: str | None

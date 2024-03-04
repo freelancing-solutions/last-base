@@ -40,7 +40,7 @@ class UserController(Controllers):
         self.users[new_user.user_id] = new_user
 
     async def manage_profiles(self, new_profile: Profile):
-        self.profiles[new_profile.user_id] = new_profile
+        self.profiles[new_profile.game_id] = new_profile
 
     @error_handler
     async def get_profile_by_user_id(self, user_id: str) -> Profile | None:
@@ -64,7 +64,7 @@ class UserController(Controllers):
                 return {}
 
             # Convert ProfileORM to Profile object
-            profile = Profile(user_id=profile_orm.user_id,
+            profile = Profile(user_id=profile_orm.game_id,
                               deposit_multiplier=profile_orm.deposit_multiplier,
                               currency=profile_orm.currency,
                               tax_rate=profile_orm.tax_rate)

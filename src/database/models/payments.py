@@ -15,9 +15,6 @@ class Payment(BaseModel):
    """
     transaction_id: str
     invoice_number: int
-    tenant_id: str
-    property_id: str
-    unit_id: str
     amount_paid: PositiveInt
     date_paid: date
     payment_method: str
@@ -53,9 +50,6 @@ class CreatePayment(BaseModel):
    """
     transaction_id: str = Field(default_factory=create_transaction_id, description="BankTransaction ID")
     invoice_number: int
-    tenant_id: str
-    property_id: str
-    unit_id: str
     amount_paid: int
     date_paid: date = Field(default_factory=lambda: create_date_paid())
     payment_method: str | None
@@ -67,9 +61,6 @@ class CreatePayment(BaseModel):
 class UpdatePayment(BaseModel):
     transaction_id: str
     invoice_number: int
-    tenant_id: str
-    property_id: str
-    unit_id: str
     amount_paid: int
     date_paid: str
     payment_method: str
@@ -79,9 +70,6 @@ class UpdatePayment(BaseModel):
 
 class UnitInvoicePaymentForm(BaseModel):
     invoice_number: int
-    tenant_id: str
-    property_id: str
-    unit_id: str
     amount_paid: int
     payment_verified: bool = Field(default=False)
 
@@ -89,9 +77,6 @@ class UnitInvoicePaymentForm(BaseModel):
 class PaymentVerificationForm(BaseModel):
     transaction_id: str
     invoice_number: str
-    tenant_id: str
-    property_id: str
-    unit_id: str
     payment_method: str
     amount_paid: int
     month: int

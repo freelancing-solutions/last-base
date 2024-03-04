@@ -31,7 +31,7 @@ class SubscriptionController(Controllers):
                 _plan = plan
 
         return self.set_active(
-            subscription=Subscriptions(user_id=sub_orm.user_id, subscription_id=sub_orm.subscription_id, plan=_plan,
+            subscription=Subscriptions(user_id=sub_orm.game_id, subscription_id=sub_orm.subscription_id, plan=_plan,
                                        date_subscribed=sub_orm.date_subscribed,
                                        subscription_period_in_month=sub_orm.subscription_period_in_month))
 
@@ -48,7 +48,7 @@ class SubscriptionController(Controllers):
             self.plans = [Plan(**plan_orm.to_dict()) for plan_orm in plans_orm_list]
 
             subscriptions_orm_list: list[SubscriptionsORM] = session.query(SubscriptionsORM).all()
-            self.subscriptions = {sub_orm.user_id: self.create_sub_model(sub_orm=sub_orm)
+            self.subscriptions = {sub_orm.game_id: self.create_sub_model(sub_orm=sub_orm)
                                   for sub_orm in subscriptions_orm_list}
             payments_orm_list: list[PaymentReceiptORM] = session.query(PaymentReceiptORM).all()
             self.payment_receipts = [PaymentReceipts(**receipt.to_dict()) for receipt in payments_orm_list if
@@ -68,12 +68,12 @@ class SubscriptionController(Controllers):
             return self.subscriptions.get(user_id)
 
         with self.get_session() as session:
-            subscription_orm = session.query(SubscriptionsORM).filter(SubscriptionsORM.user_id == user_id).first()
+            subscription_orm = session.query(SubscriptionsORM).filter(SubscriptionsORM.game_id == user_id).first()
             if not subscription_orm:
                 return None
 
             subscription = Subscriptions(**subscription_orm.to_dict())
-            self.subscriptions[subscription.user_id] = subscription
+            self.subscriptions[subscription.game_id] = subscription
             return subscription
 
     @error_handler
@@ -140,7 +140,7 @@ class SubscriptionController(Controllers):
         # depending on the payment form then display the appropriate response
         plan = await self.get_plan_by_id(plan_id=subscription_form.subscription_plan)
 
-        new_subscription = Subscriptions(user_id=subscription_form.user_id,
+        new_subscription = Subscriptions(user_id=subscription_form.game_id,
                                          subscription_id=str(uuid.uuid4()),
                                          plan=plan,
                                          date_subscribed=datetime.datetime.now().date(),
@@ -153,7 +153,7 @@ class SubscriptionController(Controllers):
 
             reference = await create_payment_reference()
             payment_receipt = PaymentReceipts(reference=reference, subscription_id=new_subscription.subscription_id,
-                                              user_id=subscription_form.user_id,
+                                              user_id=subscription_form.game_id,
                                               payment_amount=new_subscription.payment_amount,
                                               date_created=datetime.datetime.now().date(),
                                               payment_method=subscription_form.payment_method)

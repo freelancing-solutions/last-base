@@ -6,6 +6,7 @@ from src.database.models.auth import Auth, RegisterUser
 from src.database.models.users import User
 
 from src.logger import init_logger
+from src.main import user_controller
 
 auth_route = Blueprint('auth', __name__)
 auth_logger = init_logger('auth_logger')

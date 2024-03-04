@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Notification(BaseModel):
-    user_id: str
+    game_id: str
     title: str
     message: str
     category: str
@@ -38,7 +38,7 @@ class NotificationsModel(BaseModel):
 
 
 class CreateNotification(BaseModel):
-    user_id: str = Field(default_factory=lambda: uuid.uuid4())
+    game_id: str = Field(default_factory=lambda: uuid.uuid4())
     title: str
     message: str
     category: str
