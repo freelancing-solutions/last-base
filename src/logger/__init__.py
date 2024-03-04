@@ -2,7 +2,7 @@ import functools
 import logging
 import socket
 import sys
-from src.config import create_config as config_instance
+from src.config import  config_instance
 
 
 class AppLogger:

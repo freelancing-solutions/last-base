@@ -1,5 +1,11 @@
 from flask import Flask
 
+from src.emailer import SendMail
+
+send_mail = SendMail()
+from src.controller.auth import UserController
+
+user_controller = UserController()
 
 
 def _add_blue_prints(app: Flask):

@@ -11,6 +11,7 @@ class Auth(BaseModel):
 
 class RegisterUser(BaseModel):
     username: str
+    game_id: str
     email: str
     password: str
     terms: str
