@@ -1,13 +1,40 @@
-from flask import Blueprint, render_template, send_from_directory, flash
+from flask import Blueprint, render_template, send_from_directory, flash, request, make_response, redirect, Response, \
+    url_for
+from pydantic import ValidationError
+
+from src.database.models.auth import Auth
 from src.utils import static_folder
+from src.logger import init_logger
 
 auth_route = Blueprint('auth', __name__)
+auth_logger = init_logger('auth_logger')
 
+async def create_response(redirect_url, message=None, category=None) -> Response:
+    response = make_response(redirect(redirect_url))
+    if message and category:
+        flash(message=message, category=category)
+    return response
 
 @auth_route.get('/login')
 def get_auth():
     context = {}
     return render_template('login.html', **context)
+
+
+@auth_route.post('/login')
+async def do_login():
+    context = {}
+    auth_user = Auth(**request.form)
+    try:
+        auth_user = Auth(**request.form)
+    except ValidationError as e:
+        auth_logger.error(str(e))
+        return await create_response(url_for('auth.get_login'), 'Login failed. Check your username and password.',
+                                     'danger')
+
+    print(auth_user)
+    flash(message='Successfully logged in', category='success')
+    return render_template('index.html')
 
 
 @auth_route.get('/password-reset')
