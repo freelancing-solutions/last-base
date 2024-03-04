@@ -58,6 +58,14 @@ class ProfileORM(Base):
     """
     __tablename__ = "profile"
     game_id: str = Column(String(ID_LEN), primary_key=True)
+    gameUID: str = Column(String(ID_LEN))
+    alliancename: str = Column(String(NAME_LEN))
+    allianceabr: str = Column(String(3))
+    level: int = Column(Integer)
+    sid: int = Column(Integer)
+    name: str = Column(String(12))
+    power: int = Column(Integer)
+    lastTime: str = Column(String(24))
     currency: str = Column(String(6))
 
     @classmethod

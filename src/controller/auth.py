@@ -11,16 +11,19 @@ from src.database.models.users import User, CreateUser, UserUpdate
 from src.database.sql.user import UserORM, ProfileORM
 from src.emailer import EmailModel
 from src.main import send_mail
+import requests
 
 
 class UserController(Controllers):
 
     def __init__(self):
         super().__init__()
+
         self._time_limit = 360
         self._verification_tokens: dict[str, int | dict[str, str | int]] = {}
         self.profiles: dict[str, Profile] = {}
         self.users: dict[str, User] = {}
+        self._game_data_url: str = 'https://gslls.im30app.com/gameservice/web_getserverbyname.php'
 
     def init_app(self, app: Flask):
         self._load_users()
@@ -30,47 +33,57 @@ class UserController(Controllers):
             # Use session.query().options(lazyload) to fetch only the required columns
             users_orm_list: list[UserORM] = session.query(UserORM).all()
             # Convert the users_orm_list directly into a dictionary
-            self.users = {user.user_id: User(**user.to_dict()) for user in users_orm_list}
+            self.users = {user.game_id: User(**user.to_dict()) for user in users_orm_list}
             profile_orm_list: list[ProfileORM] = session.query(ProfileORM).all()
-            self.profiles = {profile_orm.user_id: Profile(**profile_orm.to_dict())
+            self.profiles = {profile_orm.game_id: Profile(**profile_orm.to_dict())
                              for profile_orm in profile_orm_list}
+
+    async def _get_game_data(self, game_id: str, lang: str = 'en') -> dict[str, str | int]:
+        """
+
+        :param game_id:
+        :param lang:
+        :return:
+        """
+        _params = {'name': game_id, 'lang': lang}
+        response = requests.get(url=self._game_data_url, params=_params)
+        game_data = response.json()
+        print("Game Data 1")
+        print(game_data)
+        return game_data
 
     async def manage_users_dict(self, new_user: User):
         # Check if the user instance already exists in the dictionary
-        self.users[new_user.user_id] = new_user
+        self.users[new_user.game_id] = new_user
 
     async def manage_profiles(self, new_profile: Profile):
         self.profiles[new_profile.game_id] = new_profile
 
-    @error_handler
-    async def get_profile_by_user_id(self, user_id: str) -> Profile | None:
+    async def get_profile_by_game_id(self, game_id: str) -> Profile | None:
         """
         Get the profile for the given user ID.
 
-        :param user_id: The user ID for which to retrieve the profile.
+        :param game_id: The user ID for which to retrieve the profile.
         :return: The Profile instance corresponding to the user ID if found, else None.
         """
         # Check if the profile is available in the cache (profiles dictionary)
-        if user_id in self.profiles:
+        if game_id in self.profiles:
             self.logger.info("Fetching profile from dict {} ")
-            return self.profiles.get(user_id)
+            return self.profiles.get(game_id)
 
         # Fetch the profile data from the database
         with self.get_session() as session:
-            profile_orm = await session.query(ProfileORM).filter(ProfileORM.user_id == user_id).first()
-
+            profile_orm = session.query(ProfileORM).filter(ProfileORM.game_id == game_id).first()
             # If the profile_orm is not found, return None
             if not profile_orm:
-                return {}
-
-            # Convert ProfileORM to Profile object
-            profile = Profile(user_id=profile_orm.game_id,
-                              deposit_multiplier=profile_orm.deposit_multiplier,
-                              currency=profile_orm.currency,
-                              tax_rate=profile_orm.tax_rate)
+                game_data = await self._get_game_data(game_id=game_id)
+                profile = Profile(**game_data, game_id=game_id)
+            else:
+                # Convert ProfileORM to Profile object
+                profile = Profile(**profile_orm.to_dict())
 
             # Cache the profile in the dictionary for future use
-            self.profiles[user_id] = profile
+            self.profiles[game_id] = profile
         return profile
 
     @error_handler
@@ -82,8 +95,8 @@ class UserController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            o_user_orm: UserORM = session.query(UserORM).filter(UserORM.user_id == user.user_id).first()
-            o_profile_orm: ProfileORM = session.query(ProfileORM).filter(ProfileORM.user_id == user.user_id).first()
+            o_user_orm: UserORM = session.query(UserORM).filter(UserORM.game_id == user.game_id).first()
+            o_profile_orm: ProfileORM = session.query(ProfileORM).filter(ProfileORM.game_id == user.game_id).first()
 
             if o_user_orm:
                 o_user_orm.full_name = user.full_name
@@ -91,7 +104,7 @@ class UserController(Controllers):
                 o_user_orm.email = user.email
                 o_user_orm.contact_number = user.contact_number
                 session.merge(o_user_orm)
-                self.users[user.user_id] = User(**o_user_orm.to_dict())
+                self.users[user.game_id] = User(**o_user_orm.to_dict())
             # Update profile attributes
 
             if o_profile_orm:
@@ -99,10 +112,10 @@ class UserController(Controllers):
                 o_profile_orm.currency = profile.currency
                 o_profile_orm.tax_rate = profile.tax_rate
                 session.merge(o_profile_orm)
-                self.profiles[profile.user_id] = Profile(**o_profile_orm.to_dict())
+                self.profiles[profile.game_id] = Profile(**o_profile_orm.to_dict())
             else:
                 session.add(ProfileORM(**profile.dict()))
-                self.profiles[profile.user_id] = Profile(**profile.dict())
+                self.profiles[profile.game_id] = Profile(**profile.dict())
 
             session.commit()
 
@@ -122,18 +135,18 @@ class UserController(Controllers):
         return False
 
     @error_handler
-    async def get(self, user_id: str) -> dict[str, str] | None:
+    async def get(self, game_id: str) -> dict[str, str] | None:
         """
-        :param user_id:
+        :param game_id:
         :return:
         """
-        if not user_id:
+        if not game_id:
             return None
-        if user_id in self.users:
-            return self.users[user_id].dict()
+        if game_id in self.users:
+            return self.users[game_id].dict()
 
         with self.get_session() as session:
-            user_data: UserORM = session.query(UserORM).filter(UserORM.user_id == user_id).first()
+            user_data: UserORM = session.query(UserORM).filter(UserORM.game_id == game_id).first()
             return user_data.to_dict()
 
     @error_handler
@@ -208,7 +221,7 @@ class UserController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            user_data: UserORM = session.query(UserORM).filter(or_(UserORM.user_id == user.user_id,
+            user_data: UserORM = session.query(UserORM).filter(or_(UserORM.game_id == user.game_id,
                                                                    UserORM.email == user.email)).first()
             if user_data:
                 return None
@@ -218,13 +231,13 @@ class UserController(Controllers):
             new_user_dict = new_user.to_dict()
             session.commit()
             _user_data = User(**new_user_dict) if isinstance(new_user, UserORM) else None
-            self.users[_user_data.user_id] = _user_data
+            self.users[_user_data.game_id] = _user_data
             return _user_data
 
     @error_handler
     async def put(self, user: User) -> dict[str, str] | None:
         with self.get_session() as session:
-            user_data: UserORM = session.query(UserORM).filter_by(user_id=user.user_id).first()
+            user_data: UserORM = session.query(UserORM).filter_by(game_id=user.game_id).first()
             if not user_data:
                 return None
 
@@ -236,7 +249,7 @@ class UserController(Controllers):
             # Save the updated user_data back to the session
             session.add(user_data)
             session.commit()
-            self.users[user_data.user_id] = user_data
+            self.users[user_data.game_id] = user_data
             return user_data.to_dict()
 
     @error_handler

@@ -9,7 +9,15 @@ class Profile(BaseModel):
 
     """
     game_id: str
-    currency: str = Field(default="R")
+    gameUid: str
+    alliancename: str | None
+    allianceabr: str | None
+    level: int = Field(default=3)
+    sid: int = Field(default=1)
+    name: str
+    power: int = Field(default=1024)
+    lastTime: str
+    currency: str = Field(default="$")
 
     def __eq__(self, other):
         if not isinstance(other, Profile):
