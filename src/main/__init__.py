@@ -1,7 +1,5 @@
 from flask import Flask
 
-from src.utils import template_folder, static_folder
-from src.routes.home import home_route
 
 
 def _add_blue_prints(app: Flask):
@@ -10,7 +8,11 @@ def _add_blue_prints(app: Flask):
     :param app:
     :return:
     """
+    from src.routes.home import home_route
+    from src.routes.auth import auth_route
+
     app.register_blueprint(home_route)
+    app.register_blueprint(auth_route)
 
 
 def _add_filters(app: Flask):
@@ -24,8 +26,8 @@ def _add_filters(app: Flask):
 
 
 def create_app(config):
+    from src.utils import template_folder, static_folder
     app: Flask = Flask(__name__)
-
     app.template_folder = template_folder()
     app.static_folder = static_folder()
     app.config['SECRET_KEY'] = config.SECRET_KEY
