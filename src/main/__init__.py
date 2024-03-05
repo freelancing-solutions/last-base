@@ -4,8 +4,10 @@ from src.emailer import SendMail
 
 send_mail = SendMail()
 from src.controller.auth import UserController
-
+from src.controller.game_controller import GameController
 user_controller = UserController()
+game_controller = GameController()
+
 
 
 def _add_blue_prints(app: Flask):
