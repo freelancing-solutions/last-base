@@ -12,13 +12,13 @@ app = Flask(__name__)
 
 # Your route handlers go here
 @cached(ttl=3600)
-async def get_user_details(user_id: str) -> User:
+async def get_user_details(game_id: str) -> User:
     """Get the details for a user by their ID."""
 
     # Assuming you have a database session and engine configured
     with Session() as session:
-        # Perform the query to retrieve the user based on the user_id
-        user = session.query(UserORM).filter(UserORM.user_id == user_id).first()
+        # Perform the query to retrieve the user based on the game_id
+        user = session.query(UserORM).filter(UserORM.game_id == game_id).first()
         return User(**user.to_dict()) if user else None
 
 
@@ -27,7 +27,7 @@ def login_required(route_function):
     async def decorated_function(*args, **kwargs):
         auth_cookie = request.cookies.get('auth')
         if auth_cookie:
-            # Assuming you have a function to retrieve the user details based on the user_id
+            # Assuming you have a function to retrieve the user details based on the game_id
             user = await get_user_details(auth_cookie)
             try:
                 if user:
@@ -47,7 +47,7 @@ def admin_login(route_function):
     async def decorated_function(*args, **kwargs):
         auth_cookie = request.cookies.get('auth')
         if auth_cookie:
-            # Assuming you have a function to retrieve the user details based on the user_id
+            # Assuming you have a function to retrieve the user details based on the game_id
             user = await get_user_details(auth_cookie)
             try:
                 if user and user.is_system_admin:
@@ -65,8 +65,8 @@ def admin_login(route_function):
 def user_details(route_function):
     @wraps(route_function)
     async def decorated_function(*args, **kwargs):
-        user_id = request.cookies.get('auth')
-        user: User | None = await get_user_details(user_id=user_id) if user_id else None
+        game_id = request.cookies.get('auth')
+        user: User | None = await get_user_details(game_id=game_id) if game_id else None
         return await route_function(user, *args, **kwargs)
 
     return decorated_function
