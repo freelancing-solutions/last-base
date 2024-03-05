@@ -85,3 +85,5 @@ class ProfileORM(Base):
         if not isinstance(other, ProfileORM):
             return False
         return self.game_id == other.game_id
+
+
