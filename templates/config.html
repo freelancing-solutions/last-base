@@ -17,11 +17,11 @@
                 <i class="ti-announcement"> </i> Verification Request </a>
             </li>
             <li class="list-group-item">
-                Activate Automatic Gift Code Redemption <a href="#" class="btn btn-sm btn-primary">
+                Activate Automatic Gift Code Redemption <a href="{{ url_for('profile.get_gift_codes')}}" class="btn btn-sm btn-primary">
                 <i class="ti-server"> </i> Auto Gift Codes </a>
             </li>
             <li class="list-group-item">
-                List Account on Market <a href="#" class="btn btn-sm btn-primary">
+                List Account on Market <a href="{{ url_for('profile.get_market_listing')}}" class="btn btn-sm btn-primary">
                 <i class="ti-briefcase"></i> Start Market Listing </a>
             </li>
         </ul>

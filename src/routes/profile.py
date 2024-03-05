@@ -26,13 +26,13 @@ async def get_settings():
     return render_template('config.html', **context)
 
 
-@profile_route.get('/verification-request')
+@profile_route.get('/dashboard/verification-request')
 async def get_verification():
     context = {}
     return render_template('verification.html', **context)
 
 
-@profile_route.post('/verification-request')
+@profile_route.post('/dashboard/verification-request')
 async def do_verification():
     context = {}
     try:
@@ -42,3 +42,15 @@ async def do_verification():
 
     flash(message="your account will be verified in 1 to 2 hours", category='success')
     return redirect(location=url_for('profile.get_settings'))
+
+
+@profile_route.get('/dashboard/giftco')
+async def get_gift_codes():
+    context = {}
+    return render_template('giftcodes.html', **context)
+
+
+@profile_route.get('/dashboard/market-listing')
+async def get_market_listing():
+    context = {}
+    return render_template('market_listing.html', **context)
