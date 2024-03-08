@@ -73,11 +73,37 @@ async def get_gift_codes(user: User):
 @profile_route.post('/dashboard/gift-codes')
 @login_required
 async def redeem_codes(user: User):
+    """
+        this method only adds game ids into database
+        only unique game ids are added errors are ignored
+    :param user:
+    :return:
+    """
     context = dict(user=user)
     try:
-        game_ids = GameIDS(request.form)
+        game_ids_input = request.form.get('game_ids', '').strip()
+        if ',' in game_ids_input:
+            game_ids_list = [id.strip() for id in game_ids_input.split(',') if id.strip()]
+        else:
+            game_ids_list = [game_ids_input]
+
+        for game_id in game_ids_list:
+            if len(game_id) != 8:
+                flash("Please provide valid 8-character Game IDs.", "danger")
+                return render_template('gift_codes.html', **context)
+
+        game_ids = GameIDS(game_id_list=game_ids_list)
+        completed = await game_controller.add_game_ids(game_ids=game_ids)
+
+        if completed:
+            flash("Successfully added game IDs. New codes will be automatically redeemed as they become available.",
+                  "success")
+        else:
+            _message: str = "could not verify if game ids where added please try again"
+            flash(message=_message, category="danger")
+
     except ValidationError as e:
-        pass
+        flash(f"Error: {str(e)}", "danger")
 
     return render_template('gift_codes.html', **context)
 

@@ -10,3 +10,14 @@ class GameAuth(BaseModel):
 
 class GameIDS(BaseModel):
     game_id_list: list[str]
+
+
+class GiftCode(BaseModel):
+    code: str
+    is_valid: bool
+
+
+class RedeemCodes(BaseModel):
+    id: str
+    game_id: str
+    code: str

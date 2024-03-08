@@ -18,11 +18,11 @@
             <form class="form-horizontal" method="POST" action="{{ url_for('profile.redeem_codes') }}">
                 <div class="form-group">
                     <label class="font-weight-bold">Game IDS, <small class="text-info"> Separate each game id with a comma </small></label>
-                     <textarea class="form-control" style="height: 12em;"></textarea>
+                     <textarea name="game_ids" class="form-control" style="height: 12em;"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <button class="btn btn-primary btn-sm">
+                    <button type="submit" class="btn btn-primary btn-sm">
                         <i class="ti ti-gift"></i>
                         Submit Game ID's </button>
                 </div>

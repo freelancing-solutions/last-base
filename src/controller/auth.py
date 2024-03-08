@@ -86,38 +86,6 @@ class UserController(Controllers):
             self.profiles[game_id] = profile
         return profile
 
-    @error_handler
-    async def update_profile(self, user: UserUpdate, profile: ProfileUpdate):
-        """
-
-        :param user:
-        :param profile:
-        :return:
-        """
-        with self.get_session() as session:
-            o_user_orm: UserORM = session.query(UserORM).filter(UserORM.game_id == user.game_id).first()
-            o_profile_orm: ProfileORM = session.query(ProfileORM).filter(ProfileORM.game_id == user.game_id).first()
-
-            if o_user_orm:
-                o_user_orm.full_name = user.full_name
-                o_user_orm.username = user.username
-                o_user_orm.email = user.email
-                o_user_orm.contact_number = user.contact_number
-                session.merge(o_user_orm)
-                self.users[user.game_id] = User(**o_user_orm.to_dict())
-            # Update profile attributes
-
-            if o_profile_orm:
-                o_profile_orm.deposit_multiplier = profile.deposit_multiplier
-                o_profile_orm.currency = profile.currency
-                o_profile_orm.tax_rate = profile.tax_rate
-                session.merge(o_profile_orm)
-                self.profiles[profile.game_id] = Profile(**o_profile_orm.to_dict())
-            else:
-                session.add(ProfileORM(**profile.dict()))
-                self.profiles[profile.game_id] = Profile(**profile.dict())
-
-            session.commit()
 
     async def is_token_valid(self, token: str) -> bool:
         """
