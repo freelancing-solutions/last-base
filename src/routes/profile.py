@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, send_from_directory, request, redi
 from pydantic import ValidationError
 
 from src.authentication import login_required
-from src.database.models.game import GameAuth
+from src.database.models.game import GameAuth, GameIDS
 from src.database.models.profile import ProfileUpdate
 from src.database.models.users import User
 from src.utils import static_folder
@@ -67,6 +67,18 @@ async def do_verification(user: User):
 @login_required
 async def get_gift_codes(user: User):
     context = dict(user=user)
+    return render_template('gift_codes.html', **context)
+
+
+@profile_route.post('/dashboard/gift-codes')
+@login_required
+async def redeem_codes(user: User):
+    context = dict(user=user)
+    try:
+        game_ids = GameIDS(request.form)
+    except ValidationError as e:
+        pass
+
     return render_template('gift_codes.html', **context)
 
 

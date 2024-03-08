@@ -8,3 +8,5 @@ class GameAuth(BaseModel):
     game_pin: str | None
 
 
+class GameIDS(BaseModel):
+    game_id_list: list[str]
