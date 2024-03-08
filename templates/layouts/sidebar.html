@@ -29,8 +29,8 @@
                         </ul>
                     </li>
 
-                    <li><a href="#"><i class="ti-info"></i> About</a></li>
-                    <li><a href="#"><i class="ti-help-alt"></i> FAQ</a></li>
+                    <li><a href="{{ url_for('home.get_about')}}"><i class="ti-info"></i> About</a></li>
+                    <li><a href="{{ url_for('home.get_faq')}}"><i class="ti-help-alt"></i> FAQ</a></li>
 
                     {% if  user and user.is_system_admin %}
                         <li><a class="sidebar-sub-toggle"><i class="ti-briefcase"></i> Admin<span

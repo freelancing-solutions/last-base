@@ -9,3 +9,14 @@ def get_home():
     context = {}
     return render_template('index.html', **context)
 
+
+@home_route.get("/about")
+def get_about():
+    context = {}
+    return render_template('about.html', **context)
+
+
+@home_route.get("/faq")
+def get_faq():
+    context = {}
+    return render_template('faq.html', **context)
