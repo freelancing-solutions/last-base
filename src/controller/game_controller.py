@@ -1,4 +1,3 @@
-from flask import Flask
 
 import requests
 from flask import Flask
@@ -25,9 +24,9 @@ class GameController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            account_verification: GameAuthORM = session.Query(GameAuthORM.game_id == game_data.game_id).first()
+            account_verification: GameAuthORM = session.query(GameAuthORM.game_id == game_data.game_id).first()
             if account_verification and account_verification.game_id == game_data.game_id:
-                return GameAuth(**GameAuthORM.to_dict())
+                return GameAuth(**account_verification.to_dict())
 
             game_orm = GameAuthORM(**game_data.dict())
             session.add(game_orm)
