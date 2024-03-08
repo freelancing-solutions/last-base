@@ -37,7 +37,7 @@ def login_required(route_function):
             except TypeError as e:
                 flash(message='Error making request please try again later', category="danger")
                 return redirect(url_for('home.get_home'))
-        return redirect(url_for('auth.get_login'))  # Redirect to login page if not logged in
+        return redirect(url_for('auth.get_auth'))  # Redirect to login page if not logged in
 
     return decorated_function
 
@@ -57,7 +57,7 @@ def admin_login(route_function):
             except TypeError as e:
                 flash(message='Error making request please try again later', category="danger")
                 return redirect(url_for('home.get_home'))
-        return redirect(url_for('auth.get_login'))  # Redirect to login page if not logged in
+        return redirect(url_for('auth.get_auth'))  # Redirect to login page if not logged in
 
     return decorated_function
 

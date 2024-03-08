@@ -39,7 +39,3 @@ class GameController(Controllers):
             session.add(game_orm)
             session.commit()
             return game_data
-
-
-
-

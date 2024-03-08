@@ -27,7 +27,7 @@
             </div>
             <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Sign in</button>
             <div class="register-link m-t-15 text-center font-weight-bold">
-                <p>Don't have an account? <a href="#">Sign Up Here</a></p>
+                <p>Don't have an account? <a href="{{ url_for('auth.get_register')}}">Sign Up Here</a></p>
             </div>
         </form>
     </div>
