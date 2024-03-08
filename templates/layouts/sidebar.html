@@ -43,7 +43,7 @@
                     {% endif %}
 
                     {% if user %}
-                        <li><a href="#"><i class="ti-power-off"></i> Logout</a></li>
+                        <li><a href="{{ url_for('auth.do_logout')}}"><i class="ti-power-off"></i> Logout</a></li>
                     {% else %}
                         <li><a href="{{ url_for('auth.get_auth')}}"><i class="ti-user"></i> Login</a></li>
                     {% endif %}

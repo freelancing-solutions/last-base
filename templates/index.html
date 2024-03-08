@@ -70,7 +70,7 @@
                         <ul class="list-group">
                             {% if user %}
                                 <li class="list-group-item">
-                                    <a href="#" class="btn btn-danger btn-block">
+                                    <a href="{{ url_for('auth.do_logout')}}" class="btn btn-danger btn-block">
                                         <i class="ti-power-off"> </i> <strong>Logout</strong>
                                     </a>
                                 </li>

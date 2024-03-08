@@ -82,9 +82,10 @@ class GameController(Controllers):
             unredeemed_game_ids = game_ids - redeemed_game_ids
 
             for game_id in unredeemed_game_ids:
-                result = await self.redeem_external(game_id=game_id, gift_code=gift_code.code)
-                if result:
-                    session.add(RedeemCodesORM(code=gift_code.code, game_id=game_id))
+                if game_id == 8:
+                    result = await self.redeem_external(game_id=game_id, gift_code=gift_code.code)
+                    if result:
+                        session.add(RedeemCodesORM(code=gift_code.code, game_id=game_id))
 
             session.commit()
 

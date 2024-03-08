@@ -14,10 +14,8 @@ profile_route = Blueprint('profile', __name__)
 @profile_route.get('/dashboard/profile')
 @login_required
 async def get_profile(user: User):
-    context = dict(user=user)
-
     data = await user_controller.get_profile_by_game_id(game_id=user.game_id)
-    context = dict(profile=data)
+    context = dict(profile=data, user=user)
     return render_template('profile.html', **context)
 
 
@@ -37,7 +35,7 @@ async def get_settings(user: User):
     context = dict(user=user)
 
     data = await user_controller.get_profile_by_game_id(game_id=user.game_id)
-    context = dict(profile=data)
+    context.update(profile=data)
     return render_template('config.html', **context)
 
 

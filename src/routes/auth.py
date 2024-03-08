@@ -14,6 +14,7 @@ auth_route = Blueprint('auth', __name__)
 auth_logger = init_logger('auth_logger')
 REMEMBER_ME_DELAY = 60 * 60 * 24 * 30
 
+
 async def create_response(redirect_url, message=None, category=None) -> Response:
     response = make_response(redirect(redirect_url))
     if message and category:
