@@ -213,7 +213,7 @@ class UserController(Controllers):
 
         return password_reset_link
 
-    @error_handler
+
     async def post(self, user: CreateUser) -> User | None:
         """
 

@@ -39,7 +39,7 @@ class UserORM(Base):
         self.is_system_admin = is_system_admin
 
     def __bool__(self) -> bool:
-        return bool(self.user_id) and bool(self.username) and bool(self.email)
+        return bool(self.game_id) and bool(self.username) and bool(self.email)
 
     def to_dict(self) -> dict[str, str | bool]:
         return {

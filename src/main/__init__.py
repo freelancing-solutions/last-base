@@ -1,7 +1,8 @@
 from flask import Flask
 
+from src.controller.encryptor import Encryptor
 from src.emailer import SendMail
-
+encryptor = Encryptor()
 send_mail = SendMail()
 from src.controller.auth import UserController
 from src.controller.game_controller import GameController
@@ -50,6 +51,7 @@ def create_app(config):
         bootstrapper()
         _add_blue_prints(app)
         _add_filters(app)
+        encryptor.init_app(app=app)
         pass
 
     return app

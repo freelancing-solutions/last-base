@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field, Extra
 
-from src.controller.encryptor import encryptor
+from src.main import encryptor
 
 
 class UserType(str, Enum):
@@ -67,13 +67,12 @@ class CreateUser(BaseModel):
     username: str
     password: str
     email: str
-    full_name: str | None
-    contact_number: str | None
     account_verified: bool = Field(default=False)
     is_system_admin: bool = Field(default=False)
 
     @property
     def password_hash(self):
+        print(f"Password : {self.password}")
         return encryptor.create_hash(password=self.password)
 
     def to_dict(self) -> dict[str, str | bool]:
@@ -88,8 +87,6 @@ class PasswordResetUser(BaseModel):
     username: str
     password: str
     email: str
-    full_name: str | None
-    contact_number: str | None
     account_verified: bool = Field(default=False)
     is_system_admin: bool = Field(default=False)
 
@@ -108,8 +105,6 @@ class UserUpdate(BaseModel):
     game_id: str
     username: str
     email: str
-    full_name: str | None
-    contact_number: str | None
     account_verified: bool = Field(default=False)
 
     class Config:

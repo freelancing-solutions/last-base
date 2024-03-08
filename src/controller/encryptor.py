@@ -19,4 +19,4 @@ class Encryptor:
         return self._bcrypt.check_password_hash(pw_hash=hash, password=password)
 
 
-encryptor = Encryptor()
+
