@@ -19,3 +19,24 @@ async def get_admin(user: User):
     return render_template('admin/admin.html', **context)
 
 
+@admin_route.get('/admin/gift-code')
+@admin_login
+async def get_gift_code(user: User):
+
+    context = dict(user=user)
+    return render_template('admin/gift_code.html', **context)
+
+@admin_route.get('/admin/gift-code')
+@admin_login
+async def add_gift_code(user: User):
+    """
+
+    :param user:
+    :return:
+    """
+    try:
+        gift_code = request.form.get('gift_code')
+        number_days_valid = request.form.get('days_valid')
+    except ValidationError as e:
+        pass
+

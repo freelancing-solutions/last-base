@@ -1,6 +1,8 @@
 import uuid
+from datetime import datetime, timedelta
 
-from sqlalchemy import Column, String, inspect, ForeignKey, Boolean
+
+from sqlalchemy import Column, String, inspect, ForeignKey, Boolean, func, Integer, Date
 
 from src.database.constants import ID_LEN, NAME_LEN
 from src.database.sql import Base, engine
@@ -45,7 +47,16 @@ class GameIDSORM(Base):
 class GiftCodesORM(Base):
     __tablename__ = "gift_codes"
     code = Column(String(NAME_LEN), primary_key=True)
-    is_valid = Column(Boolean, default=True)
+    date_submitted = Column(Date, default=func.now())
+    number_days_valid = Column(Integer)
+
+    @property
+    def is_valid(self):
+        if self.date_submitted is None:
+            return False
+        today = datetime.now().date()
+        expiry_date = self.date_submitted + timedelta(days=self.number_days_valid)
+        return today <= expiry_date
 
     @classmethod
     def create_if_not_table(cls):
@@ -55,6 +66,8 @@ class GiftCodesORM(Base):
     def to_dict(self):
         return {
             'code': self.code,
+            'date_submitted': self.date_submitted,
+            'number_days_valid': self.number_days_valid,
             'is_valid': self.is_valid
         }
 

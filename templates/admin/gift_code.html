@@ -1,0 +1,38 @@
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+
+<section id="main-content">
+    <div class="card">
+        <div class="card-header">
+            <h2 class=""> ADMIN - Add Gift Code</h2>
+            <div>
+                <label> Gift Codes Added Here will be Automatically Redemption Daily Until Such time that the Code expires</label>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <form class="form-horizontal" method="POST" action="{{ url_for('admin.add_gift_code') }}">
+                <div class="form-group">
+                    <label class="font-weight-bold">
+                           Gift Code
+                    </label>
+                    <input type="text" name="gift_code" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold">
+                           Number Days Valid
+                    </label>
+                    <input type="number" name="days_valid" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-sm btn-primary">Submit Gift Code</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}
