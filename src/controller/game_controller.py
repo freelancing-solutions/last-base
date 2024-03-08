@@ -64,8 +64,8 @@ class GameController(Controllers):
         :param gift_code:
         :return:
         """
-        _params = dict(name=game_id, code=gift_code, captcha=self.captcha)
-        _response = requests.request(url=self.redeem_url, params=_params)
+        _params: dict[str, str] = dict(name=game_id, code=gift_code, captcha=self.captcha)
+        _response = requests.get(url=self.redeem_url, params=_params)
         return _response.ok
 
     async def redeem_code_for_all_game_ids(self, gift_code: GiftCode):
@@ -99,4 +99,3 @@ class GameController(Controllers):
             none_expired_codes = [gift_code.code for gift_code in session.query(GiftCodesORM.is_valid == True).all()]
             for code in none_expired_codes:
                 await self.redeem_code_for_all_game_ids(gift_code=code)
-
