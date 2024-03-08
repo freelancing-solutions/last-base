@@ -2,13 +2,14 @@ from flask import Flask
 
 from src.controller.encryptor import Encryptor
 from src.emailer import SendMail
+
 encryptor = Encryptor()
 send_mail = SendMail()
 from src.controller.auth import UserController
 from src.controller.game_controller import GameController
+
 user_controller = UserController()
 game_controller = GameController()
-
 
 
 def _add_blue_prints(app: Flask):
@@ -21,11 +22,13 @@ def _add_blue_prints(app: Flask):
     from src.routes.auth import auth_route
     from src.routes.market import market_route
     from src.routes.profile import profile_route
+    from src.routes.admin import admin_route
 
     app.register_blueprint(auth_route)
     app.register_blueprint(home_route)
     app.register_blueprint(profile_route)
     app.register_blueprint(market_route)
+    app.register_blueprint(admin_route)
 
 
 def _add_filters(app: Flask):
