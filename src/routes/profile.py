@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from src.authentication import login_required
 from src.database.models.game import GameAuth
+from src.database.models.profile import ProfileUpdate
 from src.database.models.users import User
 from src.utils import static_folder
 from src.main import user_controller, game_controller
@@ -18,6 +19,16 @@ async def get_profile(user: User):
     data = await user_controller.get_profile_by_game_id(game_id=user.game_id)
     context = dict(profile=data)
     return render_template('profile.html', **context)
+
+
+@profile_route.post('/dashboard/profile')
+@login_required
+async def update_profile(user: User):
+    try:
+
+        updated_profile = ProfileUpdate(request.form)
+    except ValidationError as e:
+        pass
 
 
 @profile_route.get('/dashboard/settings')
