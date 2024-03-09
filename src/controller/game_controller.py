@@ -1,9 +1,8 @@
-
 import requests
 from flask import Flask
 
 from src.controller import Controllers
-from src.database.models.game import GameAuth, GameIDS, GiftCode
+from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut
 from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM
 
 
@@ -45,6 +44,14 @@ class GameController(Controllers):
             session.commit()
 
         return True
+
+    async def get_all_gift_codes(self) -> list[GiftCodeOut]:
+        """
+
+        :return:
+        """
+        with self.get_session() as session:
+            return [GiftCodeOut(**gift_code_orm.to_dict()) for gift_code_orm in session.query(GiftCodesORM).all()]
 
     async def add_new_gift_code(self, gift_code: GiftCode) -> GiftCode:
         with self.get_session() as session:

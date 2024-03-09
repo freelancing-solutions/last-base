@@ -22,6 +22,8 @@ async def get_admin(user: User):
 @admin_login
 async def get_gift_code(user: User):
     context = dict(user=user)
+    gift_codes: list[GiftCode] = await game_controller.get_all_gift_codes()
+    context = dict(user=user, gift_codes=gift_codes)
     return render_template('admin/gift_code.html', **context)
 
 

@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <table class="table table-responsive table-striped table-bordered">
+        <table class="table table-striped table-striped">
             <thead>
                 <tr>
                     <td><strong>Code</strong></td>
@@ -24,11 +24,13 @@
                 </tr>
             </thead>
             <tbody>
+            {% for gift_code in gift_codes %}
                 <tr>
-                    <td>LSSX1124</td>
-                    <td>2023-12-12</td>
-                    <td>False</td>
+                    <td>{{ gift_code.code }}</td>
+                    <td>{{ gift_code.date_submitted }}</td>
+                    <td>{{ gift_code.is_valid }}</td>
                 </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>

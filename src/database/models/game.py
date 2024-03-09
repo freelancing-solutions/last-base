@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel, Field, Extra
 
 
@@ -18,6 +20,13 @@ class GiftCode(BaseModel):
 
     class Config:
         extra = Extra.ignore
+
+
+class GiftCodeOut(BaseModel):
+    code: str
+    number_days_valid: int
+    is_valid: bool
+    date_submitted: date
 
 
 class RedeemCodes(BaseModel):
