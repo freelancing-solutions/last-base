@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 
-
-from sqlalchemy import Column, String, inspect, ForeignKey, Boolean, func, Integer, Date
+from sqlalchemy import Column, String, inspect, ForeignKey, Boolean, func, Integer, Date, DateTime
 
 from src.database.constants import ID_LEN, NAME_LEN
 from src.database.sql import Base, engine
@@ -30,8 +29,15 @@ class GameAuthORM(Base):
 
 
 class GameIDSORM(Base):
-    __tablename__ = "gameids"
+    __tablename__ = "game_accounts"
+    owner_game_id: str = Column(String(ID_LEN))
     game_id: str = Column(String(ID_LEN), primary_key=True)
+    game_uid: str = Column(String(ID_LEN))
+    base_level: int = Column(Integer)
+    state: int = Column(Integer)
+    base_name: str = Column(String(NAME_LEN))
+    power: int = Column(Integer)
+    last_login_time: datetime = Column(DateTime)
 
     @classmethod
     def create_if_not_table(cls):
@@ -40,7 +46,14 @@ class GameIDSORM(Base):
 
     def to_dict(self):
         return {
-            'game_id': self.game_id
+            'owner_game_id': self.owner_game_id,
+            'game_id': self.game_id,
+            'game_uid': self.game_uid,
+            'base_level': self.base_level,
+            'state': self.state,
+            'base_name': self.base_name,
+            'power': self.power,
+            'last_login_time': self.last_login_time
         }
 
 

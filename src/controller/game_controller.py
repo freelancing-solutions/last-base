@@ -2,7 +2,7 @@ import requests
 from flask import Flask
 
 from src.controller import Controllers
-from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut
+from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut, GameDataInternal
 from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM
 
 
@@ -12,6 +12,7 @@ class GameController(Controllers):
         super().__init__()
         self.redeem_url = "https://gslls.im30app.com/gameservice/web_code.php"
         self.captcha = "XtWh&id=cdca0109-e089-4929-a771-74a49fba48ed"
+        self._game_data_url: str = 'https://gslls.im30app.com/gameservice/web_getserverbyname.php'
 
     def init_app(self, app: Flask):
         super().init_app(app=app)
@@ -32,18 +33,54 @@ class GameController(Controllers):
             session.commit()
             return game_data
 
-    async def add_game_ids(self, game_ids: GameIDS):
+    async def _get_game_data(self, owner_game_id: str, game_id: str, lang: str = 'en') -> GameDataInternal:
+        """
+
+        :param game_id:
+        :param lang:
+        :return:
+        """
+        _params = {'name': game_id, 'lang': lang}
+        response = requests.get(url=self._game_data_url, params=_params)
+        game_data = response.json()
+        return GameDataInternal.from_json(data=game_data, game_id=game_id, owner_game_id=owner_game_id)
+
+    async def get_users_game_ids(self, owner_game_id: str) -> list[GameDataInternal]:
+        """
+
+        :param owner_game_id:
+        :return:
+        """
+        with self.get_session() as session:
+            return [GameDataInternal(**game_data.to_dict()) for game_data in
+                    session.query(GameIDSORM).filter(GameIDSORM.owner_game_id == owner_game_id).all()]
+
+    async def add_game_ids(self, owner_game_id: str, game_ids: GameIDS):
         with self.get_session() as session:
             for game_id in game_ids.game_id_list:
                 # Check if the game_id already exists in the database
-                existing_game_id = session.query(GameIDSORM).filter_by(game_id=game_id).first()
-                if existing_game_id is None:
+                existing_game_id = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
+
+                if not isinstance(existing_game_id, GameIDSORM):
                     # If the game_id doesn't exist, create a new entry
-                    new_game_id = GameIDSORM(game_id=game_id)
-                    session.add(new_game_id)
+                    game_data: GameDataInternal = await self._get_game_data(owner_game_id=owner_game_id,
+                                                                            game_id=game_id)
+                    new_game_data = GameIDSORM(**game_data.dict())
+                    session.add(new_game_data)
+
             session.commit()
 
         return True
+
+    async def get_active_gift_codes(self) -> list[GiftCodeOut]:
+        """
+
+        :return:
+        """
+        with self.get_session() as session:
+            gift_codes_list = await self.get_all_gift_codes()
+            return [gift_code for gift_code in gift_codes_list if gift_code.is_valid]
+
 
     async def get_all_gift_codes(self) -> list[GiftCodeOut]:
         """

@@ -2,6 +2,7 @@ from flask import Flask
 
 from src.controller.encryptor import Encryptor
 from src.emailer import SendMail
+from src.utils import format_with_grouping
 
 encryptor = Encryptor()
 send_mail = SendMail()
@@ -38,7 +39,7 @@ def _add_filters(app: Flask):
     :param app:
     :return:
     """
-    pass
+    app.jinja_env.filters['number'] = format_with_grouping
 
 
 def create_app(config):

@@ -65,12 +65,15 @@ async def do_verification(user: User):
 @login_required
 async def get_gift_codes(user: User):
     context = dict(user=user)
-    return render_template('gift_codes.html', **context)
+    game_data_list = await game_controller.get_users_game_ids(owner_game_id=user.game_id)
+    active_gift_codes = await game_controller.get_active_gift_codes()
+    context = dict(user=user, game_data_list=game_data_list, active_gift_codes=active_gift_codes)
+    return render_template('gift_codes/gift_codes.html', **context)
 
 
 @profile_route.post('/dashboard/gift-codes')
 @login_required
-async def redeem_codes(user: User):
+async def add_game_ids(user: User):
     """
         this method only adds game ids into database
         only unique game ids are added errors are ignored
@@ -88,10 +91,10 @@ async def redeem_codes(user: User):
         for game_id in game_ids_list:
             if len(game_id) != 8:
                 flash("Please provide valid 8-character Game IDs.", "danger")
-                return render_template('gift_codes.html', **context)
+                return render_template('gift_codes/gift_codes.html', **context)
 
         game_ids = GameIDS(game_id_list=game_ids_list)
-        completed = await game_controller.add_game_ids(game_ids=game_ids)
+        completed = await game_controller.add_game_ids(owner_game_id=user.game_id, game_ids=game_ids)
 
         if completed:
             flash("Successfully added game IDs. New codes will be automatically redeemed as they become available.",
@@ -103,7 +106,7 @@ async def redeem_codes(user: User):
     except ValidationError as e:
         flash(f"Error: {str(e)}", "danger")
 
-    return render_template('gift_codes.html', **context)
+    return render_template('gift_codes/gift_codes.html', **context)
 
 
 @profile_route.get('/dashboard/market-listing')

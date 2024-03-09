@@ -35,7 +35,9 @@ def login_required(route_function):
                 flash(message="User may not be Authorized or Logged In", category="danger")
                 return redirect(url_for('home.get_home'))
             except TypeError as e:
-                flash(message='Error making request please try again later', category="danger")
+                print(str(e))
+                _mess = f'Error making request please try again later {str(e)}'
+                flash(message= _mess, category="danger")
                 return redirect(url_for('home.get_home'))
         return redirect(url_for('auth.get_auth'))  # Redirect to login page if not logged in
 
