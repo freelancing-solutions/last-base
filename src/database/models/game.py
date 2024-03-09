@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, Extra
 
 
 class GameAuth(BaseModel):
@@ -14,7 +14,10 @@ class GameIDS(BaseModel):
 
 class GiftCode(BaseModel):
     code: str
-    is_valid: bool
+    number_days_valid: int
+
+    class Config:
+        extra = Extra.ignore
 
 
 class RedeemCodes(BaseModel):

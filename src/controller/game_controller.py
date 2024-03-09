@@ -46,15 +46,19 @@ class GameController(Controllers):
 
         return True
 
-    async def add_new_gift_code(self, gift_code: str) -> GiftCode:
+    async def add_new_gift_code(self, gift_code: GiftCode) -> GiftCode:
         with self.get_session() as session:
-            gift_code_orm = session.query(GiftCodesORM.code == gift_code).first()
-            if gift_code:
-                return GiftCode(**gift_code_orm.to_dict())
-            gift_code_orm = GiftCodesORM(code=gift_code)
+            gift_code_orm_ = session.query(GiftCodesORM.code == gift_code.code).first()
+            if isinstance(gift_code_orm_, GiftCodesORM):
+                return GiftCode(**gift_code_orm_.to_dict())
+
+            gift_code_orm = GiftCodesORM(**gift_code.dict())
+
             session.add(gift_code_orm)
+
             gift_code = GiftCode(**gift_code_orm.to_dict())
             session.commit()
+
             return gift_code
 
     async def redeem_external(self, game_id: str, gift_code: str):
