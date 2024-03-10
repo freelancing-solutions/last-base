@@ -1,0 +1,46 @@
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+
+<section id="main-content">
+    <div class="card">
+        <div class="card-header">
+            <h2 class=""> Gamer Profile</h2>
+        </div>
+        <div class="card-body">
+
+    <form method="POST" class="form-horizontal" action="{{ url_for('profile.update_profile')}}">
+        <input type="hidden" name="game_id"  value="{{ profile.game_id }}" />
+        <ul class="list-group font-weight-bold">
+            <li class="list-group-item text-dark">Game ID: <span class="font-italic text-danger">{{ profile.game_id }}</span></li>
+            <li class="list-group-item text-info">Game UID: <span class="font-italic text-danger">{{ profile.gameUid }}</span></li>
+            <li class="list-group-item text-dark">Base Level: <span class="font-italic text-danger">{{ profile.level }}</span></li>
+            <li class="list-group-item text-info">State : <span class="font-italic text-danger">{{ profile.sid }}</span></li>
+            <li class="list-group-item text-dark">Game Name : <span class="font-italic text-danger">{{ profile.name }}</span></li>
+            <li class="list-group-item text-info">Base Power : <span class="font-italic text-danger">{{ profile.power }}</span></li>
+            <li class="list-group-item text-dark">Last Login Time : <span class="font-italic text-danger">{{ profile.lastTime }}</span></li>
+            <li class="list-group-item text-info"><label for="alliancename">Alliance Name</label> <input class="form-control" type="text" id="alliancename" name="alliancename" value="{{ profile.alliancename }}"></li>
+            <li class="list-group-item text-dark"><label for="allianceabr">Alliance Abbr</label> <input class="form-control" type="text" id="allianceabr" name="allianceabr" value="{{ profile.allianceabr }}"></li>
+        </ul>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="ti ti-server"> </i>
+                Update Gamer Profile
+            </button>
+            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addPayPalAccount">
+                <i class="ti ti-shopping-cart" > </i>
+                Add PayPal Account
+            </a>
+
+        </div>
+    </form>
+
+        </div>
+    </div>
+
+
+</section>
+{% include "profile/modal/add_paypal.html" %}
+{% endblock %}

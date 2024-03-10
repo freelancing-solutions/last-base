@@ -3,9 +3,9 @@ from pydantic import ValidationError
 
 from src.authentication import login_required
 from src.database.models.game import GameAuth, GameIDS
-from src.database.models.profile import ProfileUpdate
+from src.database.models.profile import ProfileUpdate, Profile
 from src.database.models.users import User
-from src.utils import static_folder
+
 from src.main import user_controller, game_controller
 
 profile_route = Blueprint('profile', __name__)
@@ -16,17 +16,26 @@ profile_route = Blueprint('profile', __name__)
 async def get_profile(user: User):
     data = await user_controller.get_profile_by_game_id(game_id=user.game_id)
     context = dict(profile=data, user=user)
-    return render_template('profile.html', **context)
+    return render_template('profile/profile.html', **context)
 
 
 @profile_route.post('/dashboard/profile')
 @login_required
 async def update_profile(user: User):
+    context = dict(user=user)
     try:
 
-        updated_profile = ProfileUpdate(request.form)
+        updated_profile = ProfileUpdate(**request.form)
+        print(f"Game Profile : {updated_profile}")
+        updated_profile_: Profile = await user_controller.update_profile(updated_profile=updated_profile)
+        if isinstance(updated_profile_, Profile):
+            flash(message="profile updated", category="success")
+        else:
+            flash(message="Unable to Update Profile", category="danger")
     except ValidationError as e:
-        pass
+        flash(message=f"Error: str(e)", category="danger")
+
+    return redirect(location=url_for('profile.get_profile'))
 
 
 @profile_route.get('/dashboard/settings')
@@ -67,7 +76,9 @@ async def get_gift_codes(user: User):
     context = dict(user=user)
     game_data_list = await game_controller.get_users_game_ids(owner_game_id=user.game_id)
     active_gift_codes = await game_controller.get_active_gift_codes()
-    context = dict(user=user, game_data_list=game_data_list, active_gift_codes=active_gift_codes)
+    total_bases: int = len(game_data_list)
+
+    context = dict(user=user, total_bases=total_bases, game_data_list=game_data_list, active_gift_codes=active_gift_codes)
     return render_template('gift_codes/gift_codes.html', **context)
 
 

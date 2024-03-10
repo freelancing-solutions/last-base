@@ -58,7 +58,7 @@ class ProfileORM(Base):
     """
     __tablename__ = "profile"
     game_id: str = Column(String(ID_LEN), primary_key=True)
-    gameUID: str = Column(String(ID_LEN))
+    gameUid: str = Column(String(ID_LEN))
     alliancename: str = Column(String(NAME_LEN))
     allianceabr: str = Column(String(3))
     level: int = Column(Integer)
@@ -75,15 +75,23 @@ class ProfileORM(Base):
 
     def to_dict(self) -> dict[str, str | int]:
         """
-
-        :return:
+        Convert the ProfileORM instance to a dictionary.
+        :return: Dictionary representing the ProfileORM instance.
         """
-        return {'game_id': self.game_id,
-                'currency': self.currency}
+        return {
+            'game_id': self.game_id,
+            'gameUid': self.gameUid,
+            'alliancename': self.alliancename,
+            'allianceabr': self.allianceabr,
+            'level': self.level,
+            'sid': self.sid,
+            'name': self.name,
+            'power': self.power,
+            'lastTime': self.lastTime,
+            'currency': self.currency
+        }
 
     def __eq__(self, other):
         if not isinstance(other, ProfileORM):
             return False
         return self.game_id == other.game_id
-
-

@@ -56,6 +56,8 @@ def create_app(config):
         _add_blue_prints(app)
         _add_filters(app)
         encryptor.init_app(app=app)
+        user_controller.init_app(app=app)
+        game_controller.init_app(app=app)
         pass
 
     return app

@@ -7,14 +7,40 @@
         <div class="card-header">
             <h2 class=""> Buy &amp; Sell Farm Accounts</h2>
         </div>
-        
     </div>
-
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title font-weight-bold">Farm Locator</h2>
+                </div>
+                <div class="card-body">
+                    <uL>
+                        <li class="list-group-item"><h4 class="card-title">By State</h4></li>
+                        <li class="list-group-item"><h4 class="card-title">By Seller</h4></li>
+                        <li class="list-group-item"><h4 class="card-title">Request</h4></li>
+                    </uL>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-6 col-sm-6">
+            <div class="card">
+                <div class="row">
+                    {% for farm in available_farms %}
+                        <ol>
+                            <li>Seller Name: {{ farm.seller_name }}</li>
+                            <li>State: {{ farm.state }}</li>
+                            <li>Total Farms: {{ farm.total_farms }}</li>
+                            <li>Total Price: {{ farm.total_price }}</li>
+                            <li>Base Level: {{ farm.base_level }}</li>
+                            <li>In Escrow: {{ farm.in_escrow }} </li>
+                            <li>Recommendation: {{ seller.recommendation_score }} </li>
+                            <li><button class="btn btn-sm btn-success"> Buy </button> </li>
+                        </ol>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
-
 </section>
-
 {% endblock %}

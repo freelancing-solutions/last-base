@@ -29,7 +29,6 @@ class ProfileUpdate(BaseModel):
     game_id: str
     alliancename: str | None
     allianceabr: str | None
-    currency: str = Field(default="R")
 
     class Config:
         extra = Extra.ignore

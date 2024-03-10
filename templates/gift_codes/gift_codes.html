@@ -19,35 +19,53 @@
             </div>
         </div>
         <div class="card-body">
+        <div class="row d-flex">
+        <div class="col-lg-9 col-md-6 col-sm-6">
             <table class="table table-responsive table-striped">
                 <thead>
                     <tr class="font-weight-bold text-info">
-                        <td><strong>Game ID</strong></td>
+{#                        <td><strong>Game ID</strong></td>#}
                         <td><strong>Base Name</strong></td>
                         <td class="font-italic text-danger"><strong>Base Level</strong></td>
                         <td ><strong>Power</strong></td>
-
                         <td class="font-italic text-danger"><strong>State</strong></td>
-                        <td><strong>Last Login</strong></td>
+{#                        <td><strong>Last Login</strong></td>#}
                     </tr>
                 </thead>
                 <tbody>
                 {% for game_data in game_data_list %}
                     <tr>
-                        <td>{{ game_data.game_id }}</td>
+{#                        <td>{{ game_data.game_id }}</td>#}
                         <td class="font-weight-bold">{{ game_data.base_name }}</td>
                         <td class="font-weight-bold font-italic text-danger">{{ game_data.base_level }}</td>
                         <td class="font-weight-bold text-info">{{ game_data.power| number }}</td>
                         <td class="font-weight-bold font-italic text-danger">{{ game_data.state }}</td>
-                        <td>{{ game_data.last_login_time }}</td>
+{#                        <td>{{ game_data.last_login_time }}</td>#}
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="labels labels-info">Activate Automatic Gift Code Redemption</label>
+                        <a href="#" class="btn btn-success" data-toggle="modal" data-target="#showSubscribe">
+                            <i class="ti ti-shopping-cart"></i>
+                            Subscribe
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+
         </div>
     </div>
 </section>
 
     {% include "gift_codes/modals/add_game_ids.html" %}
     {% include "gift_codes/modals/gift_code_list.html" %}
+    {% include "gift_codes/modals/subscribe.html" %}
 {% endblock %}

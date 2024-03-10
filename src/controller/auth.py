@@ -26,17 +26,7 @@ class UserController(Controllers):
         self._game_data_url: str = 'https://gslls.im30app.com/gameservice/web_getserverbyname.php'
 
     def init_app(self, app: Flask):
-        self._load_users()
-
-    def _load_users(self):
-        with self.get_session() as session:
-            # Use session.query().options(lazyload) to fetch only the required columns
-            users_orm_list: list[UserORM] = session.query(UserORM).all()
-            # Convert the users_orm_list directly into a dictionary
-            self.users = {user.game_id: User(**user.to_dict()) for user in users_orm_list}
-            profile_orm_list: list[ProfileORM] = session.query(ProfileORM).all()
-            self.profiles = {profile_orm.game_id: Profile(**profile_orm.to_dict())
-                             for profile_orm in profile_orm_list}
+        super().init_app(app=app)
 
     async def _get_game_data(self, game_id: str, lang: str = 'en') -> dict[str, str | int]:
         """
@@ -78,6 +68,9 @@ class UserController(Controllers):
             if not profile_orm:
                 game_data = await self._get_game_data(game_id=game_id)
                 profile = Profile(**game_data, game_id=game_id)
+                profile_orm = ProfileORM(**profile.dict())
+                session.add(profile_orm)
+                session.commit()
             else:
                 # Convert ProfileORM to Profile object
                 profile = Profile(**profile_orm.to_dict())
@@ -86,6 +79,23 @@ class UserController(Controllers):
             self.profiles[game_id] = profile
         return profile
 
+    async def update_profile(self, updated_profile: ProfileUpdate) -> Profile | None:
+        """
+
+        :param updated_profile:
+        :return:
+        """
+        with self.get_session() as session:
+            original_profile: ProfileORM = session.query(ProfileORM).filter(ProfileORM.game_id == updated_profile.game_id).first()
+            print(original_profile.to_dict())
+            if isinstance(original_profile, ProfileORM):
+                original_profile.alliancename = updated_profile.alliancename
+                original_profile.allianceabr = updated_profile.allianceabr
+                session.merge(original_profile)
+                profile = Profile(**original_profile.to_dict())
+                session.commit()
+                return profile
+            return {}
 
     async def is_token_valid(self, token: str) -> bool:
         """
