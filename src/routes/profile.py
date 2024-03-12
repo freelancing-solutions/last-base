@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from src.authentication import login_required
 from src.database.models.game import GameAuth, GameIDS
 from src.database.models.profile import ProfileUpdate, Profile
-from src.database.models.users import User
+from src.database.models.users import User, PayPal
 
 from src.main import user_controller, game_controller
 
@@ -14,8 +14,10 @@ profile_route = Blueprint('profile', __name__)
 @profile_route.get('/dashboard/profile')
 @login_required
 async def get_profile(user: User):
-    data = await user_controller.get_profile_by_game_id(game_id=user.game_id)
-    context = dict(profile=data, user=user)
+    profile: Profile = await user_controller.get_profile_by_game_id(game_id=user.game_id)
+    paypal_account: PayPal = await  user_controller.get_paypal_account(game_id=user.game_id)
+    context = dict(profile=profile, paypal_account=paypal_account, user=user)
+
     return render_template('profile/profile.html', **context)
 
 
@@ -35,6 +37,27 @@ async def update_profile(user: User):
     except ValidationError as e:
         flash(message=f"Error: str(e)", category="danger")
 
+    return redirect(location=url_for('profile.get_profile'))
+
+
+@profile_route.post('/dashboard/paypal')
+@login_required
+async def add_paypal(user: User):
+    context = dict(user=user)
+    try:
+        paypal_email: str = request.form.get('paypal_account')
+
+    except ValidationError as e:
+        _message: str = f"Error : str(e)"
+        flash(message=_message, category='danger')
+        return redirect(url_for('profile.get_profile'))
+
+    data: PayPal = await user_controller.add_paypal(user=user, paypal_email=paypal_email)
+    if not isinstance(data, PayPal):
+        _message: str = "Unable to add paypal email to your account"
+        flash(message=_message, category="danger")
+
+    context.update(paypal_email=data.paypal_email)
     return redirect(location=url_for('profile.get_profile'))
 
 
@@ -78,7 +101,8 @@ async def get_gift_codes(user: User):
     active_gift_codes = await game_controller.get_active_gift_codes()
     total_bases: int = len(game_data_list)
 
-    context = dict(user=user, total_bases=total_bases, game_data_list=game_data_list, active_gift_codes=active_gift_codes)
+    context = dict(user=user, total_bases=total_bases, game_data_list=game_data_list,
+                   active_gift_codes=active_gift_codes)
     return render_template('gift_codes/gift_codes.html', **context)
 
 

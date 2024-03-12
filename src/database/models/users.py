@@ -109,3 +109,11 @@ class UserUpdate(BaseModel):
 
     class Config:
         extra = Extra.ignore
+
+
+class PayPal(BaseModel):
+    game_id: str
+    paypal_email: str
+
+    class Config:
+        extra = Extra.ignore

@@ -7,8 +7,8 @@ from sqlalchemy import or_
 
 from src.controller import error_handler, UnauthorizedError, Controllers
 from src.database.models.profile import Profile, ProfileUpdate
-from src.database.models.users import User, CreateUser, UserUpdate
-from src.database.sql.user import UserORM, ProfileORM
+from src.database.models.users import User, CreateUser, UserUpdate, PayPal
+from src.database.sql.user import UserORM, ProfileORM, PayPalORM
 from src.emailer import EmailModel
 from src.main import send_mail
 import requests
@@ -86,7 +86,8 @@ class UserController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            original_profile: ProfileORM = session.query(ProfileORM).filter(ProfileORM.game_id == updated_profile.game_id).first()
+            original_profile: ProfileORM = session.query(ProfileORM).filter(
+                ProfileORM.game_id == updated_profile.game_id).first()
             print(original_profile.to_dict())
             if isinstance(original_profile, ProfileORM):
                 original_profile.alliancename = updated_profile.alliancename
@@ -96,6 +97,34 @@ class UserController(Controllers):
                 session.commit()
                 return profile
             return {}
+
+    async def add_paypal(self, user: User, paypal_email: str) -> PayPal | None:
+        """
+
+        :param user:
+        :param paypal_email:
+        :return:
+        """
+        with self.get_session() as session:
+            paypal_account: PayPalORM = session.query(PayPalORM).filter(PayPalORM.paypal_email == paypal_email).first()
+            if isinstance(paypal_account, PayPalORM):
+                if paypal_account.game_id == user.game_id:
+                    return PayPal(**paypal_account.to_dict())
+                else:
+                    return None
+
+            paypal_orm = PayPalORM(paypal_email=paypal_email, game_id=user.game_id)
+            paypal_account_ = PayPal(**paypal_orm.to_dict())
+            session.add(paypal_orm)
+            session.commit()
+            return paypal_account_
+
+    async def get_paypal_account(self, game_id: str) -> PayPal | None:
+        with self.get_session() as session:
+            paypal_account: PayPalORM = session.query(PayPalORM.game_id == game_id).first()
+            if isinstance(paypal_account, PayPalORM):
+                return PayPal(**paypal_account.to_dict())
+            return None
 
     async def is_token_valid(self, token: str) -> bool:
         """
@@ -190,7 +219,6 @@ class UserController(Controllers):
         password_reset_link = f"https://rental-manager.site/admin/reset-password?token={token}&email={email}"
 
         return password_reset_link
-
 
     async def post(self, user: CreateUser) -> User | None:
         """

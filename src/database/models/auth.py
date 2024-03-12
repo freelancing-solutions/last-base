@@ -15,3 +15,5 @@ class RegisterUser(BaseModel):
     email: str
     password: str
     terms: str
+
+

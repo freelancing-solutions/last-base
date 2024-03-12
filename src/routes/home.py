@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, send_from_directory
+from flask import Blueprint, render_template
 
 from src.authentication import user_details
 from src.database.models.users import User
-from src.utils import static_folder
 
 home_route = Blueprint('home', __name__)
 

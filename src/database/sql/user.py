@@ -18,6 +18,7 @@ class UserORM(Base):
     account_verified: bool = Column(Boolean, default=False)
     is_system_admin: bool = Column(Boolean, default=False)
 
+
     @classmethod
     def create_if_not_table(cls):
         if not inspect(engine).has_table(cls.__tablename__):
@@ -95,3 +96,21 @@ class ProfileORM(Base):
         if not isinstance(other, ProfileORM):
             return False
         return self.game_id == other.game_id
+
+
+class PayPalORM(Base):
+    __tablename__ = 'paypal_account'
+    game_id = Column(String(NAME_LEN), primary_key=True)
+    paypal_email: str = Column(String(NAME_LEN))
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            'game_id': self.game_id,
+            'paypal_email': self.paypal_email
+        }
+
