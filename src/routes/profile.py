@@ -152,7 +152,7 @@ async def get_market_listing(user: User):
     return render_template('market_listing.html', **context)
 
 
-@profile_route.post('/dashboard/gift-codes/subscribe')
+@profile_route.post('/dashboard/gift-codes-subscribe')
 @login_required
 async def gift_codes_subscribe(user: User):
     """
@@ -160,5 +160,7 @@ async def gift_codes_subscribe(user: User):
     :param user:
     :return:
     """
+    _message = "Successfully Subscribed the Game ID's below to be automatically redeemed"
 
+    flash(message=_message, category="danger")
     return redirect(url_for('profile.get_gift_codes'))
