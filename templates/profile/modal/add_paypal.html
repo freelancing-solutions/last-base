@@ -10,14 +10,31 @@
             <div class="modal-body">
                 <h6>To Enable Buying and Selling you need to attach your PayPal Account into your Profile</h6>
                 <h5 class="font-italic text-danger">Note: a service charge of <span class="text-info">5 USD</span> will be charged in order to approve the account for buying and selling in our market place</h5>
-                <form class="form-horizontal" action="{{  }}" method="POST">
+                <form class="form-horizontal" action="{{ url_for('profile.add_paypal') }}" method="POST">
                     <div class="form-group">
                         <label for="paypal_account" class="label font-weight-bold text-black-50">PayPal Account</label>
-                        <input type="email" id="paypal_account" name="paypal_account" class="form-control">
+                        {% if paypal_account %}
+                            <input type="email" id="paypal_account" name="paypal_account" value="{{ paypal_account.paypal_email }}" class="form-control">
+                        {% else %}
+                            <input type="email" id="paypal_account" name="paypal_account"  class="form-control">
+                        {% endif %}
                     </div>
+                    {% if paypal_account %}
+                        <div class="form-group" style="display: flex; justify-content: space-between;">
+                            <button class="btn btn-warning btn-sm">
+                                <i class="ti ti-server"></i> Update Account
+                            </button>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="ti ti-credit-card"></i> Attach Account (5 USD)
+                            </button>
+                        </div>
+
+                    {% else %}
                     <div class="form-group">
                         <button class="btn btn-primary btn-sm">Add Account</button>
                     </div>
+                    {% endif %}
+
                 </form>
             </div>
 

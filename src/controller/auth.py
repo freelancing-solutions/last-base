@@ -121,7 +121,9 @@ class UserController(Controllers):
 
     async def get_paypal_account(self, game_id: str) -> PayPal | None:
         with self.get_session() as session:
-            paypal_account: PayPalORM = session.query(PayPalORM.game_id == game_id).first()
+            paypal_account: PayPalORM = session.query(PayPalORM).filter(PayPalORM.game_id == game_id).first()
+            print("PAYPAL ACCOUNT")
+            print(paypal_account)
             if isinstance(paypal_account, PayPalORM):
                 return PayPal(**paypal_account.to_dict())
             return None

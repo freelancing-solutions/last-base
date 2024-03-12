@@ -15,7 +15,8 @@ profile_route = Blueprint('profile', __name__)
 @login_required
 async def get_profile(user: User):
     profile: Profile = await user_controller.get_profile_by_game_id(game_id=user.game_id)
-    paypal_account: PayPal = await  user_controller.get_paypal_account(game_id=user.game_id)
+    paypal_account: PayPal = await user_controller.get_paypal_account(game_id=user.game_id)
+
     context = dict(profile=profile, paypal_account=paypal_account, user=user)
 
     return render_template('profile/profile.html', **context)
