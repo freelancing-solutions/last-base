@@ -97,7 +97,7 @@ async def do_verification(user: User):
 @profile_route.get('/dashboard/gift-codes')
 @login_required
 async def get_gift_codes(user: User):
-    context = dict(user=user)
+
     game_data_list = await game_controller.get_users_game_ids(owner_game_id=user.game_id)
     active_gift_codes = await game_controller.get_active_gift_codes()
     total_bases: int = len(game_data_list)
@@ -127,7 +127,7 @@ async def add_game_ids(user: User):
         for game_id in game_ids_list:
             if len(game_id) != 8:
                 flash("Please provide valid 8-character Game IDs.", "danger")
-                return render_template('gift_codes/gift_codes.html', **context)
+                return redirect(url_for('profile.get_gift_codes'))
 
         game_ids = GameIDS(game_id_list=game_ids_list)
         completed = await game_controller.add_game_ids(owner_game_id=user.game_id, game_ids=game_ids)
@@ -142,7 +142,7 @@ async def add_game_ids(user: User):
     except ValidationError as e:
         flash(f"Error: {str(e)}", "danger")
 
-    return render_template('gift_codes/gift_codes.html', **context)
+    return redirect(url_for('profile.get_gift_codes'))
 
 
 @profile_route.get('/dashboard/market-listing')
@@ -150,3 +150,15 @@ async def add_game_ids(user: User):
 async def get_market_listing(user: User):
     context = dict(user=user)
     return render_template('market_listing.html', **context)
+
+
+@profile_route.post('/dashboard/gift-codes/subscribe')
+@login_required
+async def gift_codes_subscribe(user: User):
+    """
+
+    :param user:
+    :return:
+    """
+
+    return redirect(url_for('profile.get_gift_codes'))
