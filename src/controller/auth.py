@@ -72,6 +72,7 @@ class UserController(Controllers):
 
         # Fetch the profile data from the database
         with self.get_session() as session:
+            session.flush()
             profile_orm = session.query(ProfileORM).filter(ProfileORM.uid == uid).first()
             # If the profile_orm is not found, return None
             if not profile_orm:
@@ -109,6 +110,27 @@ class UserController(Controllers):
                 session.commit()
                 return profile
             return {}
+
+    async def delete_profile(self, game_id: str) -> bool:
+        """
+        Delete a profile from the database.
+
+        :param uid: The UID of the profile to be deleted.
+        :return: True if the profile was successfully deleted, False otherwise.
+        """
+        with self.get_session() as session:
+            # Find the profile with the given UID
+            profile_to_delete: ProfileORM = session.query(ProfileORM).filter(
+                ProfileORM.main_game_id == game_id).first()
+
+            if profile_to_delete:
+                # Delete the profile from the session
+                session.delete(profile_to_delete)
+                # Commit the transaction to permanently delete the profile from the database
+                session.commit()
+                return True
+            else:
+                return False
 
     async def create_profile(self, main_game_id: str, uid: str) -> Profile:
         """

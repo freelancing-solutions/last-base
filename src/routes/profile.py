@@ -46,6 +46,27 @@ async def update_profile(user: User):
     return redirect(location=url_for('profile.get_profile'))
 
 
+@profile_route.post('/dashboard/delete-profile')
+@login_required
+async def delete_profile(user: User):
+    context = dict(user=user)
+    try:
+
+        game_id = request.form.get('main_game_id')
+        is_deleted = await user_controller.delete_profile(game_id=game_id)
+        is_deleted_ = await game_controller.delete_game(game_id=game_id)
+        # TODO consider deleting game listings on market
+        if is_deleted and is_deleted_:
+            flash(message="profile deleted", category="success")
+        else:
+            flash(message="cannot delete profile", category="danger")
+
+    except ValidationError as e:
+        flash(message=f"Error: {str(e)}", category="danger")
+
+    return redirect(location=url_for('profile.get_profile'))
+
+
 @profile_route.post('/dashboard/add-profile')
 @login_required
 async def add_game(user: User):

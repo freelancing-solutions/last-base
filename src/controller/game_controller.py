@@ -81,7 +81,6 @@ class GameController(Controllers):
             gift_codes_list = await self.get_all_gift_codes()
             return [gift_code for gift_code in gift_codes_list if gift_code.is_valid]
 
-
     async def get_all_gift_codes(self) -> list[GiftCodeOut]:
         """
 
@@ -148,3 +147,20 @@ class GameController(Controllers):
             none_expired_codes = [gift_code.code for gift_code in session.query(GiftCodesORM.is_valid == True).all()]
             for code in none_expired_codes:
                 await self.redeem_code_for_all_game_ids(gift_code=code)
+
+
+    async def delete_game(self, game_id: str):
+        with self.get_session() as session:
+            game_to_delete = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
+            if isinstance(game_to_delete, GameIDSORM):
+                session.delete(game_to_delete)
+
+            redeemed_codes_delete = session.query(RedeemCodesORM).filter(RedeemCodesORM.game_id == game_id).all()
+            for redeemed in redeemed_codes_delete:
+                session.delete(redeemed)
+
+            session.commit()
+
+            return True
+
+
