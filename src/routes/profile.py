@@ -47,6 +47,8 @@ async def update_profile(user: User):
 async def add_game(user: User):
     game_id: str = request.form.get('game_id')
     profile = await user_controller.create_profile(main_game_id=game_id, uid=user.uid)
+    game_ids = GameIDS(game_id_list=[profile.main_game_id])
+    game_data = await game_controller.add_game_ids(uid=user.uid, game_ids=game_ids)
     flash(message="game profile created", category='success')
     return redirect(url_for('profile.get_profile'))
 
@@ -67,8 +69,9 @@ async def add_paypal(user: User):
     if not isinstance(data, PayPal):
         _message: str = "Unable to add paypal email to your account"
         flash(message=_message, category="danger")
+        return redirect(location=url_for('profile.get_profile'))
 
-    context.update(paypal_email=data.paypal_email)
+    context.update(paypal_account=data.paypal_email)
     return redirect(location=url_for('profile.get_profile'))
 
 

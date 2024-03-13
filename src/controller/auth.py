@@ -125,7 +125,7 @@ class UserController(Controllers):
                 profile_: dict[str, str] = await self._get_game_data(game_id=main_game_id)
                 print(profile_)
 
-                profile = Profile(uid=uid, main_game_id=main_game_id)
+                profile = Profile(uid=uid, main_game_id=main_game_id, game_name=profile_.get('name'))
                 profile_orm = ProfileORM(**profile.dict())
 
                 session.add(profile_orm)
