@@ -141,13 +141,29 @@ class UserController(Controllers):
         :param paypal_email:
         :return:
         """
+        if not paypal_email.strip():
+            return None
+
+        paypal_email = paypal_email.strip().lower()
+
         with self.get_session() as session:
-            paypal_account: PayPalORM = session.query(PayPalORM).filter(PayPalORM.paypal_email == paypal_email).first()
+            paypal_account = session.query(PayPalORM).filter(PayPalORM.paypal_email == paypal_email).first()
             if isinstance(paypal_account, PayPalORM):
                 if paypal_account.uid == user.uid:
-                    return PayPal(**paypal_account.to_dict())
+                    paypal_account.paypal_email = paypal_email
+                    paypal_account.uid = user.uid
+                    session.merge()
+                    return paypal_account
                 else:
                     return None
+
+            paypal_account: PayPalORM = session.query(PayPalORM).filter(PayPalORM.uid == user.uid).first()
+            if isinstance(paypal_account, PayPalORM):
+                paypal_account.paypal_email = paypal_email
+                paypal_account_ = PayPal(**paypal_account.to_dict())
+                session.merge()
+
+                return paypal_account_
 
             paypal_orm = PayPalORM(paypal_email=paypal_email, uid=user.uid)
             paypal_account_ = PayPal(**paypal_orm.to_dict())

@@ -15,10 +15,14 @@ profile_route = Blueprint('profile', __name__)
 @login_required
 async def get_profile(user: User):
     # TODO - there can be multiple profiles
+    context = dict(user=user)
     profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
     paypal_account: PayPal = await user_controller.get_paypal_account(uid=user.uid)
+    if paypal_account:
+        context.update(paypal_account=paypal_account)
 
-    context = dict(profile=profile, paypal_account=paypal_account, user=user)
+    if profile:
+        context.update(profile=profile)
 
     return render_template('profile/profile.html', **context)
 
@@ -71,7 +75,7 @@ async def add_paypal(user: User):
         flash(message=_message, category="danger")
         return redirect(location=url_for('profile.get_profile'))
 
-    context.update(paypal_account=data.paypal_email)
+    context.update(paypal_account=paypal_email)
     return redirect(location=url_for('profile.get_profile'))
 
 
