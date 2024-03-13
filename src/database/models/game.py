@@ -16,7 +16,7 @@ class GameIDS(BaseModel):
 
 
 class GameDataInternal(BaseModel):
-    owner_game_id: str
+    uid: str
     game_id: str
     game_uid: str
     base_level: int
@@ -26,9 +26,9 @@ class GameDataInternal(BaseModel):
     last_login_time: datetime
 
     @classmethod
-    def from_json(cls, data, game_id: str, owner_game_id: str):
+    def from_json(cls, data, game_id: str, uid: str):
         return cls(
-            owner_game_id=owner_game_id,
+            uid=uid,
             game_id=game_id,
             game_uid=data.get('gameUid'),
             base_level=int(data.get('level')),

@@ -16,7 +16,7 @@ class User(BaseModel):
     Represents the details of a user.
 
     Attributes:
-    - game_id (str): The ID of the user.
+    - uid (str): The ID of the user.
     - company_id (str): The ID of the company_id associated with the user.
     - is_tenant (bool): Indicates if the user is a tenant.
     - tenant_id (str): The ID of the tenant associated with the user.
@@ -27,7 +27,8 @@ class User(BaseModel):
     - full_name (str): The full name of the user.
     - contact_number (str): The contact number of the user.
     """
-    game_id: str
+    uid: str
+
     username: str
     password_hash: str
     email: str
@@ -40,7 +41,7 @@ class User(BaseModel):
         orm_mode = True
 
     def __bool__(self) -> bool:
-        return bool(self.game_id) and bool(self.username) and bool(self.password_hash)
+        return bool(self.uid) and bool(self.username) and bool(self.password_hash)
 
     def is_login(self, password: str) -> bool:
         """
@@ -52,18 +53,18 @@ class User(BaseModel):
 
     def __eq__(self, other):
         """
-        Compare two User instances based on their game_id only.
+        Compare two User instances based on their uid only.
 
         :param other: The other User instance to compare.
-        :return: True if game_id of both instances is the same, False otherwise.
+        :return: True if uid of both instances is the same, False otherwise.
         """
         if not isinstance(other, User):
             return False
-        return self.game_id == other.game_id
+        return self.uid == other.uid
 
 
 class CreateUser(BaseModel):
-    game_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    uid: str
     username: str
     password: str
     email: str
@@ -83,7 +84,7 @@ class CreateUser(BaseModel):
 
 
 class PasswordResetUser(BaseModel):
-    game_id: str
+    uid: str
     username: str
     password: str
     email: str
@@ -102,7 +103,7 @@ class PasswordResetUser(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    game_id: str
+    uid: str
     username: str
     email: str
     account_verified: bool = Field(default=False)
@@ -112,7 +113,7 @@ class UserUpdate(BaseModel):
 
 
 class PayPal(BaseModel):
-    game_id: str
+    uid: str
     paypal_email: str
 
     class Config:

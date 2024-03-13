@@ -11,35 +11,52 @@
         <div class="card-body">
 
     <form method="POST" class="form-horizontal" action="{{ url_for('profile.update_profile')}}">
-        <input type="hidden" name="game_id"  value="{{ profile.game_id }}" />
-        <ul class="list-group font-weight-bold">
-            <li class="list-group-item text-dark">Game ID: <span class="font-italic text-danger">{{ profile.game_id }}</span></li>
-            <li class="list-group-item text-info">Game UID: <span class="font-italic text-danger">{{ profile.gameUid }}</span></li>
-            <li class="list-group-item text-dark">Base Level: <span class="font-italic text-danger">{{ profile.level }}</span></li>
-            <li class="list-group-item text-info">State : <span class="font-italic text-danger">{{ profile.sid }}</span></li>
-            <li class="list-group-item text-dark">Game Name : <span class="font-italic text-danger">{{ profile.name }}</span></li>
-            <li class="list-group-item text-info">Base Power : <span class="font-italic text-danger">{{ profile.power }}</span></li>
-            <li class="list-group-item text-dark">Last Login Time : <span class="font-italic text-danger">{{ profile.lastTime }}</span></li>
-            <li class="list-group-item text-info"><label for="alliancename">Alliance Name</label> <input class="form-control" type="text" id="alliancename" name="alliancename" value="{{ profile.alliancename }}"></li>
-            <li class="list-group-item text-dark"><label for="allianceabr">Alliance Abbr</label> <input class="form-control" type="text" id="allianceabr" name="allianceabr" value="{{ profile.allianceabr }}"></li>
-        </ul>
+        <input type="hidden" name="uid"  value="{{ user.uid }}" />
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">
-                <i class="ti ti-server"> </i>
-                Update Gamer Profile
-            </button>
-            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addPayPalAccount">
-                <i class="ti ti-shopping-cart" > </i>
-                Add PayPal Account
-            </a>
-        </div>
+            <div class="form-group">
+                <label>Main Game</label>
+                <input class="form-control" type="text" value="{{ profile.main_game_id }}" name="main_game_id" readonly/>
+            </div>
+            <div class="form-group">
+                <label>Display Name / Game Name</label>
+                <input class="form-control" type="text" value="{{ profile.profile_name }}" name="profile_name" />
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <input class="form-control" type="text" value="{{ profile.notes }}" name="notes" />
+            </div>
+            <div class="form-group">
+                <label>Preferred Currency</label>
+                <input class="form-control" type="text" value="{{ profile.currency }}" name="currency" />
+            </div>
+            <div class="form-group">
+                {% if profile and profile.main_game_id %}
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-server"> </i>
+                    Update Gamer Profile
+                </button>
+                {% else %}
+                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addGameAccount">
+                    <i class="ti ti-shopping-cart" > </i>
+                    Add Game Account
+                </a>
+
+                {% endif %}
+                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addPayPalAccount">
+                    <i class="ti ti-shopping-cart" > </i>
+                    Add PayPal Account
+                </a>
+            </div>
     </form>
 
-        </div>
+
+
+
+    </div>
     </div>
 
 
 </section>
 {% include "profile/modal/add_paypal.html" %}
+{% include "profile/modal/add_game_account.html" %}
 {% endblock %}

@@ -33,7 +33,7 @@ class GameController(Controllers):
             session.commit()
             return game_data
 
-    async def _get_game_data(self, owner_game_id: str, game_id: str, lang: str = 'en') -> GameDataInternal:
+    async def _get_game_data(self, uid: str, game_id: str, lang: str = 'en') -> GameDataInternal:
         """
 
         :param game_id:
@@ -43,27 +43,27 @@ class GameController(Controllers):
         _params = {'name': game_id, 'lang': lang}
         response = requests.get(url=self._game_data_url, params=_params)
         game_data = response.json()
-        return GameDataInternal.from_json(data=game_data, game_id=game_id, owner_game_id=owner_game_id)
+        return GameDataInternal.from_json(data=game_data, game_id=game_id, uid=uid)
 
-    async def get_users_game_ids(self, owner_game_id: str) -> list[GameDataInternal]:
+    async def get_users_game_ids(self, uid: str) -> list[GameDataInternal]:
         """
 
-        :param owner_game_id:
+        :param uid:
         :return:
         """
         with self.get_session() as session:
             return [GameDataInternal(**game_data.to_dict()) for game_data in
-                    session.query(GameIDSORM).filter(GameIDSORM.owner_game_id == owner_game_id).all()]
+                    session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()]
 
-    async def add_game_ids(self, owner_game_id: str, game_ids: GameIDS):
+    async def add_game_ids(self, uid: str, game_ids: GameIDS):
         with self.get_session() as session:
             for game_id in game_ids.game_id_list:
-                # Check if the game_id already exists in the database
+                # Check if the uid already exists in the database
                 existing_game_id = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
 
                 if not isinstance(existing_game_id, GameIDSORM):
-                    # If the game_id doesn't exist, create a new entry
-                    game_data: GameDataInternal = await self._get_game_data(owner_game_id=owner_game_id,
+                    # If the uid doesn't exist, create a new entry
+                    game_data: GameDataInternal = await self._get_game_data(uid=uid,
                                                                             game_id=game_id)
                     new_game_data = GameIDSORM(**game_data.dict())
                     session.add(new_game_data)
@@ -123,8 +123,8 @@ class GameController(Controllers):
         :return: True if redemption is successful, False otherwise
         """
         with self.get_session() as session:
-            game_ids = {game.game_id for game in session.query(GameIDSORM).all()}
-            redeemed_game_ids = {redeemed.game_id for redeemed in
+            game_ids = {game.uid for game in session.query(GameIDSORM).all()}
+            redeemed_game_ids = {redeemed.uid for redeemed in
                                  session.query(RedeemCodesORM).filter(RedeemCodesORM.code == gift_code.code)}
 
             unredeemed_game_ids = game_ids - redeemed_game_ids

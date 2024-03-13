@@ -14,8 +14,9 @@ profile_route = Blueprint('profile', __name__)
 @profile_route.get('/dashboard/profile')
 @login_required
 async def get_profile(user: User):
-    profile: Profile = await user_controller.get_profile_by_game_id(game_id=user.game_id)
-    paypal_account: PayPal = await user_controller.get_paypal_account(game_id=user.game_id)
+    # TODO - there can be multiple profiles
+    profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
+    paypal_account: PayPal = await user_controller.get_paypal_account(uid=user.uid)
 
     context = dict(profile=profile, paypal_account=paypal_account, user=user)
 
@@ -39,6 +40,15 @@ async def update_profile(user: User):
         flash(message=f"Error: str(e)", category="danger")
 
     return redirect(location=url_for('profile.get_profile'))
+
+
+@profile_route.post('/dashboard/add-profile')
+@login_required
+async def add_game(user: User):
+    game_id: str = request.form.get('game_id')
+    profile = await user_controller.create_profile(main_game_id=game_id, uid=user.uid)
+    flash(message="game profile created", category='success')
+    return redirect(url_for('profile.get_profile'))
 
 
 @profile_route.post('/dashboard/paypal')
@@ -67,7 +77,7 @@ async def add_paypal(user: User):
 async def get_settings(user: User):
     context = dict(user=user)
 
-    data = await user_controller.get_profile_by_game_id(game_id=user.game_id)
+    data = await user_controller.get_profile_by_uid(game_id=user.uid)
     context.update(profile=data)
     return render_template('config.html', **context)
 
@@ -97,8 +107,7 @@ async def do_verification(user: User):
 @profile_route.get('/dashboard/gift-codes')
 @login_required
 async def get_gift_codes(user: User):
-
-    game_data_list = await game_controller.get_users_game_ids(owner_game_id=user.game_id)
+    game_data_list = await game_controller.get_users_game_ids(uid=user.uid)
     active_gift_codes = await game_controller.get_active_gift_codes()
     total_bases: int = len(game_data_list)
 
@@ -130,7 +139,7 @@ async def add_game_ids(user: User):
                 return redirect(url_for('profile.get_gift_codes'))
 
         game_ids = GameIDS(game_id_list=game_ids_list)
-        completed = await game_controller.add_game_ids(owner_game_id=user.game_id, game_ids=game_ids)
+        completed = await game_controller.add_game_ids(uid=user.uid, game_ids=game_ids)
 
         if completed:
             flash("Successfully added game IDs. New codes will be automatically redeemed as they become available.",

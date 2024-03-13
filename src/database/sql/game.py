@@ -19,6 +19,11 @@ class GameAuthORM(Base):
         if not inspect(engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=engine)
 
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
     def to_dict(self):
         return {
             'game_id': self.game_id,
@@ -30,7 +35,7 @@ class GameAuthORM(Base):
 
 class GameIDSORM(Base):
     __tablename__ = "game_accounts"
-    owner_game_id: str = Column(String(ID_LEN))
+    uid: str = Column(String(ID_LEN))
     game_id: str = Column(String(ID_LEN), primary_key=True)
     game_uid: str = Column(String(ID_LEN))
     base_level: int = Column(Integer)
@@ -44,9 +49,14 @@ class GameIDSORM(Base):
         if not inspect(engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=engine)
 
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
     def to_dict(self):
         return {
-            'owner_game_id': self.owner_game_id,
+            'uid': self.uid,
             'game_id': self.game_id,
             'game_uid': self.game_uid,
             'base_level': self.base_level,
@@ -76,6 +86,11 @@ class GiftCodesORM(Base):
         if not inspect(engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=engine)
 
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
     def to_dict(self):
         return {
             'code': self.code,
@@ -90,13 +105,18 @@ class RedeemCodesORM(Base):
     __tablename__ = "redeem_codes"
 
     id = Column(String(ID_LEN), primary_key=True, default=str(uuid.uuid4()))
-    game_id = Column(String(ID_LEN), ForeignKey('game_accounts.game_id'))
-    code = Column(String(NAME_LEN), ForeignKey('gift_codes.code'))
+    game_id = Column(String(ID_LEN))
+    code = Column(String(NAME_LEN))
 
     @classmethod
     def create_if_not_table(cls):
         if not inspect(engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
 
     def to_dict(self):
         return {

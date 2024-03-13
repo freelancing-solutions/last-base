@@ -8,27 +8,27 @@ class Profile(BaseModel):
             such us - deposit multiplier
 
     """
-    game_id: str
-    gameUid: str
-    alliancename: str | None
-    allianceabr: str | None
-    level: int = Field(default=3)
-    sid: int = Field(default=1)
-    name: str
-    power: int = Field(default=1024)
-    lastTime: str
+    uid: str
+    main_game_id: str | None
+    profile_name: str | None
+    notes: str | None
     currency: str = Field(default="$")
+
+    class Config:
+        extra = Extra.ignore
 
     def __eq__(self, other):
         if not isinstance(other, Profile):
             return False
-        return self.game_id == other.game_id
+        return self.main_game_id == other.main_game_id
 
 
 class ProfileUpdate(BaseModel):
-    game_id: str
-    alliancename: str | None
-    allianceabr: str | None
+    uid: str
+    main_game_id: str | None
+    profile_name: str | None
+    notes: str | None
+    currency: str | None
 
     class Config:
         extra = Extra.ignore

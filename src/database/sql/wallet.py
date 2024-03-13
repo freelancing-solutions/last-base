@@ -9,7 +9,7 @@ from src.database.sql import engine, Base
 class WalletTransactionORM(Base):
     __tablename__ = 'wallet_transactions'
     transaction_id: str = Column(String(ID_LEN), primary_key=True)
-    user_id: str = Column(String(ID_LEN), nullable=False)
+    uid: str = Column(String(ID_LEN), nullable=False)
     date: datetime = Column(DateTime)
     transaction_type: str = Column(String(16), nullable=False)
     pay_to_wallet: str = Column(String(ID_LEN), nullable=False)
@@ -30,7 +30,7 @@ class WalletTransactionORM(Base):
         """
         return {
             "transaction_id": self.transaction_id,
-            "game_id": self.user_id,
+            "uid": self.uid,
             "date": self.date,
             "transaction_type": self.transaction_type,
             "pay_to_wallet": self.pay_to_wallet,
@@ -40,14 +40,14 @@ class WalletTransactionORM(Base):
 
     def __eq__(self, other):
         """
-        Override the equality dunder method to compare WalletTransaction instances based on transaction_id and game_id.
+        Override the equality dunder method to compare WalletTransaction instances based on transaction_id and uid.
 
         Args:
             other (WalletTransaction): The other instance to compare with.
 
         Returns:
-            bool: True if the two instances have the same transaction_id and game_id, False otherwise.
+            bool: True if the two instances have the same transaction_id and uid, False otherwise.
         """
         if not isinstance(other, WalletTransactionORM):
             return False
-        return (self.transaction_id == other.transaction_id) and (self.user_id == other.user_id)
+        return (self.transaction_id == other.transaction_id) and (self.uid == other.uid)

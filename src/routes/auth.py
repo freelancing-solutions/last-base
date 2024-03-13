@@ -1,12 +1,11 @@
 from datetime import timedelta, datetime
 
-from flask import Blueprint, render_template, send_from_directory, flash, request, make_response, redirect, Response, \
+from flask import Blueprint, render_template, flash, request, make_response, redirect, Response, \
     url_for
 from pydantic import ValidationError
 
 from src.database.models.auth import Auth, RegisterUser
 from src.database.models.users import User, CreateUser
-
 from src.logger import init_logger
 from src.main import user_controller
 
@@ -44,7 +43,7 @@ async def do_login():
         # Setting Loging Cookie
         delay = REMEMBER_ME_DELAY if auth_user.remember == "on" else 30
         expiration = datetime.utcnow() + timedelta(minutes=delay)
-        response.set_cookie('auth', value=login_user.game_id, expires=expiration, httponly=True)
+        response.set_cookie('auth', value=login_user.uid, expires=expiration, httponly=True)
 
         if not login_user.account_verified:
             _ = await user_controller.send_verification_email(user=login_user)
@@ -117,7 +116,7 @@ async def do_register():
         flash(message='Account Successfully created please login', category='success')
         response: Response = await create_response(url_for('auth.get_auth'))
         expiration = datetime.utcnow() + timedelta(minutes=30)
-        response.set_cookie('auth', value=user_data.game_id, expires=expiration, httponly=True)
+        response.set_cookie('auth', value=user_data.uid, expires=expiration, httponly=True)
         return response
 
     flash(message='failed to create new user try again later', category='danger')

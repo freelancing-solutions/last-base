@@ -6,7 +6,7 @@ from src.database.sql import Base, engine
 
 class NotificationORM(Base):
     __tablename__ = 'notifications'
-    id = Column(String(ID_LEN), primary_key=True)
+    uid = Column(String(ID_LEN), primary_key=True)
     game_id = Column(String(ID_LEN))
     title = Column(String(ID_LEN))
     message = Column(String(ID_LEN))
@@ -20,3 +20,7 @@ class NotificationORM(Base):
         if not inspect(engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=engine)
 
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)

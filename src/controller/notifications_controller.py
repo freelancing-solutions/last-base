@@ -14,7 +14,7 @@ class NotificationsController(Controllers):
         super().init_app(app=app)
 
     @error_handler
-    async def get_user_notifications(self, user_id: str) -> NotificationsModel | None:
+    async def get_user_notifications(self, uid: str) -> NotificationsModel | None:
         """
 
         :param user_id:
@@ -22,7 +22,7 @@ class NotificationsController(Controllers):
         """
         with self.get_session() as session:
             notifications: list[NotificationORM] = session.query(NotificationORM).filter(
-                NotificationORM.user_id == user_id).all()
+                NotificationORM.uid == uid).all()
             notifications_ = [Notification(**notification.dict()) for notification in notifications]
             if notifications_:
                 notifications_list: NotificationsModel = NotificationsModel(**dict(notifications=notifications_))

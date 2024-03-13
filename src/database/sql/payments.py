@@ -26,6 +26,11 @@ class PaymentORM(Base):
         if not inspect(engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=engine)
 
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
     def to_dict(self):
         return {
             'transaction_id': self.transaction_id,
