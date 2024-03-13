@@ -90,7 +90,7 @@ class RedeemCodesORM(Base):
     __tablename__ = "redeem_codes"
 
     id = Column(String(ID_LEN), primary_key=True, default=str(uuid.uuid4()))
-    game_id = Column(String(ID_LEN), ForeignKey('gameids.game_id'))
+    game_id = Column(String(ID_LEN), ForeignKey('game_accounts.game_id'))
     code = Column(String(NAME_LEN), ForeignKey('gift_codes.code'))
 
     @classmethod
