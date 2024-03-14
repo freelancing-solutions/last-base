@@ -41,7 +41,7 @@ async def update_profile(user: User):
         else:
             flash(message="Unable to Update Profile", category="danger")
     except ValidationError as e:
-        flash(message=f"Error: str(e)", category="danger")
+        flash(message=f"Error: {str(e)}", category="danger")
 
     return redirect(location=url_for('profile.get_profile'))
 
@@ -105,8 +105,9 @@ async def add_paypal(user: User):
 async def get_settings(user: User):
     context = dict(user=user)
 
-    data = await user_controller.get_profile_by_uid(game_id=user.uid)
-    context.update(profile=data)
+    profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
+    if profile:
+        context.update(profile=profile)
     return render_template('config.html', **context)
 
 

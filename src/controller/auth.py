@@ -31,7 +31,7 @@ class UserController(Controllers):
     async def _get_game_data(self, game_id: str, lang: str = 'en') -> dict[str, str | int]:
         """
 
-        :param uid:
+        :param game_id:
         :param lang:
         :return:
         """
@@ -109,21 +109,21 @@ class UserController(Controllers):
                 profile = Profile(**original_profile.to_dict())
                 session.commit()
                 return profile
-            return {}
+            return None
 
     async def delete_profile(self, game_id: str) -> bool:
         """
         Delete a profile from the database.
 
-        :param uid: The UID of the profile to be deleted.
+        :param game_id:
+
         :return: True if the profile was successfully deleted, False otherwise.
         """
         with self.get_session() as session:
             # Find the profile with the given UID
-            profile_to_delete: ProfileORM = session.query(ProfileORM).filter(
-                ProfileORM.main_game_id == game_id).first()
+            profile_to_delete: ProfileORM = session.query(ProfileORM).filter(ProfileORM.main_game_id == game_id).first()
 
-            if profile_to_delete:
+            if isinstance(profile_to_delete, ProfileORM):
                 # Delete the profile from the session
                 session.delete(profile_to_delete)
                 # Commit the transaction to permanently delete the profile from the database
@@ -147,8 +147,8 @@ class UserController(Controllers):
                 profile_: dict[str, str] = await self._get_game_data(game_id=main_game_id)
                 print(profile_)
 
-                profile = Profile(uid=uid, main_game_id=main_game_id, game_name=profile_.get('name'))
-                profile_orm = ProfileORM(**profile.dict())
+                profile: Profile = Profile(uid=uid, main_game_id=main_game_id, game_name=profile_.get('name'))
+                profile_orm: ProfileORM = ProfileORM(**profile.dict())
 
                 session.add(profile_orm)
                 session.commit()
@@ -163,10 +163,9 @@ class UserController(Controllers):
         :param paypal_email:
         :return:
         """
-        if not paypal_email.strip():
-            return None
-
         paypal_email = paypal_email.strip().lower()
+        if not paypal_email:
+            return None
 
         with self.get_session() as session:
             paypal_account = session.query(PayPalORM).filter(PayPalORM.paypal_email == paypal_email).first()
