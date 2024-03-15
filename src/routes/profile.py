@@ -35,7 +35,8 @@ async def get_accounts(user: User):
 
     game_accounts: list[GameDataInternal] = await game_controller.get_game_accounts(uid=user.uid)
     print(game_accounts)
-    context.update(game_accounts=game_accounts, GameAccountTypes=GameAccountTypes)
+    total_accounts: int = len(game_accounts)
+    context.update(game_accounts=game_accounts, GameAccountTypes=GameAccountTypes, total_accounts=total_accounts)
     return render_template('profile/game_accounts.html', **context)
 
 

@@ -6,16 +6,15 @@
 <section id="main-content">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class=""> Auto Gift Codes - Redemption</h2>
+            <h2 class="title d-none d-sm-block">Auto Gift Codes - Redemption</h2>
+            <h2 class="title d-block d-sm-none">Gift Codes</h2>
+
             <div>
-                <a href="#" class="btn btn-sm btn-primary mr-2 mr-md-12 mb-2 mb-md-0" data-toggle="modal" data-target="#showAddGameID">
-                    <i class="ti ti-game"> </i>
-                    Add Game ID
-                </a>
-                <a href="#" class="btn btn-sm btn-primary mr-2 mr-md-12 mb-2 mb-md-0" data-toggle="modal" data-target="#showGiftCodes">
-                    <i class="ti ti-gift"> </i>
-                    Gift Codes
-                </a>
+                    <a href="#" class="btn btn-sm btn-primary mr-2 mr-md-12 mb-2 mb-md-0" data-toggle="modal" data-target="#showGiftCodes">
+                        <i class="ti ti-gift"> </i>
+                        Gift Codes
+                    </a>
+
             </div>
         </div>
         <div class="card-body">
@@ -26,9 +25,9 @@
                     <thead>
                         <tr class="font-weight-bold text-info">
     {#                        <td><strong>Game ID</strong></td>#}
-                            <td><strong>Base Name</strong></td>
-                            <td class="font-italic text-danger"><strong>Base Level</strong></td>
-                            <td ><strong>Power</strong></td>
+                            <td><strong>Name</strong></td>
+                            <td class="font-italic text-danger d-none d-sm-table-cell d-md-table-cell"><strong>Level</strong></td>
+                            <td class="d-none d-sm-table-cell d-md-table-cell"><strong>Power</strong></td>
                             <td class="font-italic text-danger align-left"><strong>State</strong></td>
     {#                        <td><strong>Last Login</strong></td>#}
                         </tr>
@@ -38,14 +37,21 @@
                         <tr>
     {#                        <td>{{ game_data.uid }}</td>#}
                             <td class="font-weight-bold">{{ game_data.base_name }}</td>
-                            <td class="font-weight-bold font-italic text-danger">{{ game_data.base_level }}</td>
-                            <td class="font-weight-bold text-info">{{ game_data.power| number }}</td>
+                            <td class="font-italic text-danger d-none d-sm-table-cell d-md-table-cell">{{ game_data.base_level }}</td>
+                            <td class="d-none d-sm-table-cell d-md-table-cell">{{ game_data.power| number }}</td>
                             <td class="font-weight-bold font-italic text-danger">{{ game_data.state }}</td>
     {#                        <td>{{ game_data.last_login_time }}</td>#}
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
+
+                <div class="card-footer">
+                    <a href="#" class="btn btn-sm btn-primary mr-2 mr-md-12 mb-2 mb-md-0" data-toggle="modal" data-target="#showAddGameID">
+                        <i class="ti ti-game"> </i>
+                        Add Game ID
+                    </a>
+                </div>
             </div>
             {% if total_bases %}
                 <div class="card-footer">
@@ -59,15 +65,15 @@
             {% endif %}
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card">
-                    <div class="form-group">
+                <h2 class="title ">Subscribe</h2>
+                <div class="form-group">
                         <label class="labels labels-info">Activate Automatic Gift Code Redemption</label>
-                        <a href="#" class="btn btn-success" data-toggle="modal" data-target="#showSubscribe">
+                        <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#showSubscribe">
                             <i class="ti ti-shopping-cart"></i>
                             Subscribe
                         </a>
                     </div>
-                </div>
+
             </div>
         </div>
 

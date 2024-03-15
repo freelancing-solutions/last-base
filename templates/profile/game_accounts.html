@@ -5,7 +5,8 @@
 <section id="main-content">
     <div class="card">
         <div class="card-header">
-            <h2 class=""> Game Accounts</h2>
+            <h2 class="title d-none d-sm-block">Game Accounts</h2>
+            <h2 class="title d-block d-sm-none">Accounts</h2>
         </div>
         <div class="table-responsive-sm table-responsive-md">
         <table class="table table-striped">
@@ -34,6 +35,15 @@
             {% endfor %}
             </tbody>
         </table>
+
+            <span class="font-weight-bold text-darken-4">
+                <span class="text-white btn btn-sm btn-secondary">
+                Total: {{ total_accounts | number}}
+                </span>
+            </span>
+
+            <button class="btn btn-sm btn-primary">Add Account</button>
+
         </div>
     </div>
 </section>
