@@ -1,7 +1,14 @@
 from datetime import date, datetime
-
+from enum import Enum
 
 from pydantic import BaseModel, Field, Extra
+
+
+class GameAccountTypes(Enum):
+    Farm = "Farm"
+    Main = "Main"
+    Flag = "Flag"
+    Alt = "Alt"
 
 
 class GameAuth(BaseModel):
