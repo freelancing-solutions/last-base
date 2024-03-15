@@ -140,7 +140,7 @@ class UserController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            profile_orm: ProfileORM = session.query(ProfileORM).filter(ProfileORM.main_game_id == main_game_id).first()
+            profile_orm: ProfileORM = session.query(ProfileORM).filter(ProfileORM.uid == uid).first()
 
             if not isinstance(profile_orm, ProfileORM):
                 profile_: dict[str, str] = await self._get_game_data(game_id=main_game_id)

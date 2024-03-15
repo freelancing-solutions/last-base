@@ -26,6 +26,7 @@ class GameDataInternal(BaseModel):
     uid: str
     game_id: str
     game_uid: str
+    account_type: str
     base_level: int
     state: int
     base_name: str
@@ -38,6 +39,7 @@ class GameDataInternal(BaseModel):
             uid=uid,
             game_id=game_id,
             game_uid=data.get('gameUid'),
+            account_type='Farm',
             base_level=int(data.get('level')),
             state=data.get('sid'),  # Assuming 'result' corresponds to 'state' in GameDataInternal
             base_name=data.get('name'),

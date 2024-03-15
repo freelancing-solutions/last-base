@@ -15,6 +15,7 @@
                     <td class="font-weight-bold">Level</td>
                     <td class="font-weight-bold">State</td>
                     <td class="font-weight-bold">Power</td>
+                    <td class="font-weight-bold">Account Type</td>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,7 @@
                     <td class="font-weight-bold font-italic text-danger">{{ game_account.base_level }}</td>
                     <td class="font-weight-bold font-italic text-danger">{{ game_account.state }}</td>
                     <td class="font-weight-bold text-info align-left">{{ game_account.power| number }}</td>
+                    <td class="font-weight-bold text-info">{{ game_account.account_type }}</td>
                 </tr>
             {% endfor %}
             </tbody>

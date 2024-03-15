@@ -38,6 +38,7 @@ class GameIDSORM(Base):
     uid: str = Column(String(ID_LEN))
     game_id: str = Column(String(ID_LEN), primary_key=True)
     game_uid: str = Column(String(ID_LEN))
+    account_type: str = Column(String(12))
     base_level: int = Column(Integer)
     state: int = Column(Integer)
     base_name: str = Column(String(NAME_LEN))
@@ -59,6 +60,7 @@ class GameIDSORM(Base):
             'uid': self.uid,
             'game_id': self.game_id,
             'game_uid': self.game_uid,
+            'account_type': self.account_type,
             'base_level': self.base_level,
             'state': self.state,
             'base_name': self.base_name,

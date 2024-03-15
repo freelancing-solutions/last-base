@@ -57,10 +57,9 @@ async def do_update_base(user: User):
     context = dict(user=user)
     game_id = request.form.get('game_id')
     account_type = request.form.get('account_type')
-    print(game_id)
-    print(account_type)
-    game_account: GameDataInternal | dict[str, str] = await game_controller.get_game_by_game_id(uid=user.uid,
-                                                                                                game_id=game_id)
+
+    game_account = await game_controller.update_game_account_type(game_id=game_id, account_type=account_type)
+
     context.update(game_account=game_account, game_account_types=GameAccountTypes)
     return render_template('profile/game_account.html', **context)
 
