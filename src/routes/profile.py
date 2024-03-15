@@ -23,6 +23,7 @@ async def get_profile(user: User):
 
     if profile:
         context.update(profile=profile)
+        print(f"Found Profile : {profile}")
 
     return render_template('profile/profile.html', **context)
 
@@ -53,6 +54,7 @@ async def delete_profile(user: User):
     try:
 
         game_id = request.form.get('main_game_id')
+        print(f"Game ID: {game_id}")
         is_deleted = await user_controller.delete_profile(game_id=game_id)
         is_deleted_ = await game_controller.delete_game(game_id=game_id)
         # TODO consider deleting game listings on market

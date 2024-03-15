@@ -122,8 +122,8 @@ class UserController(Controllers):
         with self.get_session() as session:
             # Find the profile with the given UID
             profile_to_delete: ProfileORM = session.query(ProfileORM).filter(ProfileORM.main_game_id == game_id).first()
-
             if isinstance(profile_to_delete, ProfileORM):
+                print(f"Profile to Delete {profile_to_delete.to_dict()}")
                 # Delete the profile from the session
                 session.delete(profile_to_delete)
                 # Commit the transaction to permanently delete the profile from the database

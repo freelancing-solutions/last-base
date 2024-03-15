@@ -148,7 +148,6 @@ class GameController(Controllers):
             for code in none_expired_codes:
                 await self.redeem_code_for_all_game_ids(gift_code=code)
 
-
     async def delete_game(self, game_id: str):
         with self.get_session() as session:
             game_to_delete = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
@@ -162,5 +161,3 @@ class GameController(Controllers):
             session.commit()
 
             return True
-
-

@@ -11,8 +11,10 @@
         <div class="card-body">
 
         <form method="POST" class="form-horizontal" action="{{ url_for('profile.update_profile')}}" id="profileForm">
-            <input type="hidden" name="uid" value="{{ user.uid }}" />
-
+        {% if profile and profile.main_game_id %}
+                <input type="hidden" name="main_game_id" value="{{ profile.main_game_id }}" />
+        {% endif %}
+                <input type="hidden" name="uid" value="{{ user.uid }}"/>
             <div class="form-group">
                 <label>Main Game</label>
                 <input class="form-control" type="text" value="{{ profile.main_game_id }}" name="main_game_id" readonly/>
@@ -48,8 +50,9 @@
             </div>
         </form>
         {% if profile and profile.main_game_id %}
-            <form class="form-horizontal" METHOD="post" action="{{ url_for('profile.delete_profile') }}">
-
+            <form class="form-horizontal" method="post" action="{{ url_for('profile.delete_profile') }}">
+                <input type="hidden" name="main_game_id" value="{{ profile.main_game_id }}" />
+                <input type="hidden" name="uid" value="{{ user.uid }}"/>
                 <button type="submit" class="btn btn-danger" id="deleteButton">
                     <i class="ti ti-cut"> </i>
                     Delete
