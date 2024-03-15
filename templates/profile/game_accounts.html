@@ -2,50 +2,54 @@
 {% extends "layouts/page.html" %}
 
 {% block content %}
-<section id="main-content">
-    <div class="card">
-        <div class="card-header">
-            <h2 class="title d-none d-sm-block">Game Accounts</h2>
-            <h2 class="title d-block d-sm-none">Accounts</h2>
-        </div>
-        <div class="table-responsive-sm table-responsive-md">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <td class="font-weight-bold">Base Name</td>
-                    <td class="font-weight-bold">Level</td>
-                    <td class="font-weight-bold">State</td>
-                    <td class="font-weight-bold">Power</td>
-                    <td class="font-weight-bold">Account Type</td>
-                </tr>
-            </thead>
-            <tbody>
-            {% for game_account in game_accounts %}
-                <tr>
-                    <td class="font-weight-bold text-info">
-                        <a href="{{ url_for('profile.edit_base', game_id=game_account.game_id) }}" title="Open To Edit Base">
-                            <strong>{{ game_account.base_name }}</strong>
-                        </a>
-                    </td>
-                    <td class="font-weight-bold font-italic text-danger">{{ game_account.base_level }}</td>
-                    <td class="font-weight-bold font-italic text-danger">{{ game_account.state }}</td>
-                    <td class="font-weight-bold text-info align-left">{{ game_account.power| number }}</td>
-                    <td class="font-weight-bold text-info">{{ game_account.account_type }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <section id="main-content">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="title d-none d-sm-block">Game Accounts</h2>
+                <h2 class="title d-block d-sm-none">Accounts</h2>
+            </div>
+            <div class="table-responsive-sm table-responsive-md">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td class="font-weight-bold">Base Name</td>
+                        <td class="font-weight-bold">Level</td>
+                        <td class="font-weight-bold">State</td>
+                        <td class="font-weight-bold">Power</td>
+                        <td class="font-weight-bold">Account Type</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for game_account in game_accounts %}
+                    <tr>
+                        <td class="font-weight-bold text-info">
+                            <a href="{{ url_for('profile.edit_base', game_id=game_account.game_id) }}" title="Open To Edit Base">
+                                <strong>{{ game_account.base_name }}</strong>
+                            </a>
+                        </td>
+                        <td class="font-weight-bold font-italic text-danger">{{ game_account.base_level }}</td>
+                        <td class="font-weight-bold font-italic text-danger">{{ game_account.state }}</td>
+                        <td class="font-weight-bold text-info align-left">{{ game_account.power| number }}</td>
+                        <td class="font-weight-bold text-info">{{ game_account.account_type }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-            <span class="font-weight-bold text-darken-4">
-                <span class="text-white btn btn-sm btn-secondary">
-                Total: {{ total_accounts | number}}
+                <span class="font-weight-bold text-darken-4">
+                    <span class="text-white btn btn-sm btn-secondary">
+                    Total: {{ total_accounts | number}}
+                    </span>
                 </span>
-            </span>
 
-            <button class="btn btn-sm btn-primary">Add Account</button>
+                <button class="btn btn-sm btn-primary">
+                    <i class="ti ti-plus"></i>
+                    Add Account
+                </button>
 
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 {% endblock %}
+

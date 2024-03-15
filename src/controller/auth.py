@@ -96,10 +96,10 @@ class UserController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            original_profile: ProfileORM = session.query(ProfileORM).filter(
-                ProfileORM.uid == updated_profile.uid).first()
-            print(original_profile.to_dict())
+            original_profile: ProfileORM = session.query(ProfileORM).filter(ProfileORM.uid == updated_profile.uid).first()
+
             if isinstance(original_profile, ProfileORM):
+                print(original_profile.to_dict())
                 original_profile.main_game_id = updated_profile.main_game_id
                 original_profile.profile_name = updated_profile.profile_name
                 original_profile.notes = updated_profile.notes
