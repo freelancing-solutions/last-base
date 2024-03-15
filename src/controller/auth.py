@@ -92,7 +92,6 @@ class UserController(Controllers):
 
     async def update_profile(self, updated_profile: ProfileUpdate) -> Profile | None:
         """
-
         :param updated_profile:
         :return:
         """

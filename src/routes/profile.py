@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, send_from_directory, request, redi
 from pydantic import ValidationError
 
 from src.authentication import login_required
-from src.database.models.game import GameAuth, GameIDS
+from src.database.models.game import GameAuth, GameIDS, GameDataInternal
 from src.database.models.profile import ProfileUpdate, Profile
 from src.database.models.users import User, PayPal
 
@@ -26,6 +26,19 @@ async def get_profile(user: User):
         print(f"Found Profile : {profile}")
 
     return render_template('profile/profile.html', **context)
+
+
+@profile_route.get('/dashboard/profile/game-accounts')
+@login_required
+async def get_accounts(user: User):
+    context = dict(user=user)
+
+    game_accounts: list[GameDataInternal] = await game_controller.get_game_accounts(uid=user.uid)
+    print(game_accounts)
+    context.update(game_accounts=game_accounts)
+    return render_template('profile/game_accounts.html', **context)
+
+
 
 
 @profile_route.post('/dashboard/profile')

@@ -1,0 +1,36 @@
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+<section id="main-content">
+    <div class="card">
+        <div class="card-header">
+            <h2 class=""> Game Accounts</h2>
+        </div>
+        <div class="table-responsive-sm table-responsive-md">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Base Name</td>
+                    <td>Level</td>
+                    <td>State</td>
+                    <td>Power</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for game_account in game_accounts %}
+                <tr>
+                    <td class="font-weight-bold">{{ game_account.base_name }}</td>
+                    <td class="font-weight-bold font-italic text-danger">{{ game_account.base_level }}</td>
+                    <td class="font-weight-bold font-italic text-danger">{{ game_account.state }}</td>
+                    <td class="font-weight-bold text-info align-left">{{ game_account.power| number }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

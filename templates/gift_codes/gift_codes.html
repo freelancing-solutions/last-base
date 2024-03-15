@@ -21,14 +21,15 @@
         <div class="card-body">
         <div class="row d-flex">
             <div class="col-lg-9 col-md-6 col-sm-6">
-                <table class="table table-responsive table-striped">
+            <div class="table-responsive-md table-responsive-sm">
+                <table class="table table-striped">
                     <thead>
                         <tr class="font-weight-bold text-info">
     {#                        <td><strong>Game ID</strong></td>#}
                             <td><strong>Base Name</strong></td>
                             <td class="font-italic text-danger"><strong>Base Level</strong></td>
                             <td ><strong>Power</strong></td>
-                            <td class="font-italic text-danger"><strong>State</strong></td>
+                            <td class="font-italic text-danger align-left"><strong>State</strong></td>
     {#                        <td><strong>Last Login</strong></td>#}
                         </tr>
                     </thead>
@@ -45,6 +46,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
+            </div>
             {% if total_bases %}
                 <div class="card-footer">
                     <ol>

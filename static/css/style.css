@@ -4518,3 +4518,10 @@ h6.h1 {
   max-height: 400px;
   overflow-y: scroll;
 }
+
+
+@media (min-width: 992px) {
+    .align-left {
+        text-align: left;
+    }
+}

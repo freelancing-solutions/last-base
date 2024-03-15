@@ -161,3 +161,8 @@ class GameController(Controllers):
             session.commit()
 
             return True
+
+    async def get_game_accounts(self, uid: str) -> list[GameDataInternal]:
+        with self.get_session() as session:
+            game_accounts = session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()
+            return [GameDataInternal(**game_account.to_dict()) for game_account in game_accounts if isinstance(game_account, GameIDSORM)]
