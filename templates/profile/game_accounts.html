@@ -11,16 +11,20 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <td>Base Name</td>
-                    <td>Level</td>
-                    <td>State</td>
-                    <td>Power</td>
+                    <td class="font-weight-bold">Base Name</td>
+                    <td class="font-weight-bold">Level</td>
+                    <td class="font-weight-bold">State</td>
+                    <td class="font-weight-bold">Power</td>
                 </tr>
             </thead>
             <tbody>
             {% for game_account in game_accounts %}
                 <tr>
-                    <td class="font-weight-bold">{{ game_account.base_name }}</td>
+                    <td class="font-weight-bold text-info">
+                        <a href="{{ url_for('profile.edit_base', game_id=game_account.game_id) }}" title="Open To Edit Base">
+                            <strong>{{ game_account.base_name }}</strong>
+                        </a>
+                    </td>
                     <td class="font-weight-bold font-italic text-danger">{{ game_account.base_level }}</td>
                     <td class="font-weight-bold font-italic text-danger">{{ game_account.state }}</td>
                     <td class="font-weight-bold text-info align-left">{{ game_account.power| number }}</td>
@@ -30,7 +34,6 @@
         </table>
         </div>
     </div>
-
 </section>
 
 {% endblock %}

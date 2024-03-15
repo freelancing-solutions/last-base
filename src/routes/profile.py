@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, send_from_directory, request, redi
 from pydantic import ValidationError
 
 from src.authentication import login_required
-from src.database.models.game import GameAuth, GameIDS, GameDataInternal
+from src.database.models.game import GameAuth, GameIDS, GameDataInternal, GameAccountTypes
 from src.database.models.profile import ProfileUpdate, Profile
 from src.database.models.users import User, PayPal
 
@@ -35,10 +35,34 @@ async def get_accounts(user: User):
 
     game_accounts: list[GameDataInternal] = await game_controller.get_game_accounts(uid=user.uid)
     print(game_accounts)
-    context.update(game_accounts=game_accounts)
+    context.update(game_accounts=game_accounts, GameAccountTypes=GameAccountTypes)
     return render_template('profile/game_accounts.html', **context)
 
 
+@profile_route.get('/dashboard/edit-game/<string:game_id>')
+@login_required
+async def edit_base(user: User, game_id: str):
+    context = dict(user=user)
+
+    game_account: GameDataInternal | dict[str, str] = await game_controller.get_game_by_game_id(uid=user.uid,
+                                                                                                game_id=game_id)
+
+    context.update(game_account=game_account, game_account_types=GameAccountTypes)
+    return render_template('profile/game_account.html', **context)
+
+
+@profile_route.post('/dashboard/update-base')
+@login_required
+async def do_update_base(user: User):
+    context = dict(user=user)
+    game_id = request.form.get('game_id')
+    account_type = request.form.get('account_type')
+    print(game_id)
+    print(account_type)
+    game_account: GameDataInternal | dict[str, str] = await game_controller.get_game_by_game_id(uid=user.uid,
+                                                                                                game_id=game_id)
+    context.update(game_account=game_account, game_account_types=GameAccountTypes)
+    return render_template('profile/game_account.html', **context)
 
 
 @profile_route.post('/dashboard/profile')
