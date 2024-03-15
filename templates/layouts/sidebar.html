@@ -4,7 +4,7 @@
                 <ul>
                     <div class="logo">
                         <a href="{{ url_for('home.get_home') }}">
-                            <img src="{{ url_for('static', filename='images/custom/logo.png') }}" alt="logo" width="45"
+                            <img src="{{ url_for('static', filename='images/LSS.webp') }}" alt="logo" width="45"
                                  height="45">
                             <span>LSS - VIP</span>
                         </a>
@@ -31,7 +31,8 @@
                     </li>
 
                     <li><a href="{{ url_for('home.get_about')}}"><i class="ti-info"></i> About</a></li>
-                    <li><a href="{{ url_for('home.get_faq')}}"><i class="ti-help-alt"></i> FAQ</a></li>
+{#                    <li><a href="{{ url_for('home.get_faq')}}"><i class="ti-help-alt"></i> FAQ</a></li>#}
+                    <li><a href="{{ url_for('home.get_downloads')}}"><i class="ti-download"></i> Downloads</a></li>
 
                     {% if  user and user.is_system_admin %}
                         <li><a class="sidebar-sub-toggle"><i class="ti-briefcase"></i> Admin<span

@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, send_file
 
 from src.authentication import user_details
 from src.database.models.users import User
+from src.utils import static_folder
 
 home_route = Blueprint('home', __name__)
 
@@ -26,3 +27,45 @@ async def get_about(user: User| None):
 async def get_faq(user: User | None):
     context = {'user': user} if user else {}
     return render_template('faq.html', **context)
+
+
+@home_route.get("/downloads")
+@user_details
+async def get_downloads(user: User | None):
+    context = {'user': user} if user else {}
+    return render_template('downloads.html', **context)
+
+
+@home_route.get("/downloads/android/latest-version")
+@user_details
+async def download_latest_version(user: User | None):
+    """
+        assume the apk file to be downloaded is located in static folder
+        under the name latest.apk
+    :param user:
+    :return:
+    """
+    try:
+        apk_file_path = f"{static_folder()}/downloads/latest.apk"
+        return send_file(apk_file_path, as_attachment=True)
+    except Exception as e:
+        return f"Failed to download Android APK Last Shelter Survival: ()", 500
+
+
+@home_route.get("/downloads/android/previous-version")
+@user_details
+async def download_previous_version(user: User | None):
+    """
+        assume the apk file to be downloaded is located in static folder
+        under the name latest.apk
+    :param user:
+    :return:
+    """
+    try:
+        apk_file_path = f"{static_folder()}/downloads/previous.apk"
+        return send_file(apk_file_path, as_attachment=True)
+    except Exception as e:
+        return f"Failed to download Android APK Last Shelter Survival: ()", 500
+
+
+
