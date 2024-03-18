@@ -134,8 +134,8 @@ async def add_paypal(user: User):
         _message: str = "Unable to add paypal email to your account"
         flash(message=_message, category="danger")
         return redirect(location=url_for('profile.get_profile'))
-
-    context.update(paypal_account=paypal_email)
+    _message: str ="Successfully created or updated your paypal account - please attach your account"
+    flash(message=_message, category="success")
     return redirect(location=url_for('profile.get_profile'))
 
 

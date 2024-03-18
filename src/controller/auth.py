@@ -175,8 +175,9 @@ class UserController(Controllers):
                 if paypal_account.uid == user.uid:
                     paypal_account.paypal_email = paypal_email
                     paypal_account.uid = user.uid
-                    session.merge()
-                    return paypal_account
+                    session.merge(paypal_account)
+                    session.commit()
+                    return PayPal(**paypal_account.to_dict())
                 else:
                     return None
 
@@ -184,9 +185,10 @@ class UserController(Controllers):
             if isinstance(paypal_account, PayPalORM):
                 paypal_account.paypal_email = paypal_email
                 paypal_account_ = PayPal(**paypal_account.to_dict())
-                session.merge()
+                session.merge(paypal_account_)
+                session.commit()
 
-                return paypal_account_
+                return PayPal(**paypal_account_.to_dict())
 
             paypal_orm = PayPalORM(paypal_email=paypal_email, uid=user.uid)
             paypal_account_ = PayPal(**paypal_orm.to_dict())
