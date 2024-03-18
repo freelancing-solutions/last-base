@@ -66,13 +66,13 @@ class UserController(Controllers):
         :return: The Profile instance corresponding to the user ID if found, else None.
         """
         # Check if the profile is available in the cache (profiles dictionary)
-        if uid in self.profiles:
-            self.logger.info("Fetching profile from dict {} ")
-            return self.profiles.get(uid)
+        # if uid in self.profiles:
+        #     self.logger.info("Fetching profile from dict {} ")
+        #     return self.profiles.get(uid)
 
         # Fetch the profile data from the database
         with self.get_session() as session:
-            session.flush()
+
             profile_orm = session.query(ProfileORM).filter(ProfileORM.uid == uid).first()
             # If the profile_orm is not found, return None
             if not profile_orm:
@@ -107,6 +107,7 @@ class UserController(Controllers):
                 session.merge(original_profile)
                 profile = Profile(**original_profile.to_dict())
                 session.commit()
+                self.profiles[profile.uid] = profile
                 return profile
             return None
 
@@ -127,6 +128,7 @@ class UserController(Controllers):
                 session.delete(profile_to_delete)
                 # Commit the transaction to permanently delete the profile from the database
                 session.commit()
+
                 return True
             else:
                 return False
@@ -151,6 +153,7 @@ class UserController(Controllers):
 
                 session.add(profile_orm)
                 session.commit()
+                self.profiles[profile.uid] = profile
                 return profile
 
             return Profile(**profile_orm.to_dict())
