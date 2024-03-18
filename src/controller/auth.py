@@ -226,8 +226,8 @@ class UserController(Controllers):
         """
         if not uid:
             return None
-        if uid in self.users:
-            return self.users[uid].dict()
+        # if uid in self.users:
+        #     return self.users[uid].dict()
 
         with self.get_session() as session:
             user_data: UserORM = session.query(UserORM).filter(UserORM.uid == uid).first()
@@ -242,9 +242,9 @@ class UserController(Controllers):
         """
         if not email:
             return None
-        for user in self.users.values():
-            if user.email.casefold() == email.casefold():
-                return user
+        # for user in self.users.values():
+        #     if user.email.casefold() == email.casefold():
+        #         return user
 
         with self.get_session() as session:
             user_data: UserORM = session.query(UserORM).filter(UserORM.email == email.casefold()).first()
