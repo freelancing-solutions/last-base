@@ -55,10 +55,19 @@
                     Delete
                 </button>
 
+                {% if paypal_account and paypal_account.paypal_email %}
+                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addPayPalAccount">
+                    <i class="ti ti-shopping-cart" > </i>
+                    Show PayPal Account
+                </a>
+
+                {% else %}
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addPayPalAccount">
                     <i class="ti ti-shopping-cart" > </i>
                     Add PayPal Account
                 </a>
+                {% endif %}
+
             </form>
         {% endif %}
 
