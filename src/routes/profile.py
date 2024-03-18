@@ -18,10 +18,10 @@ async def get_profile(user: User):
     context = dict(user=user)
     profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
     paypal_account: PayPal = await user_controller.get_paypal_account(uid=user.uid)
-    if paypal_account:
+    if isinstance(paypal_account, PayPal):
         context.update(paypal_account=paypal_account)
 
-    if profile:
+    if isinstance(profile, Profile):
         context.update(profile=profile)
         print(f"Found Profile : {profile}")
 

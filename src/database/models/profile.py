@@ -14,8 +14,8 @@ class Profile(BaseModel):
     notes: str | None
     currency: str = Field(default="$")
 
-    class Config:
-        extra = Extra.ignore
+    # class Config:
+    #     extra = Extra.ignore
 
     def __eq__(self, other):
         if not isinstance(other, Profile):
