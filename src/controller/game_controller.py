@@ -179,6 +179,10 @@ class GameController(Controllers):
     async def update_game_account_type(self, game_id: str, account_type: str):
         with self.get_session() as session:
             game_account: GameIDSORM = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
-            game_account.account_type = account_type
-            session.merge(game_account)
-            return game_account
+            if isinstance(game_account, GameIDSORM):
+                game_account.account_type = account_type
+                _game_account = GameDataInternal(**game_account.to_dict())
+                session.merge(game_account)
+                session.commit()
+                return _game_account
+            return {}
