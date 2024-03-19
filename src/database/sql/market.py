@@ -1,0 +1,229 @@
+import uuid
+from datetime import datetime, timedelta
+
+from sqlalchemy import Column, String, inspect, ForeignKey, Boolean, func, Integer, Date, DateTime, Text
+
+from src.database.constants import ID_LEN, NAME_LEN
+from src.database.sql import Base, engine
+
+
+class SellerAccountORM(Base):
+    uid: str = Column(String(ID_LEN), primary_key=True)
+    seller_rating: int = Column(Integer)
+    seller_name: str = Column(String(NAME_LEN))
+    promotional_content: str = Column(Text)
+    account_verified: bool = Column(Boolean)
+    total_items_sold: int = Column(Integer)
+
+    total_amount_sold: int = Column(Integer)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            'uid': self.uid,
+            'seller_rating': self.seller_rating,
+            'seller_name': self.seller_name,
+            'promotional_content': self.promotional_content,
+            'account_verified': self.account_verified,
+            'total_items_sold': self.total_items_sold,
+            'total_amount_sold': self.total_amount_sold
+        }
+
+
+class BuyerAccountORM(Base):
+    uid: str = Column(String(ID_LEN), primary_key=True)
+    buyer_rating: int = Column(Integer)
+    buyer_name: int = Column(String(NAME_LEN))
+    account_verified: bool = Column(Boolean)
+
+    total_accounts_bought: int = Column(Integer)
+    total_skins_bought: int = Column(Integer)
+
+    total_amount_spent: int = Column(Integer)
+    amount_in_escrow: int = Column(Integer)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            'uid': self.uid,
+            'buyer_rating': self.buyer_rating,
+            'buyer_name': self.buyer_name,
+            'account_verified': self.account_verified,
+            'total_accounts_bought': self.total_accounts_bought,
+            'total_skins_bought': self.total_skins_bought,
+            'total_amount_spent': self.total_amount_spent,
+            'amount_in_escrow': self.amount_in_escrow
+        }
+
+
+class FarmSaleORM(Base):
+    uid: str = Column(String(ID_LEN))
+    package_id: str = Column(String(ID_LEN))
+
+    state: int = Column(Integer)
+    average_base_level: int = Column(Integer)
+    total_farms: int = Column(Integer)
+    total_bought: int = Column(Integer)
+    item_price: int = Column(Integer)
+    package_price: int = Column(Integer)
+    farm_manager_available: bool = Column(Boolean)
+    image_url: str = Column(String(255))
+    accounts_verified: bool = Column(Boolean)
+    notes: str = Column(String(255))
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "uid": self.uid,
+            "package_id": self.package_id,
+            "state": self.state,
+            "average_base_level": self.average_base_level,
+            "total_farms": self.total_farms,
+            "total_bought": self.total_bought,
+            "item_price": self.item_price,
+            "package_price": self.package_price,
+            "farm_manager_available": self.farm_manager_available,
+            "image_url": self.image_url,
+            "accounts_verified": self.accounts_verified,
+            "notes": self.notes
+        }
+
+
+class FarmResourcesORM(Base):
+    package_id: str = Column(String(ID_LEN))
+    total_iron: int = Column(Integer)
+    total_wood: int = Column(Integer)
+    total_oil: int = Column(Integer)
+    total_food: int = Column(Integer)
+    total_money: int = Column(Integer)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "package_id": self.package_id,
+            "total_iron": self.total_iron,
+            "total_wood": self.total_wood,
+            "total_oil": self.total_oil,
+            "total_food": self.total_food,
+            "total_money": self.total_money
+        }
+
+
+class FarmIDORM(Base):
+    package_id: str = Column(String(NAME_LEN))
+    uid: str = Column(String(NAME_LEN))
+    game_id: str = Column(String(NAME_LEN))
+    game_uid: str = Column(String(NAME_LEN))
+    base_level: int = Column(Integer)
+    state: int = Column(Integer)
+    base_name: str = Column(String(NAME_LEN))
+
+    power: int = Column(Integer)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "package_id": self.package_id,
+            "uid": self.uid,
+            "game_id": self.game_id,
+            "game_uid": self.game_uid,
+            "base_level": self.base_level,
+            "state": self.state,
+            "base_name": self.base_name,
+            "power": self.power
+        }
+
+
+class FarmCredentialsORM(Base):
+    game_id: str = Column(String(ID_LEN))
+    account_email: str = Column(String(255))
+    password: str = Column(String(NAME_LEN))
+    pin: str = Column(String(NAME_LEN), nullable=True)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "game_id": self.game_id,
+            "account_email": self.account_email,
+            "password": self.password,
+            "pin": self.pin
+        }
+
+
+class MainAccountsCredentialsORM(Base):
+    game_id: str = Column(String(ID_LEN))
+    account_email: str = Column(String(255))
+    account_password: str = Column(String(NAME_LEN))
+    account_pin: str = Column(String(NAME_LEN))
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "game_id": self.game_id,
+            "account_email": self.account_email,
+            "account_password": self.account_password,
+            "account_pin": self.account_pin
+        }
