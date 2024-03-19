@@ -33,28 +33,35 @@
             </div>
             <div class="form-group">
                 {% if profile and profile.main_game_id %}
-                <button type="submit" class="btn btn-primary btn-sm">
-                    <i class="ti ti-save"> </i>
-                    Update
-                </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-save"> </i>
+                        Update Profile (LSS Account)
+                    </button>
                 {% else %}
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addGameAccount">
                     <i class="ti ti-shopping-cart" > </i>
-                    Add Game Account
+                    Create Profile (LSS Account)
                 </a>
 
                 {% endif %}
             </div>
         </form>
+
         {% if profile and profile.main_game_id %}
             <form class="form-horizontal" method="post" action="{{ url_for('profile.delete_profile') }}">
                 <input type="hidden" name="main_game_id" value="{{ profile.main_game_id }}" />
                 <input type="hidden" name="uid" value="{{ user.uid }}"/>
-                <button type="submit" class="btn btn-sm btn-danger" id="deleteButton">
+                <button type="submit" class="btn btn-danger" id="deleteButton">
                     <i class="ti ti-cut"> </i>
-                    Delete
+                    Delete Profile
                 </button>
-
+            </form>
+<hr/>
+<div class="card">
+<div class="card-header">
+    <h3 class="title">Merchant Accounts</h3>
+</div>
+<div class="card-body">
                 {% if paypal_account and paypal_account.paypal_email %}
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addPayPalAccount">
                     <i class="ti ti-shopping-cart" > </i>
@@ -72,8 +79,8 @@
                     Merchant Account
                 </a>
                 {% endif %}
-
-            </form>
+</div>
+</div>
         {% endif %}
 
     </div>
