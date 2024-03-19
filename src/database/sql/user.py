@@ -101,6 +101,7 @@ class PayPalORM(Base):
     uid = Column(String(NAME_LEN), primary_key=True)
     paypal_email: str = Column(String(NAME_LEN))
 
+
     @classmethod
     def create_if_not_table(cls):
         if not inspect(engine).has_table(cls.__tablename__):

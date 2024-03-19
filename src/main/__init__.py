@@ -8,10 +8,11 @@ encryptor = Encryptor()
 send_mail = SendMail()
 from src.controller.auth import UserController
 from src.controller.game_controller import GameController
+from src.controller.market_controller import MarketController
 
 user_controller = UserController()
 game_controller = GameController()
-
+market_controller = MarketController()
 
 def _add_blue_prints(app: Flask):
     """
@@ -58,6 +59,7 @@ def create_app(config):
         encryptor.init_app(app=app)
         user_controller.init_app(app=app)
         game_controller.init_app(app=app)
+        market_controller.init_app(app=app)
         pass
 
     return app

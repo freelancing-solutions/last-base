@@ -16,6 +16,7 @@ class SellerAccount(BaseModel):
     total_items_sold: int  # Farms, Accounts and Skins
 
     total_amount_sold: int  # Amount Sold in Dollars
+    account_activated: bool
 
 
 class BuyerAccount(BaseModel):
@@ -29,13 +30,14 @@ class BuyerAccount(BaseModel):
 
     total_amount_spent: int  # Amount Spent in Dollars
     amount_in_escrow: int  # Amount the buyer puts in Escrow to secure a sale
+    account_activated: bool
 
 
 #################################################################################################
 
 class FarmSale(BaseModel):
     uid: str  # ID of the user selling the Farm
-    package_id: str # ID of the Packaged Deal
+    package_id: str  # ID of the Packaged Deal
 
     state: int
     average_base_level: int

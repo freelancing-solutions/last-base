@@ -21,11 +21,20 @@
                     </div>
                     <div class="form-group">
                         <label>Become a Seller</label>
-                        <input type="checkbox" name="seller_account" />
+                        {% if seller_account and seller_account.account_activated %}
+                            <input type="checkbox" name="seller_account"  checked/>
+                        {% else %}
+                            <input type="checkbox" name="seller_account" />
+                        {% endif %}
+
                     </div>
                     <div class="form-group">
                         <label>Become a Buyer</label>
-                        <input type="checkbox" name="buyer_account" />
+                        {% if buyer_account and buyer_account.account_activated %}
+                            <input type="checkbox" name="buyer_account" checked/>
+                        {% else %}
+                            <input type="checkbox" name="buyer_account" />
+                        {% endif %}
                     </div>
                     {% if paypal_account %}
                         <div class="form-group" style="display: flex; justify-content: space-between;">

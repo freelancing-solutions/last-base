@@ -3,10 +3,11 @@ from pydantic import ValidationError
 
 from src.authentication import login_required
 from src.database.models.game import GameAuth, GameIDS, GameDataInternal, GameAccountTypes
+from src.database.models.market import SellerAccount, BuyerAccount
 from src.database.models.profile import ProfileUpdate, Profile
 from src.database.models.users import User, PayPal, Wallet
 
-from src.main import user_controller, game_controller
+from src.main import user_controller, game_controller, market_controller
 
 profile_route = Blueprint('profile', __name__)
 
@@ -19,6 +20,9 @@ async def get_profile(user: User):
     profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
     paypal_account: PayPal = await user_controller.get_paypal_account(uid=user.uid)
     wallet: Wallet = await user_controller.get_wallet(uid=user.uid)
+    buyer_account: BuyerAccount = await market_controller.get_buyer_account(uid=user.uid)
+    seller_account: SellerAccount = await market_controller.get_seller_account(uid=user.uid)
+
     if isinstance(paypal_account, PayPal):
         context.update(paypal_account=paypal_account)
 
@@ -28,6 +32,11 @@ async def get_profile(user: User):
 
     if isinstance(wallet, Wallet):
         context.update(wallet=wallet)
+
+    if isinstance(seller_account, SellerAccount):
+        context.update(seller_account=seller_account)
+    if isinstance(buyer_account, BuyerAccount):
+        context.update(buyer_account=buyer_account)
 
     return render_template('profile/profile.html', **context)
 
@@ -63,7 +72,8 @@ async def do_update_base(user: User):
     game_id = request.form.get('game_id')
     account_type = request.form.get('account_type')
 
-    game_account: GameDataInternal | dict[str, str] = await game_controller.update_game_account_type(game_id=game_id, account_type=account_type)
+    game_account: GameDataInternal | dict[str, str] = await game_controller.update_game_account_type(game_id=game_id,
+                                                                                                     account_type=account_type)
 
     context.update(game_account=game_account, game_account_types=GameAccountTypes)
     return render_template('profile/game_account.html', **context)
@@ -127,13 +137,27 @@ async def add_paypal(user: User):
     context = dict(user=user)
     try:
         paypal_email: str = request.form.get('paypal_account')
-
+        become_seller: str = request.form.get('seller_account')
+        become_buyer: str = request.form.get('buyer_account')
+        print(f'Seller : {become_seller}')
     except ValidationError as e:
         _message: str = f"Error : str(e)"
         flash(message=_message, category='danger')
         return redirect(url_for('profile.get_profile'))
 
     data: PayPal = await user_controller.add_paypal(user=user, paypal_email=paypal_email)
+
+    if become_seller in ['on', 'ON']:
+        seller_account: SellerAccount = await market_controller.activate_seller_account(uid=user.uid, activate=True)
+
+    else:
+        seller_account: SellerAccount = await market_controller.activate_seller_account(uid=user.uid, activate=False)
+
+    if become_buyer in ['on', 'ON']:
+        buyer_account: BuyerAccount = await  market_controller.activate_buyer_account(uid=user.uid, activate=True)
+    else:
+        buyer_account: BuyerAccount = await  market_controller.activate_buyer_account(uid=user.uid, activate=False)
+
     if not isinstance(data, PayPal):
         _message: str = "Unable to add paypal email to your account"
         flash(message=_message, category="danger")
