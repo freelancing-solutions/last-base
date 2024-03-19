@@ -19,28 +19,32 @@
                             <input type="email" id="paypal_account" name="paypal_account"  class="form-control">
                         {% endif %}
                     </div>
+                    <div class="form-group">
+                        <label>Become a Seller</label>
+                        <input type="checkbox" name="seller_account" />
+                    </div>
+                    <div class="form-group">
+                        <label>Become a Buyer</label>
+                        <input type="checkbox" name="buyer_account" />
+                    </div>
                     {% if paypal_account %}
                         <div class="form-group" style="display: flex; justify-content: space-between;">
                             <button class="btn btn-warning btn-sm">
                                 <i class="ti ti-server"></i> Update Account
                             </button>
                             <button type="button" class="btn btn-primary btn-sm">
-                                <i class="ti ti-credit-card"></i> Attach Account (5 USD)
+                                <i class="ti ti-credit-card"></i> Activate Account (5 USD)
                             </button>
                         </div>
 
                     {% else %}
                     <div class="form-group">
-                        <button class="btn btn-primary btn-sm">Add Account</button>
+                        <button class="btn btn-primary btn-sm">Merchant Account</button>
                     </div>
                     {% endif %}
 
                 </form>
             </div>
-
         </div>
-
-
     </div>
-
 </div>
