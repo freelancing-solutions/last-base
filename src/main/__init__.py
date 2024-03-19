@@ -9,10 +9,13 @@ send_mail = SendMail()
 from src.controller.auth import UserController
 from src.controller.game_controller import GameController
 from src.controller.market_controller import MarketController
+from src.controller.wallet_controller import WalletController
 
 user_controller = UserController()
 game_controller = GameController()
 market_controller = MarketController()
+wallet_controller = WalletController()
+
 
 def _add_blue_prints(app: Flask):
     """
@@ -60,6 +63,7 @@ def create_app(config):
         user_controller.init_app(app=app)
         game_controller.init_app(app=app)
         market_controller.init_app(app=app)
+        wallet_controller.init_app(app=app)
         pass
 
     return app

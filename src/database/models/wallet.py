@@ -5,8 +5,10 @@ from pydantic import BaseModel, Field, PositiveInt
 
 class TransactionType(str):
     deposit = "deposit"
-    payment = "payment"
+    payment_from_escrow = "payment_from_escrow"
     withdrawal = "withdrawal"
+    transfer_to_escrow = 'transfer_to_escrow'
+    transfer_from_escrow = "transfer_from_escrow"
 
 
 class WalletTransaction(BaseModel):
@@ -16,8 +18,7 @@ class WalletTransaction(BaseModel):
     uid: str
     date: datetime = Field(default_factory=datetime.utcnow)
     transaction_type: str
-    pay_to_wallet: str
-    payment_from_wallet: str
+    target_wallet: str | None
     amount: PositiveInt
 
 
@@ -32,9 +33,15 @@ class Wallet(WalletConst):
     """
     uid: str
     balance: int = Field(default=0, description="Balance in Cents")
+    escrow: int = Field(default=0, description="Amount in Escrow Account")
     transactions: list[WalletTransaction] = Field(default=[], description="List of transaction details")
 
-    async def make_payment(self, amount: PositiveInt, destination_wallet: str):
+    async def transfer_to_escrow(self, amount: PositiveInt) -> WalletTransaction:
+        """
+
+        :param amount:
+        :return:
+        """
         if self.balance == 0:
             raise ValueError("Insufficient Balance to make payment")
 
@@ -45,35 +52,45 @@ class Wallet(WalletConst):
             raise ValueError(f"Payment amount must not be more than {self._max_transaction_amount}")
 
         if amount > self.balance:
-            raise ValueError("Insufficient funds in the wallet.")
-
-        # Implement payment processing here
-        # You can make API calls to process the payment with a payment gateway
-
-        # For demonstration purposes, we'll just deduct the payment amount from the balance
+            raise ValueError("Insufficient Balance to transfer to Escrow.")
+        transaction = await self._record_transaction(amount=amount,
+                                                     transaction_type=TransactionType.transfer_to_escrow)
         self.balance -= amount
-        await self._record_transaction(amount=amount, transaction_type=TransactionType.payment,
-                                       pay_to_wallet=destination_wallet)
+        self.escrow += amount
 
-    async def accept_payment(self, amount: PositiveInt, from_wallet: str):
+        return transaction
+
+    async def pay_from_escrow(self, amount: PositiveInt, target_wallet: str) -> WalletTransaction:
         """
-            **accept_payment**
-                accept payments from wallets
+            using balance in escrow pay to a target wallet
+        :param target_wallet:
         :param amount:
-        :param from_wallet:
+
         :return:
         """
+        if self.escrow == 0:
+            raise ValueError("Insufficient Balance to make payment")
+
         if amount < self._min_transaction_amount:
             raise ValueError(f"Payment amount must be greater than {self._min_transaction_amount}.")
 
         if amount > self._max_transaction_amount:
             raise ValueError(f"Payment amount must not be more than {self._max_transaction_amount}")
 
-        self.balance += amount
-        await self._record_transaction(amount=amount, transaction_type=TransactionType.deposit,
-                                       pay_from_wallet=from_wallet)
+        if amount > self.escrow:
+            raise ValueError("Insufficient funds in Escrow.")
 
-    async def withdraw_funds(self, amount: PositiveInt):
+        # Implement payment processing here
+        # You can make API calls to process the payment with a payment gateway
+
+        # For demonstration purposes, we'll just deduct the payment amount from the balance
+        transaction = await self._record_transaction(amount=amount,
+                                                     transaction_type=TransactionType.payment_from_escrow,
+                                                     target_wallet=target_wallet)
+        self.escrow -= amount
+        return transaction
+
+    async def withdraw_funds(self, amount: PositiveInt) -> WalletTransaction:
         if amount > self.balance:
             raise ValueError("Insufficient funds in the wallet.")
         if amount < self._min_transaction_amount:
@@ -86,10 +103,11 @@ class Wallet(WalletConst):
         # You can make API calls to initiate the withdrawal
 
         # For demonstration purposes, we'll just deduct the withdrawal amount from the balance
+        transaction = await self._record_transaction(amount=amount, transaction_type=TransactionType.withdrawal)
         self.balance -= amount
-        await self._record_transaction(amount=amount, transaction_type=TransactionType.withdrawal)
+        return transaction
 
-    async def deposit_funds(self, amount: PositiveInt):
+    async def deposit_funds(self, amount: PositiveInt) -> WalletTransaction:
         if amount < self._min_transaction_amount:
             raise ValueError(f"Deposit amount must be equal to or greater than {self._min_transaction_amount}")
         if amount > self._max_transaction_amount:
@@ -100,20 +118,9 @@ class Wallet(WalletConst):
         # You can make API calls to process the deposit with a payment gateway
 
         # For demonstration purposes, we'll just add the deposit amount to the balance
+        transaction = await self._record_transaction(amount=amount, transaction_type=TransactionType.deposit)
         self.balance += amount
-        await self._record_transaction(amount=amount, transaction_type=TransactionType.deposit)
-
-    async def _record_transaction(self, amount: PositiveInt, transaction_type: str, pay_from_wallet: str | None = None,
-                                  pay_to_wallet: str | None = None):
-
-        transaction = WalletTransaction(
-            uid=self.uid,
-            amount=amount,
-            transaction_type=transaction_type,
-            pay_to_wallet=pay_to_wallet,
-            pay_from_wallet=pay_from_wallet
-        )
-        self.transactions.append(transaction)
+        return transaction
 
     async def get_transactions(self, limit: int | None = None) -> list[WalletTransaction]:
         """
@@ -138,3 +145,16 @@ class Wallet(WalletConst):
             int: Total number of transactions.
         """
         return len(self.transactions)
+
+    async def _record_transaction(self, amount: PositiveInt,
+                                  transaction_type: str,
+                                  target_wallet: str | None = None) -> WalletTransaction:
+
+        transaction = WalletTransaction(
+            uid=self.uid,
+            amount=amount,
+            transaction_type=transaction_type,
+            target_wallet=target_wallet
+        )
+        self.transactions.append(transaction)
+        return transaction

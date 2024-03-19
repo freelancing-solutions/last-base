@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, inspect
+from sqlalchemy import Column, Integer, String, DateTime, inspect, Text
 
 from src.database.constants import ID_LEN
 from src.database.sql import engine, Base
@@ -51,3 +51,30 @@ class WalletTransactionORM(Base):
         if not isinstance(other, WalletTransactionORM):
             return False
         return (self.transaction_id == other.transaction_id) and (self.uid == other.uid)
+
+
+class WalletORM(Base):
+    __tablename__ = "wallet"
+    uid: str = Column(Integer, primary_key=True)
+    balance: int = Column(Integer)
+    escrow: int = Column(Integer)
+    transactions: str = Column(Text)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self) -> dict[str, str | int | list[str]]:
+        return {
+            'uid': self.uid,
+            'balance': self.balance,
+            'escrow': self.escrow,
+            'transactions': self.transactions.split(",")
+        }
+

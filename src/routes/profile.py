@@ -5,9 +5,10 @@ from src.authentication import login_required
 from src.database.models.game import GameAuth, GameIDS, GameDataInternal, GameAccountTypes
 from src.database.models.market import SellerAccount, BuyerAccount
 from src.database.models.profile import ProfileUpdate, Profile
-from src.database.models.users import User, PayPal, Wallet
+from src.database.models.users import User, PayPal
+from src.database.models.wallet import Wallet
 
-from src.main import user_controller, game_controller, market_controller
+from src.main import user_controller, game_controller, market_controller, wallet_controller
 
 profile_route = Blueprint('profile', __name__)
 
@@ -19,7 +20,7 @@ async def get_profile(user: User):
     context = dict(user=user)
     profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
     paypal_account: PayPal = await user_controller.get_paypal_account(uid=user.uid)
-    wallet: Wallet = await user_controller.get_wallet(uid=user.uid)
+    wallet: Wallet = await wallet_controller.get_wallet(uid=user.uid)
     buyer_account: BuyerAccount = await market_controller.get_buyer_account(uid=user.uid)
     seller_account: SellerAccount = await market_controller.get_seller_account(uid=user.uid)
 

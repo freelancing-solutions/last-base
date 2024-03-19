@@ -7,7 +7,7 @@ from sqlalchemy import or_
 
 from src.controller import error_handler, UnauthorizedError, Controllers
 from src.database.models.profile import Profile, ProfileUpdate
-from src.database.models.users import User, CreateUser, UserUpdate, PayPal, Wallet
+from src.database.models.users import User, CreateUser, UserUpdate, PayPal
 from src.database.sql.user import UserORM, ProfileORM, PayPalORM
 from src.emailer import EmailModel
 from src.main import send_mail
@@ -206,15 +206,7 @@ class UserController(Controllers):
                 return PayPal(**paypal_account.to_dict())
             return None
 
-    async def get_wallet(self, uid: str) -> Wallet | None:
-        """
 
-        :param uid:
-        :return:
-        """
-        with self.get_session() as session:
-            pass
-        return Wallet(uid=uid, balance=10000, escrow=5000)
 
     async def is_token_valid(self, token: str) -> bool:
         """
