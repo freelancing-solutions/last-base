@@ -216,7 +216,6 @@ class UserController(Controllers):
             pass
         return Wallet(uid=uid, balance=10000, escrow=5000)
 
-
     async def is_token_valid(self, token: str) -> bool:
         """
         **is_token_valid**
