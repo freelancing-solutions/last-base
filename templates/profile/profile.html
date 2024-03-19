@@ -61,6 +61,11 @@
                     Show Merchant Account
                 </a>
 
+                <a href="#" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#showWallet">
+                    <i class="ti ti-wallet" > </i>
+                    Wallet
+                </a>
+
                 {% else %}
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addPayPalAccount">
                     <i class="ti ti-shopping-cart" > </i>
@@ -78,5 +83,6 @@
 </section>
 {% include "profile/modal/add_paypal.html" %}
 {% include "profile/modal/add_game_account.html" %}
+{% include 'profile/modal/show_wallet.html' %}
 {% endblock %}
 

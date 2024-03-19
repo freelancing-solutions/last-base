@@ -1,0 +1,48 @@
+
+
+
+
+<div class="modal fade" id="showWallet" tabindex="-1" role="dialog" aria-labelledby="showWalletLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="addPayPalLabel"> <i class="ti ti-wallet"> </i>Merchant Wallet </h2>
+            </div>
+
+            <div class="modal-body">
+
+
+                <form class="form-horizontal" action="{{ url_for('profile.add_paypal') }}" method="POST">
+
+                    <div class="form-group">
+                        <label class="font-weight-bold"><i class="ti ti-money"> </i> Total Balance</label>
+                        <input class="form-control" type="text" name="balance" value="{{ wallet.balance| number }}" readonly/>
+                        <div class="form-control-sm">
+                            <input type="number" class="form-control-sm"/>
+                         <button type="button" class="btn btn-sm btn-addon"> <i class="ti ti-bag"> </i> Send to Escrow</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Amount In Escrow <span class="font-italic font-weight-bold text-info"><small>(You can guarantee a purchase with an amount in Escrow)</small></span></label>
+                        <input class="form-control" type="text" name="escrow" value="{{ wallet.escrow| number }}" readonly />
+                    </div>
+                    <div class="form-group">
+                        <div class="form-control-sm">
+                            <input type="number" class="form-control-sm"/>
+                         <button class="btn btn-sm btn-default" type="button" name="withdraw"> <i class="ti ti-credit-card"> </i> Withdraw</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-control-sm">
+                            <input type="number" class="form-control-sm"/>
+                         <button class="btn btn-sm btn-default" type="button" name="withdraw"> <i class="ti ti-credit-card"> </i> Deposit</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

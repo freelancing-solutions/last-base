@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from src.authentication import login_required
 from src.database.models.game import GameAuth, GameIDS, GameDataInternal, GameAccountTypes
 from src.database.models.profile import ProfileUpdate, Profile
-from src.database.models.users import User, PayPal
+from src.database.models.users import User, PayPal, Wallet
 
 from src.main import user_controller, game_controller
 
@@ -18,12 +18,16 @@ async def get_profile(user: User):
     context = dict(user=user)
     profile: Profile = await user_controller.get_profile_by_uid(uid=user.uid)
     paypal_account: PayPal = await user_controller.get_paypal_account(uid=user.uid)
+    wallet: Wallet = await user_controller.get_wallet(uid=user.uid)
     if isinstance(paypal_account, PayPal):
         context.update(paypal_account=paypal_account)
 
     if isinstance(profile, Profile):
         context.update(profile=profile)
         print(f"Found Profile : {profile}")
+
+    if isinstance(wallet, Wallet):
+        context.update(wallet=wallet)
 
     return render_template('profile/profile.html', **context)
 

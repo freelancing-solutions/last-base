@@ -118,3 +118,9 @@ class PayPal(BaseModel):
 
     class Config:
         extra = Extra.ignore
+
+
+class Wallet(BaseModel):
+    uid: str
+    balance: int
+    escrow: int
