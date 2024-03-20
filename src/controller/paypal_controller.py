@@ -8,7 +8,7 @@ from src.database.models.users import User, PayPal
 class PayPalController(Controllers):
     def __init__(self):
         super().__init__()
-        self.mode = "sandbox"
+        self.mode = "live"
 
 
     def init_app(self, app: Flask, config_instance: Settings):
