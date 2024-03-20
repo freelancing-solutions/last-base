@@ -51,9 +51,8 @@ class PayPalController(Controllers):
                     "total": amount,
                     "currency": "USD"
                 },
-                "description": "Deposit to wallet"
+                "description": f"Deposit to wallet : {user.uid}"
             }],
-            "custom": {'uid': user.uid}  # Include the UID as custom data
         })
 
         return payment, payment.create()
