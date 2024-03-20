@@ -14,7 +14,6 @@ class PayPalController(Controllers):
         self.mode = "live"
         self._client_secret = ""
 
-
     def init_app(self, app: Flask, config_instance: Settings):
         self._client_secret = config_instance.PAYPAL_SETTINGS.SECRET_KEY
         configure({
@@ -62,8 +61,7 @@ class PayPalController(Controllers):
 
         return payment, payment.create()
 
-
-    async def verify_signature(self, payload: str,  signature: str) -> bool:
+    async def verify_signature(self, payload: str, signature: str) -> bool:
         """
 
         :param signature:
