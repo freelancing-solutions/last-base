@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash
 from pydantic import ValidationError
 from paypalrestsdk import Payment
@@ -41,12 +43,37 @@ async def make_deposit(user: User):
 @wallet_route.get('/dashboard/wallet/deposit-success')
 @login_required
 async def deposit_success(user: User):
-    flash(message=f"Payment Successfull", category="success")
+
+    try:
+        # Load JSON data
+
+        data = request.json
+
+        # Extract payment amount
+        amount = data.get("resource", {}).get("amount", {}).get("total")
+
+        # Convert amount to float
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+        return None
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+
+    flash(message=f"Payment Of {amount} Made Successfully", category="success")
     return redirect(url_for('profile.get_profile'))
 
 
 @wallet_route.get('/dashboard/wallet/deposit-failure')
 @login_required
 async def deposit_failure(user: User):
-    flash(message=f"Sorry to see you go", category="danger")
+    try:
+        data = request.json
+        event_type = data.get('event_type')
+
+        flash(message= f"{data }", category="danger")
+
+    except:
+        pass
+
     return redirect(url_for('profile.get_profile'))
