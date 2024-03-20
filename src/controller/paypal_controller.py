@@ -53,7 +53,7 @@ class PayPalController(Controllers):
                 },
                 "description": "Deposit to wallet"
             }],
-            "custom": user.uid  # Include the UID as custom data
+            "custom": {'uid': user.uid}  # Include the UID as custom data
         })
 
         return payment, payment.create()
