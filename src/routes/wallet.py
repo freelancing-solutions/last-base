@@ -58,7 +58,8 @@ async def deposit_success(user: User):
         amount = int(_payload.get("resource", {}).get("amount", {}).get("total"))
 
         wallet = await wallet_controller.get_wallet(uid=user.uid)
-        wallet.deposit_funds(amount=amount)
+        transaction = await wallet.deposit_funds(amount=amount)
+        transaction_saved = await wallet_controller.add_transaction(transaction=transaction)
         # Convert amount to float
     except json.JSONDecodeError as e:
         print("Error decoding JSON:", e)

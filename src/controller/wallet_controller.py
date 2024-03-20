@@ -76,3 +76,15 @@ class WalletController(Controllers):
         """
         self.load_and_build_wallets()
         return True
+
+    async def add_transaction(self, transaction: WalletTransaction) -> bool:
+        """
+
+        :param transaction:
+        :return:
+        """
+        with self.get_session() as session:
+            transaction_orm = WalletTransactionORM(**transaction.dict())
+            session.add(transaction_orm)
+            session.commit()
+            return True
