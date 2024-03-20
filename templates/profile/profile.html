@@ -1,6 +1,11 @@
 
 {% extends "layouts/page.html" %}
 
+{% block head_scripts %}
+     <script src="https://js.braintreegateway.com/web/dropin/1.42.0/js/dropin.min.js"></script>
+{% endblock %}
+
+
 {% block content %}
 
 <section id="main-content">
@@ -55,6 +60,7 @@
                     <i class="ti ti-cut"> </i>
                     Delete Profile
                 </button>
+             <div id="dropin-container"></div>
             </form>
 <hr/>
 <div class="card">
@@ -88,7 +94,7 @@
 
 
 </section>
-{% include "profile/modal/add_paypal.html" %}
+{% include "profile/modal/merchant_wallet.html" %}
 {% include "profile/modal/add_game_account.html" %}
 {% include 'profile/modal/show_wallet.html' %}
 {% endblock %}

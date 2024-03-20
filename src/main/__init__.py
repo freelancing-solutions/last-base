@@ -6,15 +6,18 @@ from src.utils import format_with_grouping
 
 encryptor = Encryptor()
 send_mail = SendMail()
+
 from src.controller.auth import UserController
 from src.controller.game_controller import GameController
 from src.controller.market_controller import MarketController
 from src.controller.wallet_controller import WalletController
+from src.controller.paypal_controller import PayPalController
 
 user_controller = UserController()
 game_controller = GameController()
 market_controller = MarketController()
 wallet_controller = WalletController()
+paypal_controller = PayPalController()
 
 
 def _add_blue_prints(app: Flask):
@@ -28,12 +31,14 @@ def _add_blue_prints(app: Flask):
     from src.routes.market import market_route
     from src.routes.profile import profile_route
     from src.routes.admin import admin_route
+    from src.routes.wallet import wallet_route
 
     app.register_blueprint(auth_route)
     app.register_blueprint(home_route)
     app.register_blueprint(profile_route)
     app.register_blueprint(market_route)
     app.register_blueprint(admin_route)
+    app.register_blueprint(wallet_route)
 
 
 def _add_filters(app: Flask):
@@ -64,6 +69,7 @@ def create_app(config):
         game_controller.init_app(app=app)
         market_controller.init_app(app=app)
         wallet_controller.init_app(app=app)
+        paypal_controller.init_app(app=app, config_instance=config)
         pass
 
     return app

@@ -56,6 +56,15 @@ class PayPalSettings(BaseSettings):
         env_file = '.env.development'
         env_file_encoding = 'utf-8'
 
+class BrainTreeSettings(BaseSettings):
+    MERCHANT_ID: str = Field(..., env='BRAIN_TREE_MERCHANT_ID')
+    PUBLIC_KEY: str = Field(..., env='BRAIN_TREE_PUBLIC_KEY')
+    PRIVATE_KEY: str = Field(..., env='BRAIN_TREE_PRIVATE_KEY')
+
+    class Config:
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
 
 class Settings(BaseSettings):
     APP_NAME: str = Field(default='Last Base')
@@ -73,6 +82,7 @@ class Settings(BaseSettings):
     FLUTTERWAVE_FLW_SECRET_KEY: str = Field(..., env="FLUTTERWAVE_SECRET_KEY")
     FLUTTERWAVE_HASH: str = Field(..., env="FLUTTERWAVE_HASH")
     PAYPAL_SETTINGS: PayPalSettings = PayPalSettings()
+
 
     class Config:
         env_file = '.env.development'

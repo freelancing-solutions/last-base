@@ -12,14 +12,12 @@
             <div class="modal-body">
 
 
-                <form class="form-horizontal" action="{{ url_for('profile.add_paypal') }}" method="POST">
-
                     <div class="form-group">
                         <label class="font-weight-bold"><i class="ti ti-money"> </i> Total Balance</label>
                         <input class="form-control" type="text" name="balance" value="{{ wallet.balance| number }}" readonly/>
                         <div class="form-control-sm">
                             <input type="number" class="form-control-sm"/>
-                         <button type="button" class="btn btn-sm btn-addon"> <i class="ti ti-bag"> </i> Send to Escrow</button>
+                         <button type="button" class="btn btn-sm btn-secondary btn-addon"> <i class="ti ti-bag"> </i> Send Amount Escrow</button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,14 +31,17 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="form-control-sm">
-                            <input type="number" class="form-control-sm"/>
-                         <button class="btn btn-sm btn-default" type="button" name="withdraw"> <i class="ti ti-credit-card"> </i> Deposit</button>
+                    <form class="form-horizontal" method="POST" action="{{ url_for('wallet.make_deposit') }}">
+                        {#  This wallet Sub Form Allows for Deposits #}
+                        <div class="form-group">
+                            <div class="form-control-sm">
+                                <input type="number" name="deposit_amount" class="form-control-sm"/>
+                             <button class="btn btn-sm btn-default" type="submit" name="deposit"> <i class="ti ti-credit-card"> </i> Deposit</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
-                </form>
+
 
             </div>
         </div>
