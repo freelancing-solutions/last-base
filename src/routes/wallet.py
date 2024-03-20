@@ -46,12 +46,19 @@ async def deposit_success(user: User):
 
     try:
         # Load JSON data
+        _payload = request.json
+        _signature = request.headers.get('Paypal-Transmission-Sig')
+        request_valid = await paypal_controller.verify_signature(payload=_payload, signature=_signature)
+        if not request_valid:
+            redirect(url_for('home.get_home'))
 
         data = request.json
 
         # Extract payment amount
-        amount = data.get("resource", {}).get("amount", {}).get("total")
+        amount = int(_payload.get("resource", {}).get("amount", {}).get("total"))
 
+        wallet = await wallet_controller.get_wallet(uid=user.uid)
+        wallet.deposit_funds(amount=amount)
         # Convert amount to float
     except json.JSONDecodeError as e:
         print("Error decoding JSON:", e)
@@ -67,13 +74,6 @@ async def deposit_success(user: User):
 @wallet_route.get('/dashboard/wallet/deposit-failure')
 @login_required
 async def deposit_failure(user: User):
-    try:
-        data = request.json
-        event_type = data.get('event_type')
 
-        flash(message= f"{data }", category="danger")
-
-    except:
-        pass
-
+    flash(message=f"Please Note that you can make payment whenever you are ready", category="danger")
     return redirect(url_for('profile.get_profile'))

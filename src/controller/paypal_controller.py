@@ -1,3 +1,6 @@
+import hashlib
+import hmac
+
 from flask import Flask, url_for
 from paypalrestsdk import configure, Api, Payment
 from src.config import Settings
@@ -9,9 +12,11 @@ class PayPalController(Controllers):
     def __init__(self):
         super().__init__()
         self.mode = "live"
+        self._client_secret = ""
 
 
     def init_app(self, app: Flask, config_instance: Settings):
+        self._client_secret = config_instance.PAYPAL_SETTINGS.SECRET_KEY
         configure({
             "mode": self.mode,
             "client_id": config_instance.PAYPAL_SETTINGS.CLIENT_ID,
@@ -56,3 +61,17 @@ class PayPalController(Controllers):
         })
 
         return payment, payment.create()
+
+
+    async def verify_signature(self, payload: str,  signature: str) -> bool:
+        """
+
+        :param signature:
+        :return:
+        """
+        expected_sig = hmac.new(
+            bytes(self._client_secret, 'utf=8'),
+            bytes(payload, 'utf-8'),
+            hashlib.sha256
+        ).hexdigest()
+        return hmac.compare_digest(expected_sig, signature)
