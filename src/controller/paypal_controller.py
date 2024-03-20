@@ -33,8 +33,8 @@ class PayPalController(Controllers):
         :param uid: User ID to be included
         :return: A tuple containing the Payment object and a boolean indicating success or failure
         """
-        _deposit_success_url = url_for('wallet.deposit_success')
-        _deposit_failed_url = url_for('wallet.deposit_failure')
+        _deposit_success_url = url_for('wallet.deposit_success', _external=True)
+        _deposit_failed_url = url_for('wallet.deposit_failure', _external=True)
 
         # Include customer information and UID
         payment = Payment({
