@@ -40,23 +40,20 @@ class PayPalController(Controllers):
         payment = Payment({
             "intent": "sale",
             "payer": {
-                "payment_method": "paypal",
-                "payer_info": {
-                    "email": paypal.paypal_email  # Include customer's PayPal email address
-                }
+                "payment_method": "paypal"
             },
             "redirect_urls": {
                 "return_url": _deposit_success_url,
                 "cancel_url": _deposit_failed_url
             },
-            "custom": user.uid,  # Include the UID as custom data
             "transactions": [{
                 "amount": {
                     "total": amount,
                     "currency": "USD"
                 },
                 "description": "Deposit to wallet"
-            }]
+            }],
+            "custom": user.uid  # Include the UID as custom data
         })
 
         return payment, payment.create()
