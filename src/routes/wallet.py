@@ -24,8 +24,8 @@ async def make_deposit(user: User):
     """
     # Obtaining amount to deposit
     amount = request.form.get('deposit_amount')
-
-    payment, is_created = await paypal_controller.create_payment(amount=amount)
+    paypal = await user_controller.get_paypal_account(uid=user.uid)
+    payment, is_created = await paypal_controller.create_payment(amount=amount, user=user, paypal=paypal)
     # Create payment
 
     if is_created:

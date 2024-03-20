@@ -9,7 +9,7 @@ class PayPalController(Controllers):
     def __init__(self):
         super().__init__()
         self.mode = "sandbox"
-        self.api = None
+
 
     def init_app(self, app: Flask, config_instance: Settings):
         configure({
@@ -17,11 +17,12 @@ class PayPalController(Controllers):
             "client_id": config_instance.PAYPAL_SETTINGS.CLIENT_ID,
             "client_secret": config_instance.PAYPAL_SETTINGS.SECRET_KEY
         })
-        self.api = Api(**{
-            "mode": self.mode,
-            "client_id": config_instance.PAYPAL_SETTINGS.CLIENT_ID,
-            "client_secret": config_instance.PAYPAL_SETTINGS.SECRET_KEY
-        })
+        # self.api = Api(**{
+        #     "mode": self.mode,
+        #     "client_id": config_instance.PAYPAL_SETTINGS.CLIENT_ID,
+        #     "client_secret": config_instance.PAYPAL_SETTINGS.SECRET_KEY
+        # })
+        super().init_app(app=app)
 
     async def create_payment(self, amount: int, user: User, paypal: PayPal) -> tuple[Payment, bool]:
         """
