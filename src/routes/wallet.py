@@ -41,8 +41,9 @@ async def make_deposit(user: User):
 @wallet_route.post('/dashboard/wallet/deposit-success')
 @login_required
 async def deposit_success(user: User):
-    flash(message=f"Payment Successfully", category="success")
+    flash(message=f"Payment Successfull", category="success")
     return redirect(url_for('profile.get_profile'))
+
 
 @wallet_route.post('/dashboard/wallet/deposit-failure')
 @login_required
