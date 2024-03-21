@@ -25,8 +25,8 @@ class MarketController(Controllers):
                 session.merge(seller_account_orm)
             else:
                 # If account doesn't exist, create a new one and activate it
-                _seller_account_orm = SellerAccountORM(uid=user.uid, account_activated=True)
-                session.add(_seller_account_orm)
+                seller_account_orm = SellerAccountORM(uid=user.uid, account_activated=True)
+                session.add(seller_account_orm)
 
             session.commit()  # Commit changes to the database
 
@@ -34,8 +34,21 @@ class MarketController(Controllers):
             return SellerAccount(**seller_account_orm.to_dict()) if seller_account_orm else SellerAccount(
                 uid=user.uid, account_activated=True)
 
-    async def activate_buyer_account(self, uid: str, activate: bool):
-        pass
+    async def activate_buyer_account(self, user: User, activate: bool):
+        with self.get_session() as session:
+            buyer_account_orm = session.query(BuyerAccountORM).filter(BuyerAccountORM.uid == user.uid).first()
+
+            if isinstance(buyer_account_orm, BuyerAccountORM):
+                buyer_account_orm.account_activated = True
+                session.merge(buyer_account_orm)
+            else:
+                buyer_account_orm = BuyerAccountORM(uid=user.uid, account_activated=True)
+                session.add(buyer_account_orm)
+
+            session.commit()
+
+            return BuyerAccount(**buyer_account_orm.to_dict()) if buyer_account_orm else BuyerAccount(uid=user.uid,
+                                                                                                      account_activated=True)
 
     async def get_buyer_account(self, uid: str) -> BuyerAccount:
         with self.get_session() as session:
@@ -57,4 +70,3 @@ class MarketController(Controllers):
             session.add(SellerAccountORM(**seller_account.dict()))
             session.commit()
             return seller_account
-
