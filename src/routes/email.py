@@ -21,10 +21,10 @@ async def get_email(user: User):
     if email_service and email_service.subscription_active and not email_service.subscription_running:
         context.update(email_service=email_service)
         return render_template('email/subscription.html', **context)
+
     if email_service and email_service.subscription_active and  email_service.subscription_running:
         context.update(email_service=email_service)
         return render_template('email/active.html', **context)
-
 
     return render_template('email/email_service.html', **context)
 
@@ -63,6 +63,8 @@ async def create_subscription(user: User):
     except Exception as e:
         # Handle exceptions appropriately, like logging the error
         print("An error occurred:", e)
+        message = str(e)
+        flash(message=message, category='danger')
         return redirect(location=url_for('email.get_email'))
 
 
