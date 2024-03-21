@@ -20,7 +20,8 @@ async def request_approval_to_sell(user: User):
     paypal: PayPal = user_controller.get_paypal_account(uid=user.uid)
     success_url = url_for('market.approval_payment_success', _external=True)
     failure_url = url_for('market.approval_payment_failed', _external=True)
-    payment, is_created = await paypal_controller.create_payment(amount=_approval_amount, user=user, paypal=paypal)
+    payment, is_created = await paypal_controller.create_payment(amount=_approval_amount, user=user, paypal=paypal,
+                                                                 success_url=success_url, failure_url=failure_url)
     if is_created:
         # Redirect user to PayPal for payment approval
         for link in payment.links:
