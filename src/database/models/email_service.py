@@ -11,6 +11,7 @@ class EmailService(BaseModel):
     subscription_id: str = Field(default_factory=create_id)
     uid: str
     email: str
+    email_stub: str
     subscription_term: int
     total_emails: int
     subscription_active: bool = Field(default=False)

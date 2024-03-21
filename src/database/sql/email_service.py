@@ -11,7 +11,8 @@ class EmailServiceORM(Base):
     __tablename__ = 'email_service'
     subscription_id: str = Column(String(NAME_LEN), primary_key=True)
     uid: str = Column(String(NAME_LEN))
-    email: str = Column(String(NAME_LEN))
+    email: str = Column(String(255))
+    email_stub: str = Column(String(255))
     subscription_term: int = Column(Integer)
     total_emails: int = Column(Integer)
     subscription_active: bool = Column(Boolean)
