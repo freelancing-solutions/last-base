@@ -148,23 +148,18 @@ async def add_paypal(user: User):
 
     data: PayPal = await user_controller.add_paypal(user=user, paypal_email=paypal_email)
 
-    if become_seller in ['on', 'ON']:
-        seller_account: SellerAccount = await market_controller.activate_seller_account(user=user, activate=True)
-
-    else:
-        seller_account: SellerAccount = await market_controller.activate_seller_account(user=user, activate=False)
-
-    if become_buyer in ['on', 'ON']:
-        buyer_account: BuyerAccount = await market_controller.activate_buyer_account(user=user, activate=True)
-    else:
-        buyer_account: BuyerAccount = await market_controller.activate_buyer_account(user=user, activate=False)
-
     if not isinstance(data, PayPal):
         _message: str = "Unable to add paypal email to your account"
         flash(message=_message, category="danger")
+
         return redirect(location=url_for('profile.get_profile'))
+
+    seller_account: SellerAccount = await market_controller.activate_seller_account(user=user, activate=True)
+    buyer_account: BuyerAccount = await market_controller.activate_buyer_account(user=user, activate=True)
+
     _message: str = "Successfully created or updated your paypal account - please attach your account"
     flash(message=_message, category="success")
+
     return redirect(location=url_for('profile.get_profile'))
 
 
