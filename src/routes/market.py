@@ -58,7 +58,7 @@ async def approval_payment_success(user: User):
     return redirect(location=url_for('profile.get_profile'))
 
 
-@market_route.post('/dashboard/market/approval-failed')
+@market_route.get('/dashboard/market/approval-failed')
 @login_required
 async def approval_payment_failed(user: User):
     _mes = "We are unable to approve your account for selling please contact us if you believe this is an error"
