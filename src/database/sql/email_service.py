@@ -16,6 +16,7 @@ class EmailServiceORM(Base):
     subscription_term: int = Column(Integer)
     total_emails: int = Column(Integer)
     subscription_active: bool = Column(Boolean)
+    subscription_running: bool = Column(Boolean)
 
 
     @classmethod
@@ -35,5 +36,6 @@ class EmailServiceORM(Base):
             'email': self.email,
             'subscription_term': self.subscription_term,
             'total_emails': self.total_emails,
-            'subscription_active': self.subscription_active
+            'subscription_active': self.subscription_active,
+            'subscription_running': self.subscription_running
         }

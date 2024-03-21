@@ -15,6 +15,7 @@ class EmailService(BaseModel):
     subscription_term: int
     total_emails: int
     subscription_active: bool = Field(default=False)
+    subscription_running: bool = Field(default=False)
 
     @property
     def total_amount(self) -> int:

@@ -16,6 +16,12 @@ email_route = Blueprint('email', __name__)
 @login_required
 async def get_email(user: User):
     context = dict(user=user)
+    email_service = await email_service_controller.get_email_subscription(user=user)
+
+    if email_service:
+        context.update(email_service=email_service)
+        return render_template('email/subscription.html', **context)
+
     return render_template('email/email_service.html', **context)
 
 
