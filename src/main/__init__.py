@@ -19,6 +19,8 @@ market_controller = MarketController()
 wallet_controller = WalletController()
 paypal_controller = PayPalController()
 
+_controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller]
+
 
 def _add_blue_prints(app: Flask):
     """
@@ -32,13 +34,9 @@ def _add_blue_prints(app: Flask):
     from src.routes.profile import profile_route
     from src.routes.admin import admin_route
     from src.routes.wallet import wallet_route
-
-    app.register_blueprint(auth_route)
-    app.register_blueprint(home_route)
-    app.register_blueprint(profile_route)
-    app.register_blueprint(market_route)
-    app.register_blueprint(admin_route)
-    app.register_blueprint(wallet_route)
+    from src.routes.email import email_route
+    for route in [auth_route, home_route, profile_route, market_route, admin_route, wallet_route, email_route]:
+        app.register_blueprint(route)
 
 
 def _add_filters(app: Flask):

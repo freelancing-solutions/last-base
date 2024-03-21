@@ -1,0 +1,136 @@
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+
+<section id="main-content">
+    <div class="card">
+            <div class="card-header">
+                <h3 class="title"> Email Service</h3>
+                <div>
+                    <label class="font-weight-bold text-info">This service allows you to create custom emails to use when creating in-game accounts and farms accounts</label>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <h3>How it works</h3>
+                The Email service allows to submit one email address of which all your emails will be sent to and we in turn
+                create lots of email addresses in this domain and redirect all of the incoming emails to your main email address
+
+                <h3>Benefits</h3>
+               <ol class="list-group">
+                   <li class="list-group-item">Our Auto Responder utility will allow you to automatically verify all accounts as you create them in the game</li>
+                   <li class="list-group-item">This also simplifies your farm creation process as you do not have to sign in to multiple email accounts in order to verify all your game accounts</li>
+               </ol>
+            </div>
+        <div class="card">
+            <div class="card-header">
+                <h3>Subscription</h3>
+                <div>
+
+                    <label class="font-weight-bold">- Upon Subscription your incoming game emails will all be redirected to your main email address</label>
+
+                    <label class="font-weight-bold">- all your activation emails will be activated then sent to your original email address.</label>
+
+                    <label class="font-weight-bold">- <span class="text-danger">(for obvious security reasons)</span> all other game emails including password reset emails will not be auto responded but
+                        just sent to your inbox.</label>
+
+                </div>
+            </div>
+            <form class="form-horizontal" action="{{ url_for('email.create_subscription') }}" method="POST">
+                <div class="form-group">
+                    <label>Email Address Example: <small class="text-info"> name@gmail.com</small></label>
+                    <input type="email" class="form-control" name="email" placeholder="john@gmail.com"/>
+                </div>
+                <div class="form-group">
+                    <label>Subscription Term</label>
+                    <select class="form-control" name="subscription_term" id="subscription_term">
+                        <option value="3" selected> 3 Months Subscription</option>
+                        <option value="6"> 6 Months Subscription</option>
+                        <option value="12"> 12 Months Subscription</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Total Emails</label>
+                    <select class="form-control" name="total_emails" id="total_emails">
+                        <option value="10" selected> 10 Email Addresses</option>
+                        <option value="25"> 25 Email Addresses</option>
+                        <option value="50"> 50 Email Addresses</option>
+                        <option value="100"> 100 Email Addresses</option>
+                    </select>
+                </div>
+
+                <input type="hidden" name="total_amount" id="total_amount" value="15"/>
+
+                <div class="form-group">
+                    <label class="font-weight-bold text-info" id="total_label">Total Subscription: 15 USD</label>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-secondary"><i class="ti ti-email"> </i> Subscribe</button>
+                    </div>
+                </div>
+
+            </form>
+
+
+                </div>
+            </div>
+
+
+    </div>
+</section>
+
+{% endblock %}
+{% block scripts %}
+
+<script>
+    // Function to calculate and update the total subscription amount
+    function updateSubscriptionTotal() {
+        // Get selected values
+        var term = parseInt(document.querySelector('select[name="subscription_term"]').value);
+        var emails = parseInt(document.querySelector('select[name="total_emails"]').value);
+
+        // Calculate total amount
+        var totalAmount = 0;
+        if (term === 3) {
+            if (emails === 10) {
+                totalAmount = 15;
+            } else if (emails === 25) {
+                totalAmount = 30;
+            } else if (emails === 50) {
+                totalAmount = 45;
+            } else if (emails === 100) {
+                totalAmount = 60;
+            }
+        } else if (term === 6) {
+            if (emails === 10) {
+                totalAmount = 25;
+            } else if (emails === 25) {
+                totalAmount = 40;
+            } else if (emails === 50) {
+                totalAmount = 55;
+            } else if (emails === 100) {
+                totalAmount = 70;
+            }
+        } else if (term === 12) {
+            if (emails === 10) {
+                totalAmount = 35;
+            } else if (emails === 25) {
+                totalAmount = 50;
+            } else if (emails === 50) {
+                totalAmount = 65;
+            } else if (emails === 100) {
+                totalAmount = 80;
+            }
+        }
+
+        document.getElementById('total_label').textContent = 'Total Subscription: ' + totalAmount + ' USD';
+        document.getElementById('total_amount').value = totalAmount;
+    }
+
+    document.getElementById('subscription_term').addEventListener('change', updateSubscriptionTotal);
+    document.getElementById('total_emails').addEventListener('change', updateSubscriptionTotal)
+
+    updateSubscriptionTotal();
+</script>
+
+{% endblock %}
