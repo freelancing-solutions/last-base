@@ -80,7 +80,7 @@ async def deposit_success(user: User):
 @login_required
 async def deposit_failure(user: User):
 
-    flash(message=f"Please Note that you can make payment whenever you are ready", category="danger")
+    flash(message=f"Please Note that you can make deposit whenever you are ready", category="danger")
     return redirect(url_for('profile.get_profile'))
 
 
