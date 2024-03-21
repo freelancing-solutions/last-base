@@ -23,16 +23,16 @@ class SellerAccount(BaseModel):
 
 class BuyerAccount(BaseModel):
     uid: str
-    buyer_rating: int  # A Rating of 1 to 10 Based on Feedback
-    buyer_name: int  # Name of the Buyer , Could Also be a nickname
-    account_verified: bool
+    buyer_rating: int = Field(default=0) # A Rating of 1 to 10 Based on Feedback
+    buyer_name: str | None  # Name of the Buyer , Could Also be a nickname
+    account_verified: bool = Field(default=False)
 
-    total_accounts_bought: int
-    total_skins_bought: int
+    total_accounts_bought: int = Field(default=0)
+    total_skins_bought: int = Field(default=0)
 
-    total_amount_spent: int  # Amount Spent in Dollars
-    amount_in_escrow: int  # Amount the buyer puts in Escrow to secure a sale
-    account_activated: bool
+    total_amount_spent: int = Field(default=0)  # Amount Spent in Dollars
+    amount_in_escrow: int = Field(default=0)  # Amount the buyer puts in Escrow to secure a sale
+    account_activated: bool = Field(default=False)
 
 
 #################################################################################################
