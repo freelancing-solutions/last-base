@@ -25,11 +25,13 @@ async def create_subscription(user: User):
     try:
         # Extract data from the form
         email = request.form.get('email')
+        email_stub = request.form.get('email_stub')
         subscription_term = int(request.form.get('subscription_term'))
         total_emails = int(request.form.get('total_emails'))
-        email_service = EmailService(uid=user.uid, email=email, subscription_term=subscription_term,
+
+        email_service = EmailService(uid=user.uid, email=email, email_stub=email_stub, subscription_term=subscription_term,
                                      total_emails=total_emails)
-        paypal: PayPal = user_controller.get_paypal_account(uid=user.uid)
+        paypal: PayPal = await user_controller.get_paypal_account(uid=user.uid)
         print(email_service)
         print(email_service.total_amount)
         success_url: str = url_for('email.subscription_success', _external=True)
