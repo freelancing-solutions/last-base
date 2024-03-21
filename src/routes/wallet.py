@@ -25,7 +25,8 @@ async def make_deposit(user: User):
     :return:
     """
     # Obtaining amount to deposit
-    amount = request.form.get('deposit_amount')
+    amount = int(request.form.get('deposit_amount'))
+    print(f"DEPOSIT AMOUNT : {amount}")
     paypal = await user_controller.get_paypal_account(uid=user.uid)
     payment, is_created = await paypal_controller.create_payment(amount=amount, user=user, paypal=paypal)
     # Create payment
@@ -78,3 +79,19 @@ async def deposit_failure(user: User):
 
     flash(message=f"Please Note that you can make payment whenever you are ready", category="danger")
     return redirect(url_for('profile.get_profile'))
+
+
+@wallet_route.post('/dashboard/wallet/withdrawal')
+@login_required
+async def make_withdrawal(user: User):
+    """
+        make a withdrawal reservation in which it will be approved and then funds be sent to the wallet address
+    :param user:
+    :return:
+    """
+    amount = request.form.get("withdrawal_amount")
+    _message: str = f"A Withdrawal to the amount of : {amount} USD has been reserved and if approved, will be processed ASAP"
+    _cat = "success"
+    flash(message=_message, category=_cat)
+    return redirect(url_for('profile.get_profile'))
+
