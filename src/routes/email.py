@@ -21,6 +21,10 @@ async def get_email(user: User):
     if email_service and email_service.subscription_active and not email_service.subscription_running:
         context.update(email_service=email_service)
         return render_template('email/subscription.html', **context)
+    if email_service and email_service.subscription_active and  email_service.subscription_running:
+        context.update(email_service=email_service)
+        return render_template('email/active.html', **context)
+
 
     return render_template('email/email_service.html', **context)
 
