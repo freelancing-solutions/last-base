@@ -18,7 +18,7 @@ async def get_email(user: User):
     context = dict(user=user)
     email_service = await email_service_controller.get_email_subscription(user=user)
 
-    if email_service:
+    if email_service and email_service.subscription_active and not email_service.subscription_running:
         context.update(email_service=email_service)
         return render_template('email/subscription.html', **context)
 
