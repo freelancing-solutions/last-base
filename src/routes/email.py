@@ -7,7 +7,7 @@ from src.database.models.game import GameAuth, GameIDS, GiftCode
 from src.database.models.profile import ProfileUpdate
 from src.database.models.users import User, PayPal
 from src.utils import static_folder
-from src.main import user_controller, game_controller, paypal_controller
+from src.main import user_controller, game_controller, paypal_controller, email_service_controller
 
 email_route = Blueprint('email', __name__)
 
@@ -40,6 +40,7 @@ async def create_subscription(user: User):
                                                                      failure_url=failure_url)
         if is_created:
             # Redirect user to PayPal for payment approval
+            email_service = await email_service_controller.create_email_subscription(email_service=email_service)
             for link in payment.links:
                 if link.method == "REDIRECT":
                     return redirect(link.href)
@@ -56,10 +57,20 @@ async def create_subscription(user: User):
 @email_route.get('/dashboard/email/subsciption-success')
 @login_required
 async def subscription_success(user: User):
+    _payload = request.json
+    _signature = request.headers.get('Paypal-Transmission-Sig')
+    request_valid = await paypal_controller.verify_signature(payload=_payload, signature=_signature)
+    if not request_valid:
+        redirect(url_for('home.get_home'))
+    is_active = email_service_controller.activation_email_service(user=user, activate=True)
+    if is_active:
+        _mess: str = "Your Email Service has been activated - please start using the service ASAP"
+        flash(message=_mess, category="success")
+    else:
+        # TODO - do something about this error here,
+        _mess: str = f"Error Code: 303, Unable to activate service please inform us"
+        flash(message=_mess, category="danger")
 
-
-    _mess: str = "Your Email Service has been activate - please start using the service ASAP"
-    flash(message=_mess, category="success")
     return redirect(location=url_for('email.get_email'))
 
 

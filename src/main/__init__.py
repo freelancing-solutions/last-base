@@ -12,14 +12,16 @@ from src.controller.game_controller import GameController
 from src.controller.market_controller import MarketController
 from src.controller.wallet_controller import WalletController
 from src.controller.paypal_controller import PayPalController
+from src.controller.email_service_controller import EmailController
 
 user_controller = UserController()
 game_controller = GameController()
 market_controller = MarketController()
 wallet_controller = WalletController()
 paypal_controller = PayPalController()
+email_service_controller = EmailController()
 
-_controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller]
+_controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller, email_service_controller]
 
 
 def _add_blue_prints(app: Flask):
@@ -67,6 +69,7 @@ def create_app(config):
         game_controller.init_app(app=app)
         market_controller.init_app(app=app)
         wallet_controller.init_app(app=app)
+        email_service_controller.init_app(app=app)
         paypal_controller.init_app(app=app, config_instance=config)
         pass
 

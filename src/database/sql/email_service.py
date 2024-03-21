@@ -9,7 +9,7 @@ from src.database.sql import Base, engine
 
 class EmailServiceORM(Base):
     __tablename__ = 'email_service'
-    subscription_id: str = Column(String(NAME_LEN))
+    subscription_id: str = Column(String(NAME_LEN), primary_key=True)
     uid: str = Column(String(NAME_LEN))
     email: str = Column(String(NAME_LEN))
     subscription_term: int = Column(Integer)
