@@ -28,7 +28,10 @@ async def make_deposit(user: User):
     amount = int(request.form.get('deposit_amount'))
     print(f"DEPOSIT AMOUNT : {amount}")
     paypal = await user_controller.get_paypal_account(uid=user.uid)
-    payment, is_created = await paypal_controller.create_payment(amount=amount, user=user, paypal=paypal)
+    success_url = url_for('wallet.deposit_success', _external=True)
+    failure_url = url_for('wallet.deposit_failure', _external=True)
+    payment, is_created = await paypal_controller.create_payment(amount=amount, user=user, paypal=paypal,
+                                                                 success_url=success_url, failure_url=failure_url)
     # Create payment
 
     if is_created:

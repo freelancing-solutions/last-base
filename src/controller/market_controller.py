@@ -21,7 +21,7 @@ class MarketController(Controllers):
 
             if isinstance(seller_account_orm, SellerAccountORM):
                 # If account exists, update activation status
-                seller_account_orm.account_activated = True
+                seller_account_orm.account_activated = activate
                 session.merge(seller_account_orm)
             else:
                 # If account doesn't exist, create a new one and activate it
@@ -39,7 +39,7 @@ class MarketController(Controllers):
             buyer_account_orm = session.query(BuyerAccountORM).filter(BuyerAccountORM.uid == user.uid).first()
 
             if isinstance(buyer_account_orm, BuyerAccountORM):
-                buyer_account_orm.account_activated = True
+                buyer_account_orm.account_activated = activate
                 session.merge(buyer_account_orm)
             else:
                 buyer_account_orm = BuyerAccountORM(uid=user.uid, account_activated=True)
@@ -70,3 +70,15 @@ class MarketController(Controllers):
             session.add(SellerAccountORM(**seller_account.dict()))
             session.commit()
             return seller_account
+
+    async def approved_for_market(self, uid: str, is_approved: bool = False):
+        with self.get_session() as session:
+            seller_account_orm = session.query(SellerAccountORM).filter(SellerAccountORM.uid == uid).first()
+            if isinstance(seller_account_orm, SellerAccountORM):
+                seller_account_orm.account_verified = is_approved
+
+                session.merge(seller_account_orm)
+
+                session.commit()
+                return True
+            return False

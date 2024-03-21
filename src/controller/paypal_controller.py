@@ -28,8 +28,11 @@ class PayPalController(Controllers):
         # })
         super().init_app(app=app)
 
-    async def create_payment(self, amount: int, user: User, paypal: PayPal) -> tuple[Payment, bool]:
+    async def create_payment(self, amount: int, user: User, paypal: PayPal,
+                             success_url: str, failure_url: str) -> tuple[Payment, bool]:
         """
+        :param failure_url:
+        :param success_url:
         :param paypal:
         :param user:
         :param amount: The amount of the payment
@@ -37,8 +40,6 @@ class PayPalController(Controllers):
         :param uid: User ID to be included
         :return: A tuple containing the Payment object and a boolean indicating success or failure
         """
-        _deposit_success_url = url_for('wallet.deposit_success', _external=True)
-        _deposit_failed_url = url_for('wallet.deposit_failure', _external=True)
 
         # Include customer information and UID
         payment = Payment({
@@ -47,8 +48,8 @@ class PayPalController(Controllers):
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": _deposit_success_url,
-                "cancel_url": _deposit_failed_url
+                "return_url": success_url,
+                "cancel_url": failure_url
             },
             "transactions": [{
                 "amount": {
