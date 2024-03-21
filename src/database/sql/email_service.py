@@ -34,6 +34,7 @@ class EmailServiceORM(Base):
             'subscription_id': self.subscription_id,
             'uid': self.uid,
             'email': self.email,
+            'email_stub': self.email_stub,
             'subscription_term': self.subscription_term,
             'total_emails': self.total_emails,
             'subscription_active': self.subscription_active,

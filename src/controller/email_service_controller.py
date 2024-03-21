@@ -42,7 +42,7 @@ class EmailController(Controllers):
 
     async def get_email_subscription(self, user: User) -> EmailService | None:
         with self.get_session() as session:
-            email_service_orm = session.query(EmailServiceORM).filter(EmailService.uid == user.uid).first()
+            email_service_orm = session.query(EmailServiceORM).filter(EmailServiceORM.uid == user.uid).first()
             if isinstance(email_service_orm, EmailServiceORM):
                 return EmailService(**email_service_orm.to_dict())
             else:
