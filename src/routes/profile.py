@@ -149,15 +149,15 @@ async def add_paypal(user: User):
     data: PayPal = await user_controller.add_paypal(user=user, paypal_email=paypal_email)
 
     if become_seller in ['on', 'ON']:
-        seller_account: SellerAccount = await market_controller.activate_seller_account(uid=user.uid, activate=True)
+        seller_account: SellerAccount = await market_controller.activate_seller_account(user=user, activate=True)
 
     else:
         seller_account: SellerAccount = await market_controller.activate_seller_account(uid=user.uid, activate=False)
 
     if become_buyer in ['on', 'ON']:
-        buyer_account: BuyerAccount = await  market_controller.activate_buyer_account(uid=user.uid, activate=True)
+        buyer_account: BuyerAccount = await market_controller.activate_buyer_account(uid=user.uid, activate=True)
     else:
-        buyer_account: BuyerAccount = await  market_controller.activate_buyer_account(uid=user.uid, activate=False)
+        buyer_account: BuyerAccount = await market_controller.activate_buyer_account(uid=user.uid, activate=False)
 
     if not isinstance(data, PayPal):
         _message: str = "Unable to add paypal email to your account"

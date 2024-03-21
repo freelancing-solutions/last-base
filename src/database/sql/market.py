@@ -8,6 +8,7 @@ from src.database.sql import Base, engine
 
 
 class SellerAccountORM(Base):
+    __tablename__ = "seller_account"
     uid: str = Column(String(ID_LEN), primary_key=True)
     seller_rating: int = Column(Integer)
     seller_name: str = Column(String(NAME_LEN))
@@ -16,6 +17,7 @@ class SellerAccountORM(Base):
     total_items_sold: int = Column(Integer)
 
     total_amount_sold: int = Column(Integer)
+    account_activated: bool = Column(Boolean)
 
     @classmethod
     def create_if_not_table(cls):
@@ -35,11 +37,13 @@ class SellerAccountORM(Base):
             'promotional_content': self.promotional_content,
             'account_verified': self.account_verified,
             'total_items_sold': self.total_items_sold,
-            'total_amount_sold': self.total_amount_sold
+            'total_amount_sold': self.total_amount_sold,
+            'account_activated': self.account_activated
         }
 
 
 class BuyerAccountORM(Base):
+    __tablename__ = "buyer_account"
     uid: str = Column(String(ID_LEN), primary_key=True)
     buyer_rating: int = Column(Integer)
     buyer_name: int = Column(String(NAME_LEN))
@@ -50,6 +54,7 @@ class BuyerAccountORM(Base):
 
     total_amount_spent: int = Column(Integer)
     amount_in_escrow: int = Column(Integer)
+    account_activated: bool = Column(Boolean)
 
     @classmethod
     def create_if_not_table(cls):
@@ -70,13 +75,15 @@ class BuyerAccountORM(Base):
             'total_accounts_bought': self.total_accounts_bought,
             'total_skins_bought': self.total_skins_bought,
             'total_amount_spent': self.total_amount_spent,
-            'amount_in_escrow': self.amount_in_escrow
+            'amount_in_escrow': self.amount_in_escrow,
+            'account_activated': self.account_activated
         }
 
 
 class FarmSaleORM(Base):
+    __tablename__ = "farm_sales"
     uid: str = Column(String(ID_LEN))
-    package_id: str = Column(String(ID_LEN))
+    package_id: str = Column(String(ID_LEN), primary_key=True)
 
     state: int = Column(Integer)
     average_base_level: int = Column(Integer)
@@ -117,7 +124,8 @@ class FarmSaleORM(Base):
 
 
 class FarmResourcesORM(Base):
-    package_id: str = Column(String(ID_LEN))
+    __tablename__ = "farm_resources"
+    package_id: str = Column(String(ID_LEN), primary_key=True)
     total_iron: int = Column(Integer)
     total_wood: int = Column(Integer)
     total_oil: int = Column(Integer)
@@ -146,9 +154,10 @@ class FarmResourcesORM(Base):
 
 
 class FarmIDORM(Base):
+    __tablename__ = "farm_id"
     package_id: str = Column(String(NAME_LEN))
     uid: str = Column(String(NAME_LEN))
-    game_id: str = Column(String(NAME_LEN))
+    game_id: str = Column(String(NAME_LEN), primary_key=True)
     game_uid: str = Column(String(NAME_LEN))
     base_level: int = Column(Integer)
     state: int = Column(Integer)
@@ -180,7 +189,8 @@ class FarmIDORM(Base):
 
 
 class FarmCredentialsORM(Base):
-    game_id: str = Column(String(ID_LEN))
+    __tablename__ = "farm_credentials"
+    game_id: str = Column(String(ID_LEN), primary_key=True)
     account_email: str = Column(String(255))
     password: str = Column(String(NAME_LEN))
     pin: str = Column(String(NAME_LEN), nullable=True)
@@ -205,7 +215,8 @@ class FarmCredentialsORM(Base):
 
 
 class MainAccountsCredentialsORM(Base):
-    game_id: str = Column(String(ID_LEN))
+    __tablename__ = "market_accounts_creds"
+    game_id: str = Column(String(ID_LEN), primary_key=True)
     account_email: str = Column(String(255))
     account_password: str = Column(String(NAME_LEN))
     account_pin: str = Column(String(NAME_LEN))

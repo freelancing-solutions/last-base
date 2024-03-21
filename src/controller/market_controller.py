@@ -2,6 +2,8 @@ import requests
 from flask import Flask
 from src.controller import Controllers
 from src.database.models.market import SellerAccount, BuyerAccount
+from src.database.models.users import User
+from src.database.sql.market import SellerAccountORM, BuyerAccountORM
 
 
 class MarketController(Controllers):
@@ -12,14 +14,47 @@ class MarketController(Controllers):
     def init_app(self, app: Flask):
         super().init_app(app=app)
 
-    async def activate_seller_account(self, uid: str, activate: bool):
-        pass
+    async def activate_seller_account(self, user: User, activate: bool) -> SellerAccount:
+        with self.get_session() as session:
+            # Check if seller account exists for the user
+            seller_account_orm = session.query(SellerAccountORM).filter(SellerAccountORM.uid == user.uid).first()
+
+            if isinstance(seller_account_orm, SellerAccountORM):
+                # If account exists, update activation status
+                seller_account_orm.account_activated = True
+                session.merge(seller_account_orm)
+            else:
+                # If account doesn't exist, create a new one and activate it
+                _seller_account_orm = SellerAccountORM(uid=user.uid, account_activated=True)
+                session.add(_seller_account_orm)
+
+            session.commit()  # Commit changes to the database
+
+            # Return the corresponding SellerAccount object
+            return SellerAccount(**seller_account_orm.to_dict()) if seller_account_orm else SellerAccount(
+                uid=user.uid, account_activated=True)
 
     async def activate_buyer_account(self, uid: str, activate: bool):
         pass
 
-    async def get_seller_account(self, uid: str) -> SellerAccount:
-        pass
-
     async def get_buyer_account(self, uid: str) -> BuyerAccount:
-        pass
+        with self.get_session() as session:
+            buyer_account_orm = session.query(BuyerAccountORM).filter(BuyerAccountORM.uid == uid).first()
+            if isinstance(buyer_account_orm, BuyerAccountORM):
+                return BuyerAccount(**buyer_account_orm.to_dict())
+
+            buyer_account = BuyerAccount(uid=uid)
+            session.add(BuyerAccountORM(**buyer_account.dict()))
+            session.commit()
+            return buyer_account
+
+    async def get_seller_account(self, uid: str) -> SellerAccount:
+        with self.get_session() as session:
+            seller_account_orm = session.query(SellerAccountORM).filter(SellerAccountORM.uid == uid).first()
+            if isinstance(seller_account_orm, SellerAccountORM):
+                return SellerAccount(**seller_account_orm.to_dict())
+            seller_account = SellerAccount(uid=uid)
+            session.add(SellerAccountORM(**seller_account.dict()))
+            session.commit()
+            return seller_account
+

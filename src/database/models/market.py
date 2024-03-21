@@ -9,14 +9,16 @@ class SellerAccount(BaseModel):
         A Strcuture needed for Sellers to sell their Farms
     """
     uid: str
-    seller_rating: int  # A Rating of 1 to 10 Based on Feedback
-    seller_name: str
-    promotional_content: str
-    account_verified: bool
-    total_items_sold: int  # Farms, Accounts and Skins
-
-    total_amount_sold: int  # Amount Sold in Dollars
-    account_activated: bool
+    # A Rating of 1 to 10 Based on Feedback
+    seller_rating: int = Field(default=0)
+    seller_name: str | None
+    promotional_content: str | None
+    account_verified: bool = Field(default=False)
+    # Farms, Accounts and Skins
+    total_items_sold: int = Field(default=0)
+    # Amount Sold in Dollars
+    total_amount_sold: int = Field(default=0)
+    account_activated: bool = Field(default=False)
 
 
 class BuyerAccount(BaseModel):
