@@ -6,7 +6,7 @@ def bootstrapper():
     from src.database.sql.market import BuyerAccountORM, SellerAccountORM
     from src.database.sql.email_service import EmailServiceORM
     from src.database.sql.game import GiftCodesSubscriptionORM
-
+    GiftCodesSubscriptionORM.delete_table()
     classes_to_create = [UserORM, PayPalORM, ProfileORM, NotificationORM, GameIDSORM, GiftCodesORM, RedeemCodesORM,
                          WalletTransactionORM, WalletORM, BuyerAccountORM, SellerAccountORM, EmailServiceORM,
                          GiftCodesSubscriptionORM]
