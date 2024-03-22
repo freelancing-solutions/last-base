@@ -63,3 +63,16 @@ async def get_email_service(user: User):
     except Exception:
         pass
 
+
+@admin_route.get('/admin/accounts')
+@admin_login
+async def get_accounts(user: User):
+    try:
+        context = dict(user=user)
+        accounts_list = await user_controller.get_all_accounts()
+        context.update(accounts_list=accounts_list)
+        return render_template('admin/accounts.html', **context)
+    except Exception as e:
+        print(str(e))
+        flash(message=str(e), category="danger")
+        return render_template('admin/accounts.html', **context)

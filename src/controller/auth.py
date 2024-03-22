@@ -393,3 +393,10 @@ class UserController(Controllers):
         current_time: int = int(time.time())
         elapsed_time = current_time - int(_data.get('timestamp', 0))
         return (elapsed_time < self._time_limit) and (email.casefold() == _data.get('email'))
+
+
+    async def get_all_accounts(self) -> list[User]:
+        with self.get_session() as session:
+            accounts_list = session.query(UserORM).all()
+            return [User(**account.to_dict()) for account in accounts_list if account]
+

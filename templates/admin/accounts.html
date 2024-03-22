@@ -1,0 +1,39 @@
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+
+<section id="main-content">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"> Accounts</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <td>Username</td>
+                        <td>Email</td>
+{#                        <td>Is Verified</td>#}
+                        <td>Is Admin</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for account in accounts_list %}
+                    <tr>
+                        <td>{{ account.username }}</td>
+                        <td>{{ account.email }}</td>
+{#                        <td>{{ account.is_verified }}</td>#}
+                        <td>{{ account.is_system_admin }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}
