@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from src.authentication import login_required, admin_login
 from src.database.models.game import GameAuth, GameIDS, GiftCode
 from src.database.models.profile import ProfileUpdate
-from src.database.models.users import User
+from src.database.models.users import User, UserUpdate
 from src.utils import static_folder
 from src.main import user_controller, game_controller, email_service_controller
 
@@ -54,7 +54,6 @@ async def add_gift_code(user: User):
 @admin_route.get('/admin/email-service')
 @admin_login
 async def get_email_service(user: User):
-
     try:
         context = dict(user=user)
         email_services = await email_service_controller.get_all_active_subscriptions()
@@ -70,9 +69,38 @@ async def get_accounts(user: User):
     try:
         context = dict(user=user)
         accounts_list = await user_controller.get_all_accounts()
-        context.update(accounts_list=accounts_list)
+
+        context.update(accounts_list=accounts_list, total_accounts=len(accounts_list))
         return render_template('admin/accounts.html', **context)
     except Exception as e:
+        context = dict(user=user, accounts_list=[], total_accounts=0)
         print(str(e))
         flash(message=str(e), category="danger")
         return render_template('admin/accounts.html', **context)
+
+
+@admin_route.get('/admin/account/<string:uid>')
+@admin_login
+async def edit_user(user: User, uid: str):
+    try:
+        account = await user_controller.get_account_by_uid(uid=uid)
+        if account:
+            context = dict(user=user, account=account)
+            return render_template('admin/edit_account.html', **context)
+    except Exception as e:
+        context = dict(user=user)
+        print(str(e))
+        flash(message=str(e), category="danger")
+        return render_template('admin/accounts.html', **context)
+
+
+@admin_route.post('/admin/account/<string:uid>')
+@admin_login
+async def update_account(user: User, uid: str):
+    try:
+        account_update = UserUpdate(**request.form)
+        # will update account
+    except ValidationError as e:
+        print(str(e))
+        flash(message=str(e), category='danger')
+        return redirect('admin.get_accounts')

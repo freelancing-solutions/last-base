@@ -107,6 +107,7 @@ class UserUpdate(BaseModel):
     username: str
     email: str
     account_verified: bool = Field(default=False)
+    is_system_admin: bool = Field(default=False)
 
     class Config:
         extra = Extra.ignore

@@ -400,3 +400,10 @@ class UserController(Controllers):
             accounts_list = session.query(UserORM).all()
             return [User(**account.to_dict()) for account in accounts_list if account]
 
+
+    async def get_account_by_uid(self, uid: str) -> User | None:
+        with self.get_session() as session:
+            account_orm = session.query(UserORM).filter(UserORM.uid == uid).first()
+            if isinstance(account_orm, UserORM):
+                return User(**account_orm.to_dict())
+            return None
