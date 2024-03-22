@@ -126,10 +126,14 @@ async def delete_profile(user: User):
 async def add_game(user: User):
     game_id: str = request.form.get('game_id')
     profile = await user_controller.create_profile(main_game_id=game_id, uid=user.uid)
-    game_ids = GameIDS(game_id_list=[profile.main_game_id])
-    game_data = await game_controller.add_game_ids(uid=user.uid, game_ids=game_ids)
-    flash(message="game profile created", category='success')
-    return redirect(url_for('profile.get_profile'))
+    if profile:
+        game_ids = GameIDS(game_id_list=[profile.main_game_id])
+        game_data = await game_controller.add_game_ids(uid=user.uid, game_ids=game_ids)
+        flash(message="game profile created", category='success')
+        return redirect(url_for('profile.get_profile'))
+    else:
+        flash(message="Unable to create profile with that Game ID, probably already used", category="danger")
+        return redirect(url_for('profile.get_profile'))
 
 
 @profile_route.post('/dashboard/paypal')
@@ -333,9 +337,7 @@ async def gift_code_subscribe_success(user: User):
 @profile_route.get('/dashboard/gift-codes-subscribe/failure')
 @login_required
 async def gift_code_subscribe_failure(user: User):
-
     _message = "Unfortunately we are unable to create your subscription - subscription cancelled"
 
     flash(message=_message, category="danger")
     return redirect(url_for('profile.get_gift_codes'))
-
