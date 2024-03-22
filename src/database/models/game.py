@@ -1,3 +1,4 @@
+import uuid
 from datetime import date, datetime
 from enum import Enum
 
@@ -67,3 +68,23 @@ class RedeemCodes(BaseModel):
     id: str
     game_id: str
     code: str
+
+
+def today():
+    return datetime.today()
+
+def create_id():
+    return str(uuid.uuid4())
+
+class GiftCodesSubscriptions(BaseModel):
+    uid: str
+    subscription_id: str = Field(default_factory=create_id)
+    base_limit: int
+    amount_paid: int
+    remaining_codes: int = Field(default=30)
+    date_created: date = Field(default_factory=today)
+    subscription_active: bool = Field(default=False)
+
+    @property
+    def is_valid(self):
+        return (self.remaining_codes > 0) and self.subscription_active

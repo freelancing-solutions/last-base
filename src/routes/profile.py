@@ -261,19 +261,29 @@ async def gift_codes_subscribe(user: User):
     :param user:
     :return:
     """
-    subscription_amount: int = 30
+    subscription_amount: int = int(request.form.get('subscription_amount'))
+    base_limit: int = int(request.form.get('base_limit'))
+
     success_url: str = url_for('profile.gift_code_subscribe_success', _external=True)
     failure_url: str = url_for('profile.gift_code_subscribe_failure', _external=True)
-
-    payment, is_created = await paypal_controller.create_payment(amount=subscription_amount, user=user,
+    paypal: PayPal = await user_controller.get_paypal_account(uid=user.uid)
+    payment, is_created = await paypal_controller.create_payment(amount=subscription_amount, user=user, paypal=paypal,
                                                                  success_url=success_url, failure_url=failure_url)
     if is_created:
-        # Redirect user to PayPal for payment approval
-        for link in payment.links:
-            if link.method == "REDIRECT":
-                return redirect(link.href)
+        subscription = await game_controller.create_gift_code_subscription(user=user,
+                                                                           subscription_amount=subscription_amount,
+                                                                           base_limit=base_limit)
+        if subscription:
+            # Redirect user to PayPal for payment approval
+            for link in payment.links:
+                if link.method == "REDIRECT":
+                    return redirect(link.href)
+        else:
+            message: str = "You already have a gift code subscription"
+            flash(message=message, category="success")
+            return redirect(url_for('profile.get_gift_codes'))
     else:
-        flash(message=f"Error creating Payment : {payment.error}")
+        flash(message=f"Error creating Gift Code Subscription please inform us : {payment.error}", category="danger")
         return redirect(url_for('profile.get_profile'))
 
     _message = "Successfully Subscribed the Game ID's below to be automatically redeemed"
@@ -285,10 +295,47 @@ async def gift_codes_subscribe(user: User):
 @profile_route.get('/dashboard/gift-codes-subscribe/success')
 @login_required
 async def gift_code_subscribe_success(user: User):
-    pass
+    _payload = request.json
+    _signature = request.headers.get('Paypal-Transmission-Sig')
+    request_valid = await paypal_controller.verify_signature(payload=_payload, signature=_signature)
+    if not request_valid:
+        redirect(url_for('home.get_home'))
+    amount = int(_payload.get("resource", {}).get("amount", {}).get("total"))
+
+    gift_codes_subscription = await game_controller.get_gift_code_subscription(user=user)
+
+    if gift_codes_subscription.amount_paid > amount:
+        mes: str = ("There is a problem with the paid amount for this subscription please contact admin - to resolve "
+                    "the issue")
+        flash(message=mes, category="danger")
+        return redirect(url_for('profile.get_gift_codes'))
+
+    if not gift_codes_subscription.subscription_active:
+
+        gift_codes_subscription = await game_controller.gift_code_subscription_is_active(
+            subscription_id=gift_codes_subscription.subscription_id, is_active=True)
+
+        if gift_codes_subscription.is_valid:
+            message: str = "Your Gift Code subscription is now active and valid"
+            flash(message=message, category="success")
+            return redirect(url_for('profile.get_gift_codes'))
+        mes: str = "General Error when creating gift Codes Subscription - please contact Admin"
+        flash(message=mes, category="danger")
+        return redirect(url_for('profile.get_gift_codes'))
+
+    else:
+        mes: str = ("System Error your Gift Code Subscription was already active - please contact admin to resolve the "
+                    "issue")
+        flash(message=mes, category="danger")
+        return redirect(url_for('profile.get_gift_codes'))
 
 
 @profile_route.get('/dashboard/gift-codes-subscribe/failure')
 @login_required
 async def gift_code_subscribe_failure(user: User):
-    pass
+
+    _message = "Unfortunately we are unable to create your subscription - subscription cancelled"
+
+    flash(message=_message, category="danger")
+    return redirect(url_for('profile.get_gift_codes'))
+

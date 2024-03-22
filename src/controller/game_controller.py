@@ -2,8 +2,9 @@ import requests
 from flask import Flask
 
 from src.controller import Controllers
-from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut, GameDataInternal
-from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM
+from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut, GameDataInternal, GiftCodesSubscriptions
+from src.database.models.users import User
+from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM, GiftCodesSubscriptionORM
 
 
 class GameController(Controllers):
@@ -186,3 +187,42 @@ class GameController(Controllers):
                 session.commit()
                 return _game_account
             return {}
+
+    async def create_gift_code_subscription(self, user: User, subscription_amount: int,
+                                            base_limit: int) -> GiftCodesSubscriptions | None:
+        with self.get_session() as session:
+            gift_codes_subscriptions_orm = session.query(GiftCodesSubscriptionORM).filter(
+                GiftCodesSubscriptionORM.uid == user.uid).first()
+            if isinstance(gift_codes_subscriptions_orm, GiftCodesSubscriptionORM):
+
+                if not gift_codes_subscriptions_orm.subscription_active:
+                    return GiftCodesSubscriptions(**gift_codes_subscriptions_orm.to_dict())
+
+                return None
+
+            gift_codes_subscription = GiftCodesSubscriptions(uid=user.uid,
+                                                             base_limit=base_limit,
+                                                             amount_paid=subscription_amount)
+            session.add(GiftCodesSubscriptionORM(**gift_codes_subscription.dict()))
+            session.commit()
+            return gift_codes_subscription
+
+    async def get_gift_code_subscription(self, user: User) -> GiftCodesSubscriptions | None:
+        with self.get_session() as session:
+            gift_code_subscriptions_orm = session.query(GiftCodesSubscriptionORM).filter(
+                GiftCodesSubscriptionORM.uid == user.uid).first()
+            if isinstance(gift_code_subscriptions_orm, GiftCodesSubscriptionORM):
+                return GiftCodesSubscriptions(**gift_code_subscriptions_orm.to_dict())
+            else:
+                return None
+
+    async def gift_code_subscription_is_active(self, subscription_id: str, is_active: bool):
+        with self.get_session() as session:
+            gift_code_subscription_orm = session.query(GiftCodesSubscriptionORM).filter(
+                GiftCodesSubscriptionORM.subscription_id == subscription_id).first()
+            if isinstance(gift_code_subscription_orm, GiftCodesSubscriptionORM):
+                gift_code_subscription_orm.subscription_active = is_active
+                gift_code_subscription = GiftCodesSubscriptions(**gift_code_subscription_orm.to_dict())
+                session.merge(gift_code_subscription_orm)
+                session.commit()
+                return gift_code_subscription

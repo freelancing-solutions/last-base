@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from sqlalchemy import Column, String, inspect, ForeignKey, Boolean, func, Integer, Date, DateTime
 
@@ -125,4 +125,36 @@ class RedeemCodesORM(Base):
             'id': self.id,
             'game_id': self.game_id,
             'code': self.code
+        }
+
+
+class GiftCodesSubscriptionORM(Base):
+    __tablename__ = "gift_codes_subscription"
+    uid: str = Column(String(NAME_LEN))
+    subscription_id: str = Column(String(NAME_LEN), primary_key=True)
+    base_limit: int = Column(Integer)
+    amount_paid: int = Column(Integer)
+    remaining_codes: int = Column(Integer)
+    date_created: date = Column(DateTime)
+    subscription_active: bool = Column(Boolean)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            'uid': self.uid,
+            'subscription_id': self.subscription_id,
+            'base_limit': self.base_limit,
+            'amount_paid': self.amount_paid,
+            'remaining_codes': self.remaining_codes,
+            'date_created': self.date_subscribed.strftime('%Y-%m-%d %H:%M:%S') if self.date_subscribed else None,
+            "subscription_active": self.subscription_active
         }
