@@ -8,7 +8,7 @@ from src.database.models.profile import ProfileUpdate, Profile
 from src.database.models.users import User, PayPal
 from src.database.models.wallet import Wallet
 
-from src.main import user_controller, game_controller, market_controller, wallet_controller
+from src.main import user_controller, game_controller, market_controller, wallet_controller, paypal_controller
 
 profile_route = Blueprint('profile', __name__)
 
@@ -261,7 +261,34 @@ async def gift_codes_subscribe(user: User):
     :param user:
     :return:
     """
+    subscription_amount: int = 30
+    success_url: str = url_for('profile.gift_code_subscribe_success', _external=True)
+    failure_url: str = url_for('profile.gift_code_subscribe_failure', _external=True)
+
+    payment, is_created = await paypal_controller.create_payment(amount=subscription_amount, user=user,
+                                                                 success_url=success_url, failure_url=failure_url)
+    if is_created:
+        # Redirect user to PayPal for payment approval
+        for link in payment.links:
+            if link.method == "REDIRECT":
+                return redirect(link.href)
+    else:
+        flash(message=f"Error creating Payment : {payment.error}")
+        return redirect(url_for('profile.get_profile'))
+
     _message = "Successfully Subscribed the Game ID's below to be automatically redeemed"
 
     flash(message=_message, category="danger")
     return redirect(url_for('profile.get_gift_codes'))
+
+
+@profile_route.get('/dashboard/gift-codes-subscribe/success')
+@login_required
+async def gift_code_subscribe_success(user: User):
+    pass
+
+
+@profile_route.get('/dashboard/gift-codes-subscribe/failure')
+@login_required
+async def gift_code_subscribe_failure(user: User):
+    pass
