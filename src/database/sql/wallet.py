@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import datetime, date
 
-from sqlalchemy import Column, Integer, String, DateTime, inspect, Text
+from sqlalchemy import Column, Integer, String, DateTime, inspect, Text, Date, Boolean
 
-from src.database.constants import ID_LEN
+from src.database.constants import ID_LEN, NAME_LEN
 from src.database.sql import engine, Base
 
 
@@ -55,7 +55,7 @@ class WalletTransactionORM(Base):
 
 class WalletORM(Base):
     __tablename__ = "wallet"
-    uid: str = Column(Integer, primary_key=True)
+    uid: str = Column(String(ID_LEN), primary_key=True)
     balance: int = Column(Integer)
     escrow: int = Column(Integer)
     transactions: str = Column(Text)
@@ -78,3 +78,31 @@ class WalletORM(Base):
             'transactions': self.transactions.split(",")
         }
 
+
+class WithdrawalRequestsORM(Base):
+    __tablename__ = "withdrawal_requests"
+    uid: str = Column(String(ID_LEN))
+    request_id: str = Column(String(ID_LEN), primary_key=True)
+    withdrawal_amount: int = Column(Integer)
+    date_created: date = Column(Date)
+    is_valid: bool = Column(Boolean)
+    is_processed: bool = Column(Boolean)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self) -> dict[str, str | int | list[str]]:
+        return {
+            'uid': self.uid,
+            'request_id': self.request_id,
+            'withdrawal_amount': self.withdrawal_amount,
+            'date_created': self.date_created,
+            'is_valid': self.is_valid
+        }

@@ -9,7 +9,7 @@ from src.database.models.game import GameAuth, GameIDS, GameDataInternal, GameAc
 from src.database.models.market import SellerAccount, BuyerAccount
 from src.database.models.profile import ProfileUpdate, Profile
 from src.database.models.users import User, PayPal
-from src.database.models.wallet import Wallet
+from src.database.models.wallet import Wallet, WithdrawalRequests
 
 from src.main import user_controller, game_controller, market_controller, wallet_controller, paypal_controller
 
@@ -92,9 +92,29 @@ async def make_withdrawal(user: User):
     :param user:
     :return:
     """
-    amount = request.form.get("withdrawal_amount")
-    _message: str = f"A Withdrawal to the amount of : {amount} USD has been reserved and if approved, will be processed ASAP"
-    _cat = "success"
-    flash(message=_message, category=_cat)
-    return redirect(url_for('profile.get_profile'))
+    amount = int(request.form.get("withdrawal_amount"))
+    user_wallet = await wallet_controller.get_wallet(uid=user.uid)
 
+    if user_wallet.balance < amount:
+        mes: str = "Insufficient Balance"
+        flash(message=mes, category="danger")
+        return redirect(url_for('profile.get_profile'))
+    withdrawal = WithdrawalRequests(uid=user.uid, withdrawal_amount=amount)
+    withdrawal.is_valid = True
+    withdrawal_request = await wallet_controller.create_withdrawal_request(user=user, withdrawal=withdrawal)
+
+    if withdrawal_request:
+
+        transaction = await user_wallet.withdraw_funds(amount=amount)
+        transaction_saved = await wallet_controller.add_transaction(transaction=transaction)
+        if transaction_saved:
+
+            _message: str = (f"A Withdrawal to the amount of : {amount} USD, Has been reserved and if approved, will be "
+                             f"processed ASAP")
+            _cat = "success"
+            flash(message=_message, category=_cat)
+            return redirect(url_for('profile.get_profile'))
+
+    _message: str = "There was a problem completing withdrawal request please inform admin"
+    flash(message=_message, category="success")
+    return redirect(url_for('profile.get_profile'))

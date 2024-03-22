@@ -2,8 +2,9 @@ from flask import Flask
 from pydantic import PositiveInt
 
 from src.controller import Controllers, error_handler
-from src.database.models.wallet import Wallet, WalletTransaction, TransactionType
-from src.database.sql.wallet import WalletTransactionORM
+from src.database.models.users import User
+from src.database.models.wallet import Wallet, WalletTransaction, TransactionType, WithdrawalRequests
+from src.database.sql.wallet import WalletTransactionORM, WithdrawalRequestsORM
 
 
 class WalletController(Controllers):
@@ -90,3 +91,14 @@ class WalletController(Controllers):
             session.add(transaction_orm)
             session.commit()
             return True
+
+    @error_handler
+    async def create_withdrawal_request(self, user: User, withdrawal: WithdrawalRequests):
+        with self.get_session() as session:
+            withdrawal_orm = WithdrawalRequestsORM(**withdrawal.dict())
+            session.add(withdrawal_orm)
+            session.commit()
+            return withdrawal
+
+
+

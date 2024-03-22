@@ -1,4 +1,5 @@
-from datetime import datetime
+import uuid
+from datetime import datetime, date
 
 from pydantic import BaseModel, Field, PositiveInt
 
@@ -158,3 +159,20 @@ class Wallet(WalletConst):
         )
         self.transactions.append(transaction)
         return transaction
+
+
+def today():
+    return datetime.today()
+
+
+def create_id():
+    return str(uuid.uuid4())
+
+
+class WithdrawalRequests(BaseModel):
+    uid: str
+    request_id: str = Field(default_factory=create_id)
+    withdrawal_amount: int
+    date_created: date = Field(default_factory=today)
+    is_valid: bool = Field(default=False)
+    is_processed: bool = Field(default=False)

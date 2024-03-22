@@ -6,10 +6,11 @@ def bootstrapper():
     from src.database.sql.market import BuyerAccountORM, SellerAccountORM
     from src.database.sql.email_service import EmailServiceORM
     from src.database.sql.game import GiftCodesSubscriptionORM
+    from src.database.sql.wallet import WithdrawalRequestsORM
 
     classes_to_create = [UserORM, PayPalORM, ProfileORM, NotificationORM, GameIDSORM, GiftCodesORM, RedeemCodesORM,
                          WalletTransactionORM, WalletORM, BuyerAccountORM, SellerAccountORM, EmailServiceORM,
-                         GiftCodesSubscriptionORM]
+                         GiftCodesSubscriptionORM, WithdrawalRequestsORM]
 
     for cls in classes_to_create:
         cls.create_if_not_table()
