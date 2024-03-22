@@ -6,7 +6,7 @@ from src.database.models.game import GameAuth, GameIDS, GiftCode
 from src.database.models.profile import ProfileUpdate
 from src.database.models.users import User
 from src.utils import static_folder
-from src.main import user_controller, game_controller
+from src.main import user_controller, game_controller, email_service_controller
 
 admin_route = Blueprint('admin', __name__)
 
@@ -49,3 +49,17 @@ async def add_gift_code(user: User):
     flash(message=_mess, category="success")
     context = dict(user=user)
     return render_template('admin/gift_code.html', **context)
+
+
+@admin_route.get('/admin/email-service')
+@admin_login
+async def get_email_service(user: User):
+
+    try:
+        context = dict(user=user)
+        email_services = await email_service_controller.get_all_active_subscriptions()
+        context.update(email_services=email_services)
+        return render_template('admin/email_service.html', **context)
+    except Exception:
+        pass
+

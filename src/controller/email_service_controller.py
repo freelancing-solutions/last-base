@@ -47,3 +47,8 @@ class EmailController(Controllers):
                 return EmailService(**email_service_orm.to_dict())
             else:
                 return None
+
+    async def get_all_active_subscriptions(self) -> list[EmailService]:
+        with self.get_session() as session:
+            email_services_orm = session.query(EmailServiceORM).filter(EmailServiceORM.subscription_running == False).all()
+            return [EmailService(**email_orm.to_dict()) for email_orm in email_services_orm if email_orm]

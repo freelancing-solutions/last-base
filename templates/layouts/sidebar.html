@@ -40,7 +40,7 @@
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
                             <ul>
                                 <li><a href="{{ url_for('admin.get_gift_code')}}"><i class="ti-user"></i> Gift Codes</a></li>
-                                <li><a href="#"><i class="ti-user"></i> Verifications</a></li>
+                                <li><a href="{{ url_for('admin.get_email_service') }}"><i class="ti-email"></i> Email Service</a></li>
                             </ul>
                         </li>
                     {% endif %}
