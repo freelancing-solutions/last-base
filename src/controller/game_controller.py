@@ -1,11 +1,46 @@
 import requests
 from flask import Flask
 
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad
+from Crypto.Util.Padding import unpad
+from base64 import b64encode, b64decode
+
 from src.controller import Controllers, error_handler
 from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut, GameDataInternal, GiftCodesSubscriptions
 from src.database.models.users import User
 from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM, GiftCodesSubscriptionORM
 
+
+
+class Encryption:
+    def __init__(self, key):
+        self.key = self.pad_key(key)
+
+    def pad_key(self, key):
+        # Pad or truncate the key to 8 bytes
+        key_length = len(key)
+        if key_length < 8:
+            # Pad the key with zero bytes ('\x00') if it's shorter than 8 bytes
+            padded_key = key + (8 - key_length) * '\x00'
+        elif key_length > 8:
+            # Truncate the key if it's longer than 8 bytes
+            padded_key = key[:8]
+        else:
+            padded_key = key
+        return padded_key
+
+    def encrypt(self, plaintext):
+        cipher = DES.new(self.key.encode(), DES.MODE_ECB)
+        padded_plaintext = pad(plaintext.encode(), DES.block_size)
+        ciphertext = cipher.encrypt(padded_plaintext)
+        return b64encode(ciphertext).decode()
+
+    def decrypt(self, ciphertext):
+        cipher = DES.new(self.key.encode(), DES.MODE_ECB)
+        decrypted_data = cipher.decrypt(b64decode(ciphertext))
+        unpadded_data = unpad(decrypted_data, DES.block_size)
+        return unpadded_data.decode()
 
 class GameController(Controllers):
 
@@ -14,9 +49,32 @@ class GameController(Controllers):
         self.redeem_url = "https://gslls.im30app.com/gameservice/web_code.php"
         self.captcha = "XtWh&id=cdca0109-e089-4929-a771-74a49fba48ed"
         self._game_data_url: str = 'https://gslls.im30app.com/gameservice/web_getserverbyname.php'
+        self._account_verification_endpoint: str = "https://lsaccount.im30.net/common/v1/login"
+        self._encryption_key: str = "$VfXlM^U#*"
 
     def init_app(self, app: Flask):
         super().init_app(app=app)
+
+    async def game_account_valid(self, email: str, password: str):
+        """
+            This method will Validate Game Accounts
+        :param email:
+        :param password:
+        :return:
+        """
+        # Create a dictionary with form data
+
+        encryptor = Encryption(self._encryption_key)
+        encrypted_password = encryptor.encrypt(password)
+        form_data = {'email': email, 'pass': encrypted_password}
+
+        # Make the request with form data
+        response = requests.post(url=self._account_verification_endpoint, data=form_data)
+        if response.ok:
+            response_data = response.json()
+            if response_data.get('code') == 10000:
+                return True
+        return False
 
     @error_handler
     async def create_account_verification_request(self, game_data: GameAuth) -> GameAuth:
@@ -47,6 +105,7 @@ class GameController(Controllers):
         response = requests.get(url=self._game_data_url, params=_params)
         game_data = response.json()
         return GameDataInternal.from_json(data=game_data, game_id=game_id, uid=uid)
+
     @error_handler
     async def get_users_game_ids(self, uid: str) -> list[GameDataInternal]:
         """
@@ -57,6 +116,7 @@ class GameController(Controllers):
         with self.get_session() as session:
             return [GameDataInternal(**game_data.to_dict()) for game_data in
                     session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()]
+
     @error_handler
     async def add_game_ids(self, uid: str, game_ids: GameIDS):
         with self.get_session() as session:
