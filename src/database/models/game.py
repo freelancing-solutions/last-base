@@ -73,8 +73,10 @@ class RedeemCodes(BaseModel):
 def today():
     return datetime.today()
 
+
 def create_id():
     return str(uuid.uuid4())
+
 
 class GiftCodesSubscriptions(BaseModel):
     uid: str
