@@ -18,6 +18,7 @@ class GameController(Controllers):
     def init_app(self, app: Flask):
         super().init_app(app=app)
 
+    @error_handler
     async def create_account_verification_request(self, game_data: GameAuth) -> GameAuth:
         """
 
@@ -34,6 +35,7 @@ class GameController(Controllers):
             session.commit()
             return game_data
 
+    @error_handler
     async def _get_game_data(self, uid: str, game_id: str, lang: str = 'en') -> GameDataInternal:
         """
 
@@ -45,7 +47,7 @@ class GameController(Controllers):
         response = requests.get(url=self._game_data_url, params=_params)
         game_data = response.json()
         return GameDataInternal.from_json(data=game_data, game_id=game_id, uid=uid)
-
+    @error_handler
     async def get_users_game_ids(self, uid: str) -> list[GameDataInternal]:
         """
 
@@ -73,6 +75,7 @@ class GameController(Controllers):
 
         return True
 
+    @error_handler
     async def get_active_gift_codes(self) -> list[GiftCodeOut]:
         """
 
@@ -82,6 +85,7 @@ class GameController(Controllers):
             gift_codes_list = await self.get_all_gift_codes()
             return [gift_code for gift_code in gift_codes_list if gift_code.is_valid]
 
+    @error_handler
     async def get_all_gift_codes(self) -> list[GiftCodeOut]:
         """
 
@@ -90,6 +94,7 @@ class GameController(Controllers):
         with self.get_session() as session:
             return [GiftCodeOut(**gift_code_orm.to_dict()) for gift_code_orm in session.query(GiftCodesORM).all()]
 
+    @error_handler
     async def add_new_gift_code(self, gift_code: GiftCode) -> GiftCode:
         with self.get_session() as session:
             gift_code_orm_ = session.query(GiftCodesORM.code == gift_code.code).first()
@@ -105,6 +110,7 @@ class GameController(Controllers):
 
             return gift_code
 
+    @error_handler
     async def redeem_external(self, game_id: str, gift_code: str):
         """
             "will actually call the game servers and redeem the code"
@@ -116,6 +122,7 @@ class GameController(Controllers):
         _response = requests.get(url=self.redeem_url, params=_params)
         return _response.ok
 
+    @error_handler
     async def redeem_code_for_all_game_ids(self, gift_code: GiftCode):
         """
         Redeems a specific gift code for all present game ids
@@ -139,6 +146,7 @@ class GameController(Controllers):
 
         return True
 
+    @error_handler
     async def redeem_none_expired_codes(self):
         """
         this should be called automatically on certain times of day
@@ -149,6 +157,7 @@ class GameController(Controllers):
             for code in none_expired_codes:
                 await self.redeem_code_for_all_game_ids(gift_code=code)
 
+    @error_handler
     async def delete_game(self, game_id: str):
         with self.get_session() as session:
             game_to_delete = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
@@ -163,12 +172,14 @@ class GameController(Controllers):
 
             return True
 
+    @error_handler
     async def get_game_accounts(self, uid: str) -> list[GameDataInternal]:
         with self.get_session() as session:
             game_accounts = session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()
             return [GameDataInternal(**game_account.to_dict()) for game_account in game_accounts if
                     isinstance(game_account, GameIDSORM)]
 
+    @error_handler
     async def get_game_by_game_id(self, uid: str, game_id: str) -> GameDataInternal | dict[str, str]:
         with self.get_session() as session:
             game_account: GameIDSORM = session.query(GameIDSORM).filter(GameIDSORM.uid == uid,
@@ -177,6 +188,7 @@ class GameController(Controllers):
                 return GameDataInternal(**game_account.to_dict())
             return {}
 
+    @error_handler
     async def update_game_account_type(self, game_id: str, account_type: str):
         with self.get_session() as session:
             game_account: GameIDSORM = session.query(GameIDSORM).filter(GameIDSORM.game_id == game_id).first()
@@ -188,6 +200,7 @@ class GameController(Controllers):
                 return _game_account
             return {}
 
+    @error_handler
     async def create_gift_code_subscription(self, user: User, subscription_amount: int,
                                             base_limit: int) -> GiftCodesSubscriptions | None:
         with self.get_session() as session:
@@ -207,6 +220,7 @@ class GameController(Controllers):
             session.commit()
             return gift_codes_subscription
 
+    @error_handler
     async def get_gift_code_subscription(self, user: User) -> GiftCodesSubscriptions | None:
         with self.get_session() as session:
             gift_code_subscriptions_orm = session.query(GiftCodesSubscriptionORM).filter(
@@ -216,6 +230,7 @@ class GameController(Controllers):
             else:
                 return None
 
+    @error_handler
     async def gift_code_subscription_is_active(self, subscription_id: str, is_active: bool):
         with self.get_session() as session:
             gift_code_subscription_orm = session.query(GiftCodesSubscriptionORM).filter(
