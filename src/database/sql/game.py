@@ -155,6 +155,6 @@ class GiftCodesSubscriptionORM(Base):
             'base_limit': self.base_limit,
             'amount_paid': self.amount_paid,
             'remaining_codes': self.remaining_codes,
-            'date_created': self.date_subscribed.strftime('%Y-%m-%d %H:%M:%S') if self.date_subscribed else None,
+            'date_created': self.date_created.strftime('%Y-%m-%d %H:%M:%S') if self.date_subscribed else None,
             "subscription_active": self.subscription_active
         }
