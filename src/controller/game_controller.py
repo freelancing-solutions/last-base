@@ -1,7 +1,7 @@
 import requests
 from flask import Flask
 
-from src.controller import Controllers
+from src.controller import Controllers, error_handler
 from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut, GameDataInternal, GiftCodesSubscriptions
 from src.database.models.users import User
 from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM, GiftCodesSubscriptionORM
@@ -55,7 +55,7 @@ class GameController(Controllers):
         with self.get_session() as session:
             return [GameDataInternal(**game_data.to_dict()) for game_data in
                     session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()]
-
+    @error_handler
     async def add_game_ids(self, uid: str, game_ids: GameIDS):
         with self.get_session() as session:
             for game_id in game_ids.game_id_list:
