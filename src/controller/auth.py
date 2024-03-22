@@ -58,6 +58,7 @@ class UserController(Controllers):
     async def manage_profiles(self, new_profile: Profile):
         self.profiles[new_profile.uid] = new_profile
 
+    @error_handler
     async def get_profile_by_uid(self, uid: str) -> Profile | None:
         """
         Get the profile for the given user ID.
@@ -90,6 +91,7 @@ class UserController(Controllers):
             self.profiles[uid] = profile
         return profile
 
+    @error_handler
     async def update_profile(self, updated_profile: ProfileUpdate) -> Profile | None:
         """
         :param updated_profile:
@@ -112,6 +114,7 @@ class UserController(Controllers):
                 return profile
             return None
 
+    @error_handler
     async def delete_profile(self, game_id: str) -> bool:
         """
         Delete a profile from the database.
@@ -134,6 +137,7 @@ class UserController(Controllers):
             else:
                 return False
 
+    @error_handler
     async def create_profile(self, main_game_id: str, uid: str) -> Profile:
         """
 
@@ -159,6 +163,7 @@ class UserController(Controllers):
 
             return Profile(**profile_orm.to_dict())
 
+    @error_handler
     async def add_paypal(self, user: User, paypal_email: str) -> PayPal | None:
         """
 
@@ -189,7 +194,7 @@ class UserController(Controllers):
                 session.merge(paypal_account_)
                 session.commit()
 
-                return PayPal(**paypal_account_.to_dict())
+                return paypal_account_
 
             paypal_orm = PayPalORM(paypal_email=paypal_email, uid=user.uid)
             paypal_account_ = PayPal(**paypal_orm.to_dict())
@@ -197,6 +202,7 @@ class UserController(Controllers):
             session.commit()
             return paypal_account_
 
+    @error_handler
     async def get_paypal_account(self, uid: str) -> PayPal | None:
         with self.get_session() as session:
             paypal_account: PayPalORM = session.query(PayPalORM).filter(PayPalORM.uid == uid).first()
@@ -394,13 +400,13 @@ class UserController(Controllers):
         elapsed_time = current_time - int(_data.get('timestamp', 0))
         return (elapsed_time < self._time_limit) and (email.casefold() == _data.get('email'))
 
-
+    @error_handler
     async def get_all_accounts(self) -> list[User]:
         with self.get_session() as session:
             accounts_list = session.query(UserORM).all()
             return [User(**account.to_dict()) for account in accounts_list if account]
 
-
+    @error_handler
     async def get_account_by_uid(self, uid: str) -> User | None:
         with self.get_session() as session:
             account_orm = session.query(UserORM).filter(UserORM.uid == uid).first()

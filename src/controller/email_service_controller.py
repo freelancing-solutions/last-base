@@ -1,7 +1,7 @@
 from flask import Flask
 from pydantic import PositiveInt
 
-from src.controller import Controllers
+from src.controller import Controllers, error_handler
 from src.database.models.email_service import EmailService
 from src.database.models.users import User
 from src.database.models.wallet import Wallet, WalletTransaction, TransactionType
@@ -16,6 +16,7 @@ class EmailController(Controllers):
     def init_app(self, app):
         super().init_app(app=app)
 
+    @error_handler
     async def create_email_subscription(self, email_service: EmailService) -> EmailService:
         with self.get_session() as session:
             email_services = session.query(EmailServiceORM).filter(EmailServiceORM.uid == email_service.uid,
@@ -29,6 +30,7 @@ class EmailController(Controllers):
             session.commit()
             return email_service
 
+    @error_handler
     async def activation_email_service(self, user: User, activate: bool) -> bool:
         with self.get_session() as session:
             email_service_orm = session.query(EmailServiceORM).filter(EmailService.uid == user.uid).first()
@@ -40,6 +42,7 @@ class EmailController(Controllers):
                 return  True
             return False
 
+    @error_handler
     async def get_email_subscription(self, user: User) -> EmailService | None:
         with self.get_session() as session:
             email_service_orm = session.query(EmailServiceORM).filter(EmailServiceORM.uid == user.uid).first()
@@ -48,6 +51,7 @@ class EmailController(Controllers):
             else:
                 return None
 
+    @error_handler
     async def get_all_active_subscriptions(self) -> list[EmailService]:
         with self.get_session() as session:
             email_services_orm = session.query(EmailServiceORM).filter(EmailServiceORM.subscription_running == False).all()

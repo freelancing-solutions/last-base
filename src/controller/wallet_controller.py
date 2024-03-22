@@ -1,7 +1,7 @@
 from flask import Flask
 from pydantic import PositiveInt
 
-from src.controller import Controllers
+from src.controller import Controllers, error_handler
 from src.database.models.wallet import Wallet, WalletTransaction, TransactionType
 from src.database.sql.wallet import WalletTransactionORM
 
@@ -11,6 +11,7 @@ class WalletController(Controllers):
         super().__init__()
         self.wallets: dict[str, Wallet] = {}
 
+    @error_handler
     def load_and_build_wallets(self):
         wallets_by_uid = {}
         with self.get_session() as session:
@@ -77,6 +78,7 @@ class WalletController(Controllers):
         self.load_and_build_wallets()
         return True
 
+    @error_handler
     async def add_transaction(self, transaction: WalletTransaction) -> bool:
         """
 
