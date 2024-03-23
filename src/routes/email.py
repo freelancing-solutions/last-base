@@ -1,7 +1,9 @@
+import requests
 from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash
 from pydantic import ValidationError
 
 from src.authentication import login_required, admin_login
+from src.config import config_instance
 from src.database.models.email_service import EmailService
 from src.database.models.game import GameAuth, GameIDS, GiftCode
 from src.database.models.profile import ProfileUpdate
@@ -94,3 +96,28 @@ async def subscription_failed(user: User):
     _mess: str = "There was a Problem activating your Email Service if you think this is an Error please contact us"
     flash(message=_mess, category="danger")
     return redirect(location=url_for('email.get_email'))
+
+
+@email_route.get('/_handlers/email-service/account-verification')
+async def link_processor():
+    """
+        The Authentication for this route should be custom
+    :return:
+    """
+    try:
+        auth_token: str = request.headers.get('Auth')
+        if auth_token != config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN:
+            return "Not Found", 404
+
+        body = request.json
+        link = body.get('link')
+
+        return requests.get(link)
+    except Exception as e:
+        print(str(e))
+        return "Error - See logs", 500
+
+
+
+
+

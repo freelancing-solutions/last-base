@@ -84,6 +84,7 @@ class Settings(BaseSettings):
     PAYPAL_SETTINGS: PayPalSettings = PayPalSettings()
 
 
+
     class Config:
         env_file = '.env.development'
         env_file_encoding = 'utf-8'

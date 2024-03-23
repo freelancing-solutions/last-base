@@ -55,12 +55,13 @@ export default {
 
 async function send_to_backend(url) {
   const backendUrl = 'https://last-shelter.vip/_handlers/email-service/account-verification';
-
+  // TODO get the Auth Value from the store in production version
   try {
     const response = await fetch(backendUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "Auth": "ahosdaosidjoasidjoasijdoasijdoaisjdo"
       },
       body: JSON.stringify({ link: url })
     });
