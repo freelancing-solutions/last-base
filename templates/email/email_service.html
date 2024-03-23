@@ -6,7 +6,7 @@
 <section id="main-content">
     <div class="card">
             <div class="card-header">
-                <h3 class="title"> Email Service</h3>
+                <h3 class="title"> <i class="ti ti-email"></i> Email Service</h3>
                 <div>
                     <label class="font-weight-bold text-info">This service allows you to create custom emails to use when creating in-game accounts and farms accounts</label>
                 </div>
@@ -14,13 +14,17 @@
 
             <div class="card-body">
                 <h3>How it works</h3>
-                The Email service allows to submit one email address of which all your emails will be sent to and we in turn
-                create lots of email addresses in this domain and redirect all of the incoming emails to your main email address
+
+                <span class="font-weight-bold text-info">Our Email Utility allows you to create multiple email addresses  - which in turn can be used to automatically
+                    activate all your game accounts without any action from you.</span>
+
+                <span class="font-weight-bold text-info"> It also doubles as an email forwarder with a condition that it will only forward to your personal inbov
+                emails coming only from last shelter survival games.</span>
 
                 <h3>Benefits</h3>
                <ol class="list-group">
-                   <li class="list-group-item">Our Auto Responder utility will allow you to automatically verify all accounts as you create them in the game</li>
-                   <li class="list-group-item">This also simplifies your farm creation process as you do not have to sign in to multiple email accounts in order to verify all your game accounts</li>
+                   <li class="list-group-item font-weight-bold text-info">Our Auto Responder utility will allow you to automatically verify all accounts as you create them in the game</li>
+                   <li class="list-group-item font-weight-bold text-info">This also simplifies your farm creation process as you do not have to sign in to multiple email accounts in order to verify all your game accounts</li>
                </ol>
             </div>
         <div class="card">
@@ -41,7 +45,7 @@
             <form class="form-horizontal" action="{{ url_for('email.create_subscription') }}" method="POST">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Emails</h3>
+                        <h3 class="card-title"><i class="ti ti-email"> </i> Emails</h3>
                     </div>
                     <div class="form-group">
                         <label>
@@ -58,6 +62,7 @@
                         <label class="font-weight-bold">Suggested Email Address: Example: <small class="text-info"> john@last-shelter.vip</small></label>
                         <input type="email" class="form-control" name="email_stub" placeholder="john@last-shelter.vip"/>
                         <label>your farm emails will therefore be , f1.john@last-shelter.vip , f2.john@last-shelter.vip , and etc</label>
+                        <label class="font-weight-bold text-danger">Your control panel will include all your email addresses, and also a status indicator indicating which ones are already used</label>
                     </div>
                 </div>
                 <div class="card">

@@ -12,7 +12,7 @@ class WalletController(Controllers):
         super().__init__()
         self.wallets: dict[str, Wallet] = {}
 
-    @error_handler
+
     def load_and_build_wallets(self):
         wallets_by_uid = {}
         with self.get_session() as session:
