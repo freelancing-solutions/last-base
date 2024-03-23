@@ -8,7 +8,8 @@
     </div>
     {% include "layouts/flash.html" %}
     <div class="login-form">
-        <h4>Gamer's Login</h4>
+        <h4 class="font-weight-bold text-info">Website Login</h4>
+        <label class="font-weight-bold text-info">Login to our website to start using this service</label>
         <form action="{{ url_for('auth.do_login')}}" method="POST"  enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Email address</label>
