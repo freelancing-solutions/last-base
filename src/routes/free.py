@@ -44,8 +44,8 @@ async def submit_game_id():
 
         gift_codes = await game_controller.get_active_gift_codes()
         codes_list = [gift_code.code for gift_code in gift_codes if gift_code]
-        print(codes_list)
-        print(game_id_list)
+        # print(codes_list)
+        # print(game_id_list)
         routines = []
         for game_id in game_id_list:
             for gift_code in codes_list:

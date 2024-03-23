@@ -218,7 +218,7 @@ class GameController(Controllers):
         _url = f"{self.redeem_url}?name={game_uid}&code={gift_code}&captcha={self.captcha}&lang=en"
         _response = requests.get(url=_url, headers=self._headers)
         response = _response.json()
-        print("redeem external")
+
         return {
             'msg': response.get('msg'),
             'game_id': game_id,
