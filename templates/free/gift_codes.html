@@ -48,25 +48,26 @@
                     Redeem Codes
                 </button>
             </div>
-            <div class="form-group">
-                <label class="text text-danger font-weight-bold">
-                    For a Premium Service consider creating an account in this website so you can make use of our subscription
-                    service
-                </label>
-
-                <ol class="font-weight-bold text-info">
-                    <li>Benefits of our Premium Service includes - Access to More Codes than in our free version</li>
-                    <li>Codes are Redeemed whenever they get available and without any action from you and or us</li>
-                    <li class="font-italic text-danger">
-                        <a href="{{ url_for('auth.get_register') }}" class="btn btn-lg btn-primary">
-                            <i class="ti ti-user"> </i>
-                            CREATE YOUR ACCOUNT TODAY - REGISTER
-                        </a>
-                    </li>
-                </ol>
-            </div>
         </form>
     </div>
+    <div class="card-footer">
+        <label class="text text-danger font-weight-bold">
+            For a Premium Service consider creating an account in this website so you can make use of our subscription
+            service
+        </label>
+
+        <ol class="font-weight-bold text-info">
+            <li>Benefits of our Premium Service includes - Access to More Codes than in our free version</li>
+            <li>Codes are Redeemed whenever they get available and without any action from you and or us</li>
+            <li class="font-italic text-danger">
+                <a href="{{ url_for('auth.get_register') }}" class="btn btn-lg btn-primary">
+                    <i class="ti ti-user"> </i>
+                    CREATE YOUR ACCOUNT TODAY - REGISTER
+                </a>
+            </li>
+        </ol>
+    </div>
+
 </div>
 
 
