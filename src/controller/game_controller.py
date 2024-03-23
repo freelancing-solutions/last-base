@@ -202,8 +202,8 @@ class GameController(Controllers):
         _params = dict(name=game_id.upper(), lang="en")
         _response = requests.get(url=url, params=_params, headers=self._headers)
         data = _response.json()
-        print("get game uid")
-        print(data)
+        # print("get game uid")
+        # print(data)
         return data.get('gameUid')
 
     @error_handler
@@ -215,10 +215,7 @@ class GameController(Controllers):
         :return:
         """
         game_uid = await self.get_game_uid(game_id=game_id)
-
-        _params: dict[str, str] = dict(name=game_uid, code=gift_code, captcha=self.captcha, lang="en")
-        encoded_params = urlencode(_params)
-        _url = f"{self.redeem_url}?{encoded_params}"
+        _url = f"{self.redeem_url}?name={game_uid}&code={gift_code}&captcha={self.captcha}&lang=en"
         _response = requests.get(url=_url, headers=self._headers)
         print("redeem external")
         print(_response.json())
