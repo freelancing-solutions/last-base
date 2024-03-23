@@ -1,3 +1,6 @@
+from src.database.sql.email_service import EmailSubscriptionsORM
+
+
 def bootstrapper():
     from src.database.sql.user import UserORM, ProfileORM, PayPalORM
     from src.database.sql.notifications import NotificationORM
@@ -7,10 +10,10 @@ def bootstrapper():
     from src.database.sql.email_service import EmailServiceORM
     from src.database.sql.game import GiftCodesSubscriptionORM
     from src.database.sql.wallet import WithdrawalRequestsORM
-
+    from src.database.sql.email_service import EmailSubscriptionsORM
     classes_to_create = [UserORM, PayPalORM, ProfileORM, NotificationORM, GameIDSORM, GiftCodesORM, RedeemCodesORM,
                          WalletTransactionORM, WalletORM, BuyerAccountORM, SellerAccountORM, EmailServiceORM,
-                         GiftCodesSubscriptionORM, WithdrawalRequestsORM]
+                         GiftCodesSubscriptionORM, WithdrawalRequestsORM, EmailSubscriptionsORM]
 
     for cls in classes_to_create:
         cls.create_if_not_table()

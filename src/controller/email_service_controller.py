@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask
 from pydantic import PositiveInt
 
@@ -5,7 +7,7 @@ from src.controller import Controllers, error_handler
 from src.database.models.email_service import EmailService
 from src.database.models.users import User
 from src.database.models.wallet import Wallet, WalletTransaction, TransactionType
-from src.database.sql.email_service import EmailServiceORM
+from src.database.sql.email_service import EmailServiceORM, EmailSubscriptionsORM
 from src.database.sql.wallet import WalletTransactionORM
 
 
@@ -39,7 +41,7 @@ class EmailController(Controllers):
                 session.merge(email_service_orm)
                 session.commit()
 
-                return  True
+                return True
             return False
 
     @error_handler
@@ -54,5 +56,19 @@ class EmailController(Controllers):
     @error_handler
     async def get_all_active_subscriptions(self) -> list[EmailService]:
         with self.get_session() as session:
-            email_services_orm = session.query(EmailServiceORM).filter(EmailServiceORM.subscription_running == False).all()
+            email_services_orm = session.query(EmailServiceORM).filter(
+                EmailServiceORM.subscription_running == False).all()
             return [EmailService(**email_orm.to_dict()) for email_orm in email_services_orm if email_orm]
+
+    @error_handler
+    async def email_used(self, email: str):
+        with self.get_session() as session:
+            email_subscription_orm = session.query(EmailSubscriptionsORM).filter(
+                EmailSubscriptionsORM.email == email).first()
+            if isinstance(email_subscription_orm, EmailSubscriptionsORM):
+                email_subscription_orm.is_used = True
+                email_subscription_orm.date_used = datetime.date.today()
+                session.merge(email_subscription_orm)
+                session.commit()
+                return True
+            return False

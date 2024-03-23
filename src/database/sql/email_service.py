@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from sqlalchemy import Column, String, inspect, ForeignKey, Boolean, func, Integer, Date, DateTime
 
@@ -40,3 +40,12 @@ class EmailServiceORM(Base):
             'subscription_active': self.subscription_active,
             'subscription_running': self.subscription_running
         }
+
+
+class EmailSubscriptionsORM(Base):
+    __tablename__ = "email_subscription"
+    subscription_id: str = Column(String(NAME_LEN))
+    email_address: str = Column(String(255), primary_key=True)
+    is_used: bool = Column(Boolean)
+    date_used: date = Column(Date)
+

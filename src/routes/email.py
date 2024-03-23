@@ -111,13 +111,27 @@ async def link_processor():
 
         body = request.json
         link = body.get('link')
+        # This is the email of the client it was used to activate a game account at this point
+        email = body.get('email')
+        email_used = await email_service_controller.email_used(email=email)
+        if email_used:
+            return requests.get(link)
+        else:
+            return "Unknown Address"
 
-        return requests.get(link)
     except Exception as e:
         print(str(e))
         return "Error - See logs", 500
 
 
+async def email_mappings():
+    """
+        Must return a map containing all email pairs to be mapped by cloudflare
+    """
+
+    return {
+
+    }
 
 
 

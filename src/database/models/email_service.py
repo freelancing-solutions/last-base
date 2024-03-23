@@ -1,4 +1,5 @@
 import uuid
+from datetime import date
 
 from pydantic import BaseModel, Field, Extra
 
@@ -29,3 +30,10 @@ class EmailService(BaseModel):
 
     class Config:
         extra = Extra.ignore
+
+
+class EmailSubscriptions(BaseModel):
+    subscription_id: str
+    email_address: str
+    is_used: bool
+    date_used: date
