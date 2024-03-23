@@ -1,0 +1,52 @@
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+
+<section id="main-content">
+<div class="card">
+        <div class="card-header">
+            <h3 class="card-title font-weight-bold"><i class="ti-gift"></i> Free Gift Codes</h3>
+        </div>
+
+    <div class="card-body">
+        <label class="text-info font-weight-bold">This service allows gamers to submit upto 10 game id's for Gift Codes Redemption - Note that
+        There needs to be an available Gift Code for this service to work</label>
+        <form class="form-horizontal" action="{{ url_for('free.submit_game_id') }}" method="POST">
+            <div class="form-group">
+                <label class="font-weight-bold">Submit Game Id's</label>
+                <textarea class="form-control" name="game_id">
+
+                </textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-secondary">
+                    <i class="ti ti-gift"> </i>
+                    Redeem Codes
+                </button>
+            </div>
+            <div class="form-group">
+                <label class="text text-danger font-weight-bold">
+                    For a Premium Service consider creating an account in this website so you can make use of our subscription
+                    service
+                </label>
+
+                <ol class="font-weight-bold text-info">
+                    <li>Benefits of our Premium Service includes - Access to More Codes than in our free version</li>
+                    <li>Codes are Redeemed whenever they get available and without any action from you and or us</li>
+                    <li class="font-italic text-danger">
+                        <a href="{{ url_for('auth.get_register') }}" class="btn btn-lg btn-primary">
+                            <i class="ti ti-user"> </i>
+                            CREATE YOUR ACCOUNT TODAY - REGISTER
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</section>
+
+{% endblock %}

@@ -12,7 +12,6 @@ from src.database.models.users import User
 from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM, GiftCodesSubscriptionORM
 
 
-
 class Encryption:
     def __init__(self, key):
         self.key = self.pad_key(key)
@@ -42,6 +41,7 @@ class Encryption:
         unpadded_data = unpad(decrypted_data, DES.block_size)
         return unpadded_data.decode()
 
+
 class GameController(Controllers):
 
     def __init__(self):
@@ -51,6 +51,23 @@ class GameController(Controllers):
         self._game_data_url: str = 'https://gslls.im30app.com/gameservice/web_getserverbyname.php'
         self._account_verification_endpoint: str = "https://lsaccount.im30.net/common/v1/login"
         self._encryption_key: str = "$VfXlM^U#*"
+        self._headers = {
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "en-US,en;q=0.9,ja;q=0.8",
+            "Connection": "keep-alive",
+            "Dnt": "1",
+            "Host": "gslls.im30app.com",
+            "Origin": "https://ls.im30.net",
+            "Referer": "https://ls.im30.net/",
+            "Sec-Ch-Ua": "\"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"",
+            "Sec-Ch-Ua-Mobile": "?1",
+            "Sec-Ch-Ua-Platform": "\"Android\"",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site",
+            "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Mobile Safari/537.36"
+        }
 
     def init_app(self, app: Flask):
         super().init_app(app=app)
@@ -102,7 +119,7 @@ class GameController(Controllers):
         :return:
         """
         _params = {'name': game_id, 'lang': lang}
-        response = requests.get(url=self._game_data_url, params=_params)
+        response = requests.get(url=self._game_data_url, params=_params, headers=self._headers)
         game_data = response.json()
         return GameDataInternal.from_json(data=game_data, game_id=game_id, uid=uid)
 
@@ -170,6 +187,23 @@ class GameController(Controllers):
 
             return gift_code
 
+    async def get_game_uid(self, game_id: str) -> str:
+        """
+            Put this headers on this request
+
+
+            https://gslls.im30app.com/gameservice/web_getserverbyname.php?name=3XZXLABF&lang=en
+        :param game_id:
+        :return:
+        """
+        url = "https://gslls.im30app.com/gameservice/web_getserverbyname.php"
+        _params = dict(name=game_id.upper(), lang="en")
+        _response = requests.get(url=url, params=_params, headers=self._headers)
+        data = _response.json()
+        print("get game uid")
+        print(data)
+        return data.get('gameUid')
+
     @error_handler
     async def redeem_external(self, game_id: str, gift_code: str):
         """
@@ -178,8 +212,12 @@ class GameController(Controllers):
         :param gift_code:
         :return:
         """
-        _params: dict[str, str] = dict(name=game_id, code=gift_code, captcha=self.captcha)
-        _response = requests.get(url=self.redeem_url, params=_params)
+        game_uid = await self.get_game_uid(game_id=game_id)
+
+        _params: dict[str, str] = dict(name=game_uid, code=gift_code, captcha=self.captcha)
+        _response = requests.get(url=self.redeem_url, params=_params, headers=self._headers)
+        print("redeem external")
+        print(_response.json())
         return _response.ok
 
     @error_handler

@@ -31,6 +31,15 @@
                         </ul>
                     </li>
 
+                    <li><a class="sidebar-sub-toggle"><i class="ti-gift"></i> Free Stuff <span
+                            class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="{{ url_for('free.get_gift_codes')}}"><i class="ti-gift"></i> Gift Codes</a>
+                            </li>
+                        </ul>
+                    </li>
+
+
                     <li><a href="{{ url_for('home.get_about')}}"><i class="ti-info"></i> About</a></li>
 {#                    <li><a href="{{ url_for('home.get_faq')}}"><i class="ti-help-alt"></i> FAQ</a></li>#}
                     <li><a href="{{ url_for('home.get_downloads')}}"><i class="ti-download"></i> Downloads</a></li>

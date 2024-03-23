@@ -37,7 +37,9 @@ def _add_blue_prints(app: Flask):
     from src.routes.admin import admin_route
     from src.routes.wallet import wallet_route
     from src.routes.email import email_route
-    for route in [auth_route, home_route, profile_route, market_route, admin_route, wallet_route, email_route]:
+    from src.routes.free import free_route
+    for route in [auth_route, home_route, profile_route, market_route, admin_route, wallet_route,
+                  email_route, free_route]:
         app.register_blueprint(route)
 
 
