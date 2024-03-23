@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 import requests
 from flask import Flask
 
@@ -215,10 +217,9 @@ class GameController(Controllers):
         game_uid = await self.get_game_uid(game_id=game_id)
 
         _params: dict[str, str] = dict(name=game_uid, code=gift_code, captcha=self.captcha, lang="en")
-        dud = requests.get(url="https://gslls.im30app.com/gameservice/web_code.php?name=480322464001388&code=DSC98000&captcha=Z7Gf&id=db17bb79-9f56-4fd1-a641-a84d3edf6a08&lang=en")
-        print("prining dud")
-        print(dud.json())
-        _response = requests.get(url=self.redeem_url, params=_params, headers=self._headers)
+        encoded_params = urlencode(_params)
+        _url = f"{self.redeem_url}?{encoded_params}"
+        _response = requests.get(url=_url, headers=self._headers)
         print("redeem external")
         print(_response.json())
         return _response.ok
@@ -226,6 +227,9 @@ class GameController(Controllers):
     @error_handler
     async def redeem_code_for_all_game_ids(self, gift_code: GiftCode):
         """
+        # dud = requests.get(url="https://gslls.im30app.com/gameservice/web_code.php?name=480322464001388&code=DSC98000&captcha=Z7Gf&id=db17bb79-9f56-4fd1-a641-a84d3edf6a08&lang=en")
+        # print("prining dud")
+
         Redeems a specific gift code for all present game ids
         :param gift_code: The gift code to redeem
         :return: True if redemption is successful, False otherwise
