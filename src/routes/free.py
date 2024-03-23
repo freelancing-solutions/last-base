@@ -35,11 +35,11 @@ async def submit_game_id():
         # Ensure game_id_list does not exceed ten items
         if len(game_id_list) > 10:
             flash(message="Please provide a maximum of ten game ID's - or consider creating an account for a premium service", category="danger")
-            return redirect('free.get_gift_codes')
+            return redirect(url_for('free.get_gift_codes'))
 
         if not game_id_list:
             flash(message="Please provide game ID's", category="danger")
-            return redirect('free.get_gift_codes')
+            return redirect(url_for('free.get_gift_codes'))
 
         gift_codes = await game_controller.get_active_gift_codes()
         codes_list = [gift_code.code for gift_code in gift_codes if gift_code]
@@ -53,10 +53,10 @@ async def submit_game_id():
 
         mes = f"Completed code redemption - complete successfully - {len(game_ids)} Where gifted - Check your game Email"
         flash(message=mes, category="success")
-        return redirect('free.get_gift_codes')
+        return redirect(url_for('free.get_gift_codes'))
 
     except Exception as e:
         print(str(e))
         flash(message="Completed code redemption - with possible errors", category="danger")
-        return redirect('free.get_gift_codes')
+        return redirect(url_for('free.get_gift_codes'))
 
