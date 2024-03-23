@@ -148,6 +148,7 @@ async def map_email(email: str):
     :return:
     """
     auth_token: str = request.headers.get('Auth')
+    print(auth_token)
     if auth_token != config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN:
         return "Not Found", 404
 
@@ -155,3 +156,4 @@ async def map_email(email: str):
     results = {
         'map_to': map_to
     }
+    return jsonify(map_to)
