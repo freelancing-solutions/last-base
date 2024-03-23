@@ -32,16 +32,15 @@
                         </tr>
                     </thead>
                     <tbody>
-{% for result in results %}
-    <tr>
-        <td class="font-weight-bold text-info">{{ result.name }}</td>
-        <td>{{ result.game_id }}</td>
-        <td>{{ result.code }}</td>
-        <td>{{ result.msg }}</td>
-        <td class="{% if result.status < 1 %}text-danger{% endif %}">{{ result.status }}</td>
-    </tr>
-{% endfor %}
-
+                        {% for result in results %}
+                            <tr>
+                                <td class="font-weight-bold text-info">{{ result.name }}</td>
+                                <td>{{ result.game_id }}</td>
+                                <td>{{ result.code }}</td>
+                                <td>{{ result.msg }}</td>
+                                <td class="{% if result.status < 1 %}text-danger{% endif %}">{{ result.status }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             {% endif %}
