@@ -49,12 +49,13 @@ async def submit_game_id():
         for game_id in game_id_list:
             for gift_code in codes_list:
                 routines.append(game_controller.redeem_external(game_id=game_id, gift_code=gift_code))
-        await asyncio.gather(*routines)
+        results = await asyncio.gather(*routines)
 
         mes = (f"Completed code redemption - complete successfully - {len(game_id_list)} Accounts Where gifted - Check "
                f"your game Email")
+        context = dict(results=results)
         flash(message=mes, category="success")
-        return redirect(url_for('free.get_gift_codes'))
+        return render_template('free/gift_codes.html', **context)
 
     except Exception as e:
         print(str(e))

@@ -18,7 +18,13 @@
                 <textarea class="form-control" name="game_id">
 
                 </textarea>
+
             </div>
+            {% if results %}
+                {% for result in results %}
+                    <label>{{ result.msg }}</label>
+                {% endfor %}
+            {% endif %}
             <div class="form-group">
                 <button class="btn btn-secondary">
                     <i class="ti ti-gift"> </i>

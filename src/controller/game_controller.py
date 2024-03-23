@@ -217,9 +217,10 @@ class GameController(Controllers):
         game_uid = await self.get_game_uid(game_id=game_id)
         _url = f"{self.redeem_url}?name={game_uid}&code={gift_code}&captcha={self.captcha}&lang=en"
         _response = requests.get(url=_url, headers=self._headers)
+        response = _response.json()
         print("redeem external")
-        print(_response.json())
-        return _response.ok
+        print(response)
+        return response
 
     @error_handler
     async def redeem_code_for_all_game_ids(self, gift_code: GiftCode):
