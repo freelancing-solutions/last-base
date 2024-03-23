@@ -1,23 +1,30 @@
 
-import { extract as parseRawEmail } from 'letterparser';
+// import { extract as parseRawEmail } from 'letterparser';
 const email_table = {
-    "dev@last-shelter.vip": "mobiusndou@gmail.com",
+    "dev@last-shelter.vip": "mobiusndou@gmail.com"
     // Add more mappings as needed
 };
 
 export default {
   async email(message, env, ctx) {
+    // This Email Processor will only accept emails from last shelter survival
+    // in case the email is about account activation it will then activate
+    // the account without any action from user
+
     const allowList = ["account-verification-noreply@im30.net"];
     const {from, to} = message;
 
     const subject = message.headers.get('subject') || "";
-    const rawEmail = (await new Response(message.raw).text()).replace(/utf-8/gi, 'utf-8');
-    const body = parseRawEmail(rawEmail);
+    // const rawEmail = (await new Response(message.raw).text()).replace(/utf-8/gi, 'utf-8');
+    const body = message.text || "A Body incase the real body is not found";
+
+    console.log("Subject: ", subject);
+    console.log("Body ; ", body);
 
     const password_reset_email = subject.includes("password");
 
     const redirectAddress = email_table[to];
-
+    console.log("redirect to : ", redirectAddress);
     // if this is not a last shelter message reject the message
     if (!allowList.includes(from)) {
       message.setReject("Address not allowed");
@@ -26,6 +33,7 @@ export default {
 
     // if its a password reset message just forward the message and do nothing
     if (password_reset_email) {
+      console.log("The Message is about resetting passwords hands off");
       await message.forward(redirectAddress);
       return;
     }
@@ -41,7 +49,7 @@ export default {
       }
     }
 
-    await message.forward("inbox@corp"); // Forward to the default inbox address if no redirection is needed
+    await message.forward(redirectAddress); // Forward to the default inbox address if no redirection is needed
   }
 }
 
