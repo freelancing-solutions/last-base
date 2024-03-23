@@ -215,6 +215,9 @@ class GameController(Controllers):
         game_uid = await self.get_game_uid(game_id=game_id)
 
         _params: dict[str, str] = dict(name=game_uid, code=gift_code, captcha=self.captcha, lang="en")
+        dud = requests.get(url="https://gslls.im30app.com/gameservice/web_code.php?name=480322464001388&code=DSC98000&captcha=Z7Gf&id=db17bb79-9f56-4fd1-a641-a84d3edf6a08&lang=en")
+        print("prining dud")
+        print(dud.json())
         _response = requests.get(url=self.redeem_url, params=_params, headers=self._headers)
         print("redeem external")
         print(_response.json())
