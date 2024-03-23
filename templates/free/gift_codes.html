@@ -15,10 +15,8 @@
         <form class="form-horizontal" action="{{ url_for('free.submit_game_id') }}" method="POST">
             <div class="form-group">
                 <label class="font-weight-bold">Submit Game Id's</label>
-                <textarea class="form-control" name="game_id">
-
+                <textarea class="form-control" name="game_id" rows="3">
                 </textarea>
-
             </div>
             {% if results %}
                 <table class="table tab-content">
@@ -36,11 +34,12 @@
                             <tr>
                                 <td class="font-weight-bold text-info">{{ result.name }}</td>
                                 <td>{{ result.game_id }}</td>
-                                <td>{{ result.code }}</td>
+                                <td style="color: {% if 'expired' in result.msg %}red{% endif %}">{{ result.code }}</td>
                                 <td>{{ result.msg }}</td>
                                 <td>{{ result.status }}</td>
                             </tr>
                         {% endfor %}
+
                     </tbody>
                 </table>
             {% endif %}
