@@ -47,7 +47,7 @@ class GameController(Controllers):
     def __init__(self):
         super().__init__()
         self.redeem_url = "https://gslls.im30app.com/gameservice/web_code.php"
-        self.captcha = "XtWh&id=cdca0109-e089-4929-a771-74a49fba48ed"
+        self.captcha = "PQcA&id=bfbb020d-7579-4bd1-bc82-8be6005820c4"
         self._game_data_url: str = 'https://gslls.im30app.com/gameservice/web_getserverbyname.php'
         self._account_verification_endpoint: str = "https://lsaccount.im30.net/common/v1/login"
         self._encryption_key: str = "$VfXlM^U#*"
@@ -214,7 +214,7 @@ class GameController(Controllers):
         """
         game_uid = await self.get_game_uid(game_id=game_id)
 
-        _params: dict[str, str] = dict(name=game_uid, code=gift_code, captcha=self.captcha)
+        _params: dict[str, str] = dict(name=game_uid, code=gift_code, captcha=self.captcha, lang="en")
         _response = requests.get(url=self.redeem_url, params=_params, headers=self._headers)
         print("redeem external")
         print(_response.json())
