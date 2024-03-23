@@ -161,4 +161,4 @@ async def map_email(email: str):
         results = {
             'map_to': "noreply@last-shelter.vip"
         }
-    return jsonify(map_to)
+    return results
