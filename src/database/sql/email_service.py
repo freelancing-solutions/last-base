@@ -46,8 +46,9 @@ class EmailSubscriptionsORM(Base):
     __tablename__ = "email_subscription"
     subscription_id: str = Column(String(NAME_LEN))
     email_address: str = Column(String(255), primary_key=True)
+    map_to: str = Column(String(255))
     is_used: bool = Column(Boolean)
-    date_used: date = Column(Date)
+    date_used: date = Column(Date, nullable=True)
 
     @classmethod
     def create_if_not_table(cls):
@@ -58,3 +59,12 @@ class EmailSubscriptionsORM(Base):
     def delete_table(cls):
         if inspect(engine).has_table(cls.__tablename__):
             cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "subscription_id": self.subscription_id,
+            "email_address": self.email_address,
+            "map_to": self.map_to,
+            "is_used": self.is_used,
+            "date_used": self.date_used if self.date_used else None
+        }

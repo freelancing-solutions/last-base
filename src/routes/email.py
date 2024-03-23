@@ -1,5 +1,5 @@
 import requests
-from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash
+from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash, jsonify
 from pydantic import ValidationError
 
 from src.authentication import login_required, admin_login
@@ -24,7 +24,7 @@ async def get_email(user: User):
         context.update(email_service=email_service)
         return render_template('email/subscription.html', **context)
 
-    if email_service and email_service.subscription_active and  email_service.subscription_running:
+    if email_service and email_service.subscription_active and email_service.subscription_running:
         context.update(email_service=email_service)
         return render_template('email/active.html', **context)
 
@@ -41,7 +41,8 @@ async def create_subscription(user: User):
         subscription_term = int(request.form.get('subscription_term'))
         total_emails = int(request.form.get('total_emails'))
 
-        email_service = EmailService(uid=user.uid, email=email, email_stub=email_stub, subscription_term=subscription_term,
+        email_service = EmailService(uid=user.uid, email=email, email_stub=email_stub,
+                                     subscription_term=subscription_term,
                                      total_emails=total_emails)
         paypal: PayPal = await user_controller.get_paypal_account(uid=user.uid)
         print(email_service)
@@ -78,8 +79,9 @@ async def subscription_success(user: User):
     request_valid = await paypal_controller.verify_signature(payload=_payload, signature=_signature)
     if not request_valid:
         redirect(url_for('home.get_home'))
-    is_active = email_service_controller.activation_email_service(user=user, activate=True)
-    if is_active:
+    email_service = email_service_controller.activation_email_service(user=user, activate=True)
+    if isinstance(email_service, EmailService):
+        email_addresses = await email_service_controller.create_email_addresses(email_service=email_service)
         _mess: str = "Your Email Service has been activated - please start using the service ASAP"
         flash(message=_mess, category="success")
     else:
@@ -124,14 +126,32 @@ async def link_processor():
         return "Error - See logs", 500
 
 
+@email_route.get('/_handlers/email-service/email-maps')
 async def email_mappings():
     """
         Must return a map containing all email pairs to be mapped by cloudflare
     """
+    auth_token: str = request.headers.get('Auth')
+    if auth_token != config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN:
+        return "Not Found", 404
 
-    return {
+    email_maps = await email_service_controller.return_mappings()
 
+    return jsonify(email_maps)
+
+
+@email_route.get('/_handlers/email-service/map/<string:email>')
+async def map_email(email: str):
+    """
+        TODO caching the results of this endpoint is highly important
+    :param email:
+    :return:
+    """
+    auth_token: str = request.headers.get('Auth')
+    if auth_token != config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN:
+        return "Not Found", 404
+
+    map_to = await email_service_controller.map_to(email=email)
+    results = {
+        'map_to': map_to
     }
-
-
-

@@ -33,7 +33,8 @@ class EmailService(BaseModel):
 
 
 class EmailSubscriptions(BaseModel):
-    subscription_id: str
+    subscription_id: str = Field(default_factory=create_id)
     email_address: str
-    is_used: bool
-    date_used: date
+    map_to: str
+    is_used: bool = Field(default=False)
+    date_used: date| None

@@ -4,7 +4,7 @@ from flask import Flask
 from pydantic import PositiveInt
 
 from src.controller import Controllers, error_handler
-from src.database.models.email_service import EmailService
+from src.database.models.email_service import EmailService, EmailSubscriptions
 from src.database.models.users import User
 from src.database.models.wallet import Wallet, WalletTransaction, TransactionType
 from src.database.sql.email_service import EmailServiceORM, EmailSubscriptionsORM
@@ -32,17 +32,50 @@ class EmailController(Controllers):
             session.commit()
             return email_service
 
-    @error_handler
-    async def activation_email_service(self, user: User, activate: bool) -> bool:
+    async def generate_emails(self, email_stub: str, total_emails: int) -> list[str]:
+        emails = []
+        for i in range(1, total_emails + 1):
+            email = f"f{i}.{email_stub}@last-shelter.vip"
+            emails.append(email)
+        return emails
+
+    async def create_email_addresses(self, email_service: EmailService):
+        """
+            this Utility will create email addresses based on the information on the Email Service
+            which was created during activation of the email service
+        :param email_service:
+        :return:
+        """
+        email_list = await self.generate_emails(email_stub=email_service.email_stub,
+                                                total_emails=email_service.total_emails)
         with self.get_session() as session:
-            email_service_orm = session.query(EmailServiceORM).filter(EmailService.uid == user.uid).first()
+            for email in email_list:
+                try:
+                    session.add(EmailSubscriptionsORM(
+                        subscription_id=email_service.subscription_id,
+                        email_address=email,
+                        map_to=email_service.email,
+                        is_used=False,
+                        date_used=None
+                    ))
+                except Exception as e:
+                    print(str(e))
+                    pass
+            session.commit()
+        return email_list
+
+    @error_handler
+    async def activation_email_service(self, user: User, activate: bool) -> EmailService | None:
+        with self.get_session() as session:
+            email_service_orm = session.query(EmailServiceORM).filter(EmailServiceORM.uid == user.uid).first()
             if isinstance(email_service_orm, EmailServiceORM):
                 email_service_orm.subscription_active = activate
+                email_service = EmailService(**email_service_orm.to_dict())
                 session.merge(email_service_orm)
                 session.commit()
 
-                return True
-            return False
+                return email_service
+            return None
 
     @error_handler
     async def get_email_subscription(self, user: User) -> EmailService | None:
@@ -72,3 +105,28 @@ class EmailController(Controllers):
                 session.commit()
                 return True
             return False
+
+    async def return_mappings(self) -> dict[str, str]:
+        """
+            this method will be called only by cloudflare
+        :return:
+        """
+        mappings = {}
+        with self.get_session() as session:
+            email_subscriptions_list = session.query(EmailSubscriptionsORM).all()
+            subs_list = [EmailSubscriptions(subscript.to_dict()) for subscript in email_subscriptions_list if
+                         isinstance(subscript, EmailSubscriptionsORM)]
+            for subscript in subs_list:
+                mappings[subscript.email_address] = subscript.map_to
+        return mappings
+
+    async def map_to(self, email: str) -> str:
+        """
+            this method is called to resolve a single email address
+        :param email:
+        :return:
+        """
+        with self.get_session() as session:
+            email_subscription = session.query(EmailSubscriptionsORM).filter(EmailSubscriptionsORM.email_address == email).first()
+            if isinstance(email_subscription, EmailSubscriptionsORM):
+                return email_subscription.email_address
