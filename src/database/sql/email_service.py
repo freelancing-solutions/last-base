@@ -49,3 +49,12 @@ class EmailSubscriptionsORM(Base):
     is_used: bool = Column(Boolean)
     date_used: date = Column(Date)
 
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
