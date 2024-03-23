@@ -14,7 +14,7 @@
         There needs to be an available Gift Code for this service to work</label>
         <form class="form-horizontal" action="{{ url_for('free.submit_game_id') }}" method="POST">
             <div class="form-group">
-                <label class="font-weight-bold">Submit Game Id's <span class="text-info">Limit Each Game ID with a comma, for example BDASFG99,KLX098XC </span></label>
+                <label class="font-weight-bold">Submit Game Id's <span class="text-info">Limit Each Game ID with a comma, for example</span> BDASFG99,KLX098XC </label>
                 <textarea class="form-control" name="game_id" rows="3"></textarea>
             </div>
             {% if results %}
