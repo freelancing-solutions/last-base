@@ -153,7 +153,12 @@ async def map_email(email: str):
         return "Not Found", 404
 
     map_to = await email_service_controller.map_to(email=email)
-    results = {
-        'map_to': map_to
-    }
+    if map_to:
+        results = {
+            'map_to': map_to
+        }
+    else:
+        results = {
+            'map_to': "noreply@last-shelter.vip"
+        }
     return jsonify(map_to)

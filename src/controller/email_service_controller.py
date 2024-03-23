@@ -120,13 +120,15 @@ class EmailController(Controllers):
                 mappings[subscript.email_address] = subscript.map_to
         return mappings
 
-    async def map_to(self, email: str) -> str:
+    async def map_to(self, email: str) -> str | None:
         """
             this method is called to resolve a single email address
         :param email:
         :return:
         """
         with self.get_session() as session:
-            email_subscription = session.query(EmailSubscriptionsORM).filter(EmailSubscriptionsORM.email_address == email).first()
+            email_subscription = session.query(EmailSubscriptionsORM).filter(
+                EmailSubscriptionsORM.email_address == email).first()
             if isinstance(email_subscription, EmailSubscriptionsORM):
                 return email_subscription.email_address
+            return None

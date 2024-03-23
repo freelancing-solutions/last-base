@@ -11,6 +11,7 @@ def bootstrapper():
     from src.database.sql.game import GiftCodesSubscriptionORM
     from src.database.sql.wallet import WithdrawalRequestsORM
     from src.database.sql.email_service import EmailSubscriptionsORM
+
     classes_to_create = [UserORM, PayPalORM, ProfileORM, NotificationORM, GameIDSORM, GiftCodesORM, RedeemCodesORM,
                          WalletTransactionORM, WalletORM, BuyerAccountORM, SellerAccountORM, EmailServiceORM,
                          GiftCodesSubscriptionORM, WithdrawalRequestsORM, EmailSubscriptionsORM]
