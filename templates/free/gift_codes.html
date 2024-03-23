@@ -34,7 +34,7 @@
                             <tr>
                                 <td class="font-weight-bold text-info">{{ result.name }}</td>
                                 <td>{{ result.game_id }}</td>
-                                <td style="color: {% if 'expired' in result.msg %}red{% endif %}">{{ result.code }}</td>
+                                <td class="{% if 'expired' in result.msg %}text-danger{% else %}text-info{% endif %}">{{ result.code }}</td>
                                 <td>{{ result.msg }}</td>
                                 <td>{{ result.status }}</td>
                             </tr>
