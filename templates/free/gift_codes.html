@@ -24,21 +24,24 @@
                 <table class="table tab-content">
                     <thead>
                         <tr>
-                            <td>Game ID</td>
-                            <td>Code</td>
-                            <td>MSG</td>
-                            <td>Result</td>
+                            <td class="font-weight-bold text-info">Base Name</td>
+                            <td class="font-weight-bold text-info">Game ID</td>
+                            <td class="font-weight-bold text-info">Code</td>
+                            <td class="font-weight-bold text-info">MSG</td>
+                            <td class="font-weight-bold text-info">Result</td>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for result in results %}
-                                <tr>
-                                    <td>{{ result.game_id }}</td>
-                                    <td>{{ result.code }}</td>
-                                    <td>{{ result.msg }}</td>
-                                    <td>{{ result.status }}</td>
-                                </tr>
-                        {% endfor %}
+{% for result in results %}
+    <tr>
+        <td class="font-weight-bold text-info">{{ result.name }}</td>
+        <td>{{ result.game_id }}</td>
+        <td>{{ result.code }}</td>
+        <td>{{ result.msg }}</td>
+        <td class="{% if result.status < 1 %}text-danger{% endif %}">{{ result.status }}</td>
+    </tr>
+{% endfor %}
+
                     </tbody>
                 </table>
             {% endif %}

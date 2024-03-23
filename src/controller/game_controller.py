@@ -189,7 +189,7 @@ class GameController(Controllers):
 
             return gift_code
 
-    async def get_game_uid(self, game_id: str) -> str:
+    async def get_game_uid(self, game_id: str) -> tuple[str, str]:
         """
             Put this headers on this request
 
@@ -204,7 +204,7 @@ class GameController(Controllers):
         data = _response.json()
         # print("get game uid")
         # print(data)
-        return data.get('gameUid')
+        return data.get('name'), data.get('gameUid')
 
     @error_handler
     async def redeem_external(self, game_id: str, gift_code: str):
@@ -214,7 +214,7 @@ class GameController(Controllers):
         :param gift_code:
         :return:
         """
-        game_uid = await self.get_game_uid(game_id=game_id)
+        name, game_uid = await self.get_game_uid(game_id=game_id)
         _url = f"{self.redeem_url}?name={game_uid}&code={gift_code}&captcha={self.captcha}&lang=en"
         _response = requests.get(url=_url, headers=self._headers)
         response = _response.json()
@@ -222,6 +222,7 @@ class GameController(Controllers):
         return {
             'msg': response.get('msg'),
             'game_id': game_id,
+            'name': name,
             'code': gift_code,
             'status': response.get('result')
         }
