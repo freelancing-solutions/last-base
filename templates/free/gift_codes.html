@@ -21,9 +21,26 @@
 
             </div>
             {% if results %}
-                {% for result in results %}
-                    <label>{{ result.msg }}</label>
-                {% endfor %}
+                <table class="table tab-content">
+                    <thead>
+                        <tr>
+                            <td>Game ID</td>
+                            <td>Code</td>
+                            <td>MSG</td>
+                            <td>Result</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                                <tr>
+                                    <td>{{ result.game_id }}</td>
+                                    <td>{{ result.code }}</td>
+                                    <td>{{ result.msg }}</td>
+                                    <td>{{ result.status }}</td>
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% endif %}
             <div class="form-group">
                 <button class="btn btn-secondary">

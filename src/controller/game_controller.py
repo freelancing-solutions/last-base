@@ -219,8 +219,12 @@ class GameController(Controllers):
         _response = requests.get(url=_url, headers=self._headers)
         response = _response.json()
         print("redeem external")
-        print(response)
-        return response
+        return {
+            'msg': response.get('msg'),
+            'game_id': game_id,
+            'code': gift_code,
+            'status': response.get('result')
+        }
 
     @error_handler
     async def redeem_code_for_all_game_ids(self, gift_code: GiftCode):

@@ -34,7 +34,8 @@ async def submit_game_id():
 
         # Ensure game_id_list does not exceed ten items
         if len(game_id_list) > 10:
-            flash(message="Please provide a maximum of ten game ID's - or consider creating an account for a premium service", category="danger")
+            flash(message="Please provide a maximum of ten game ID's - or consider creating an account for a premium "
+                          "service", category="danger")
             return redirect(url_for('free.get_gift_codes'))
 
         if not game_id_list:
@@ -53,6 +54,7 @@ async def submit_game_id():
 
         mes = (f"Completed code redemption - complete successfully - {len(game_id_list)} Accounts Where gifted - Check "
                f"your game Email")
+
         context = dict(results=results)
         flash(message=mes, category="success")
         return render_template('free/gift_codes.html', **context)
