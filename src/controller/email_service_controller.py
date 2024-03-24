@@ -20,6 +20,7 @@ class EmailController(Controllers):
                                                                    EmailServiceORM.subscription_active == False).all()
             for email_service in email_services:
                 session.delete(email_service)
+            session.commit()
 
             email_service_orm = EmailServiceORM(**email_service.to_dict())
             session.add(email_service_orm)
