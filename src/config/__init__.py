@@ -33,7 +33,7 @@ class Logging(BaseSettings):
 
 class ResendSettings(BaseSettings):
     API_KEY: str = Field(..., env="RESEND_API_KEY")
-    from_: str = Field(default="norespond@rental-manager.site")
+    from_: str = Field(default="norespond@last-shelter.vip")
 
     class Config:
         env_file = '.env.development'
