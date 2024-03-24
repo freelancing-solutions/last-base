@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 
 from src.authentication import login_required
 from src.config import config_instance
-from src.database.models.email_service import EmailService
+from src.database.models.email_service import EmailService, EmailSubscriptions
 from src.database.models.users import User, PayPal
 from src.main import user_controller, paypal_controller, email_service_controller
 
@@ -14,14 +14,16 @@ email_route = Blueprint('email', __name__)
 @login_required
 async def get_email(user: User):
     context = dict(user=user)
-    email_service = await email_service_controller.get_email_subscription(user=user)
+    email_service: EmailService = await email_service_controller.get_email_service(user=user)
+    email_subscription_list: list[EmailSubscriptions] = await email_service_controller.get_email_service_subscription(
+        subscription_id=email_service.subscription_id)
 
     if email_service and email_service.subscription_active and not email_service.subscription_running:
         context.update(email_service=email_service)
         return render_template('email/subscription.html', **context)
 
     if email_service and email_service.subscription_active and email_service.subscription_running:
-        context.update(email_service=email_service)
+        context.update(email_service=email_service, email_subscription_list=email_subscription_list)
         return render_template('email/active.html', **context)
 
     return render_template('email/email_service.html', **context)
@@ -104,6 +106,12 @@ async def subscription_failed(user: User):
     _mess: str = "There was a Problem activating your Email Service if you think this is an Error please contact us"
     flash(message=_mess, category="danger")
     return redirect(location=url_for('email.get_email'))
+
+
+@email_route.get('/dashboard/email/dashboard')
+@login_required
+async def email_service_dashboard(user: User):
+    pass
 
 
 @email_route.get('/_handlers/email-service/account-verification')

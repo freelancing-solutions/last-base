@@ -10,7 +10,23 @@
     </div>
     <div class="card-body">
         <label>Available Email Addresses</label>
-        <table class="">
+        <table class="table table-responsive-md table-responsive-sm">
+            <thead>
+                <tr>
+                    <td>Email</td>
+                    <td>Is Used</td>
+                    <td>Date used</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for subscription in email_subscription_list %}
+                <tr>
+                    <td>{{ subscription.email_address }}</td>
+                    <td>{{ subscription.is_used }}</td>
+                    <td>{{ subscription.date_used }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
 
         </table>
     </div>

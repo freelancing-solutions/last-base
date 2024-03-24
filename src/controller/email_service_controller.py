@@ -73,13 +73,23 @@ class EmailController(Controllers):
             return None
 
     @error_handler
-    async def get_email_subscription(self, user: User) -> EmailService | None:
+    async def get_email_service(self, user: User) -> EmailService | None:
         with self.get_session() as session:
             email_service_orm = session.query(EmailServiceORM).filter(EmailServiceORM.uid == user.uid).first()
             if isinstance(email_service_orm, EmailServiceORM):
                 return EmailService(**email_service_orm.to_dict())
             else:
                 return None
+    async def get_email_service_subscription(self, subscription_id: str) -> list[EmailSubscriptions]:
+        """
+
+        :param user:
+        :return:
+        """
+        with self.get_session() as session:
+            email_subscription_orm = session.query(EmailSubscriptionsORM).filter(
+                EmailSubscriptionsORM.subscription_id == subscription_id).all()
+            return [EmailSubscriptions(**sub.to_dict()) for sub in email_subscription_orm if isinstance(sub, EmailSubscriptionsORM)]
 
     @error_handler
     async def get_all_active_subscriptions(self) -> list[EmailService]:
