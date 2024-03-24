@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_socketio import SocketIO
 
 from src.controller.encryptor import Encryptor
 from src.emailer import SendMail
+
 from src.utils import format_with_grouping
 
 encryptor = Encryptor()
@@ -22,6 +24,7 @@ paypal_controller = PayPalController()
 email_service_controller = EmailController()
 
 _controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller, email_service_controller]
+chat_io = SocketIO()
 
 
 def _add_blue_prints(app: Flask):
@@ -38,8 +41,11 @@ def _add_blue_prints(app: Flask):
     from src.routes.wallet import wallet_route
     from src.routes.email import email_route
     from src.routes.free import free_route
+    from src.routes.discord_hooks import discord_route
+    from src.routes.support_chat import chat_route
+
     for route in [auth_route, home_route, profile_route, market_route, admin_route, wallet_route,
-                  email_route, free_route]:
+                  email_route, free_route, discord_route, chat_route]:
         app.register_blueprint(route)
 
 
@@ -64,8 +70,10 @@ def create_app(config):
     with app.app_context():
         from src.main.bootstrapping import bootstrapper
         bootstrapper()
+
         _add_blue_prints(app)
         _add_filters(app)
+        chat_io.init_app(app)
         encryptor.init_app(app=app)
         user_controller.init_app(app=app)
         game_controller.init_app(app=app)
@@ -73,6 +81,6 @@ def create_app(config):
         wallet_controller.init_app(app=app)
         email_service_controller.init_app(app=app)
         paypal_controller.init_app(app=app, config_instance=config)
-        pass
 
-    return app
+
+    return app, chat_io

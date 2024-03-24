@@ -1,11 +1,9 @@
-from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, flash
 from pydantic import ValidationError
 
-from src.authentication import login_required, admin_login
-from src.database.models.game import GameAuth, GameIDS, GiftCode
-from src.database.models.profile import ProfileUpdate
+from src.authentication import admin_login
+from src.database.models.game import GiftCode
 from src.database.models.users import User, UserUpdate
-from src.utils import static_folder
 from src.main import user_controller, game_controller, email_service_controller
 
 admin_route = Blueprint('admin', __name__)
