@@ -1,14 +1,9 @@
 import datetime
 
-from flask import Flask
-from pydantic import PositiveInt
-
 from src.controller import Controllers, error_handler
 from src.database.models.email_service import EmailService, EmailSubscriptions
 from src.database.models.users import User
-from src.database.models.wallet import Wallet, WalletTransaction, TransactionType
 from src.database.sql.email_service import EmailServiceORM, EmailSubscriptionsORM
-from src.database.sql.wallet import WalletTransactionORM
 
 
 class EmailController(Controllers):
@@ -114,7 +109,7 @@ class EmailController(Controllers):
         mappings = {}
         with self.get_session() as session:
             email_subscriptions_list = session.query(EmailSubscriptionsORM).all()
-            subs_list = [EmailSubscriptions(subscript.to_dict()) for subscript in email_subscriptions_list if
+            subs_list = [EmailSubscriptions(**subscript.to_dict()) for subscript in email_subscriptions_list if
                          isinstance(subscript, EmailSubscriptionsORM)]
             for subscript in subs_list:
                 mappings[subscript.email_address] = subscript.map_to
@@ -132,3 +127,15 @@ class EmailController(Controllers):
             if isinstance(email_subscription, EmailSubscriptionsORM):
                 return email_subscription.email_address
             return None
+
+
+    async def email_stub_exist(self, email_stub: str):
+        """
+
+        :param email_stub:
+        :return:
+        """
+        with self.get_session() as session:
+            email_subscription_orm = session.query(EmailServiceORM.email_stub == email_stub).first()
+            return isinstance(email_subscription_orm, EmailServiceORM)
+
