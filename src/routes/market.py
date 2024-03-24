@@ -71,6 +71,7 @@ async def approval_payment_failed(user: User):
     flash(message=_mes, category="danger")
     return redirect(location=url_for('profile.get_profile'))
 
+
 @market_route.get('/dashboard/market/game_accounts')
 @login_required
 async def get_game_accounts(user: User):
