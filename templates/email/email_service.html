@@ -31,15 +31,11 @@
             <div class="card-header">
                 <h3>Subscription</h3>
                 <div>
-
                     <label class="font-weight-bold">- Upon Subscription your incoming game emails will all be redirected to your main email address</label>
-
                     <label class="font-weight-bold">- all your activation emails will be activated then sent to your original email address.</label>
-
                     <label class="font-weight-bold">- <span class="text-danger">(for obvious security reasons)</span> all other game emails including password reset emails will not be auto responded but
                         just sent to your inbox.</label>
                     <label class="font-weight-bold">- <span class="text-danger"> This Email Utility will only work for emails originating from last shelter survival</span> it cannot be used for any other purpose or to activate accounts from any other game</label>
-
                 </div>
             </div>
             <form class="form-horizontal" action="{{ url_for('email.create_subscription') }}" method="POST">
@@ -55,13 +51,13 @@
                     </div>
                     <div class="form-group">
                         <label class="font-weight-bold">Original Email Address Example: <small class="text-info"> john@gmail.com</small></label>
-                        <input type="email" class="form-control" name="email" placeholder="john@gmail.com"/>
+                        <input type="email" class="form-control" name="email" value="{{ user.email }}"/>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Suggested Email Address: Example: <small class="text-info"> john@last-shelter.vip</small></label>
                         <input type="email" class="form-control" name="email_stub" placeholder="john@last-shelter.vip"/>
-                        <label>your farm emails will therefore be , f1.john@last-shelter.vip , f2.john@last-shelter.vip , and etc</label>
+                        <label>Your farm emails will therefore be , f1.john@last-shelter.vip , f2.john@last-shelter.vip , and etc</label>
                         <label class="font-weight-bold text-danger">Your control panel will include all your email addresses, and also a status indicator indicating which ones are already used</label>
                     </div>
                 </div>

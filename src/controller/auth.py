@@ -212,8 +212,6 @@ class UserController(Controllers):
                 return PayPal(**paypal_account.to_dict())
             return None
 
-
-
     async def is_token_valid(self, token: str) -> bool:
         """
         **is_token_valid**
@@ -271,16 +269,16 @@ class UserController(Controllers):
         :return: A dictionary containing the result of the email sending operation, or None if an error occurred.
         """
         # TODO please complete the method to send the password reset email
-        password_reset_subject: str = "Rental-Manager.site Password Reset Request"
+        password_reset_subject: str = "last-shelter.vip Password Reset Request"
         # Assuming you have a function to generate the password reset link
         password_reset_link: str = self.generate_password_reset_link(email)
 
         html = f"""
         <html>
         <body>
-            <h2>Rental-Manager.site Password Reset</h2>
+            <h2>Last Shelter VIP Password Reset</h2>
             <p>Hello,</p>
-            <p>We received a password reset request for your Rental Manager account. 
+            <p>We received a password reset request for your https://last-shelter.vip account. 
             Please click the link below to reset your password:</p>
             <a href="{password_reset_link}">{password_reset_link}</a>
             <p>If you didn't request a password reset, you can ignore this email.</p>
@@ -304,7 +302,7 @@ class UserController(Controllers):
         """
         token = str(uuid.uuid4())  # Assuming you have a function to generate a random token
         self._verification_tokens[token] = int(time.time())
-        password_reset_link = f"https://rental-manager.site/admin/reset-password?token={token}&email={email}"
+        password_reset_link = f"https://last-shelter.vip/admin/reset-password?token={token}&email={email}"
 
         return password_reset_link
 
@@ -350,7 +348,7 @@ class UserController(Controllers):
     async def login(self, email: str, password: str) -> User | None:
         with self.get_session() as session:
             print(f"Email : {email}")
-            user_data: UserORM = session.query(UserORM).filter(UserORM.email==email).first()
+            user_data: UserORM = session.query(UserORM).filter(UserORM.email == email).first()
             try:
                 if user_data:
                     user: User = User(**user_data.to_dict())
@@ -368,13 +366,13 @@ class UserController(Controllers):
         :param user: The user to send the verification email to.
         """
         token = str(uuid.uuid4())  # Assuming you have a function to generate a verification token
-        verification_link = f"https://rental-manager.site/dashboard/verify-email?token={token}&email={user.email}"
+        verification_link = f"https://last-shelter.vip/dashboard/verify-email?token={token}&email={user.email}"
         self._verification_tokens[token] = dict(email=user.email, timestamp=int(time.time()))
         # Render the email template
         email_html = render_template("email_templates/verification_email.html", user=user,
                                      verification_link=verification_link)
 
-        msg = EmailModel(subject_="Rental-Manager.site Email Verification",
+        msg = EmailModel(subject_="last-shelter.vip Email Verification",
                          to_=user.email,
                          html_=email_html)
 
