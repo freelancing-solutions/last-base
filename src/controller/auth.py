@@ -347,9 +347,10 @@ class UserController(Controllers):
             return user_data.to_dict()
 
     @error_handler
-    async def login(self, username: str, password: str) -> User | None:
+    async def login(self, email: str, password: str) -> User | None:
         with self.get_session() as session:
-            user_data: UserORM = session.query(UserORM).filter_by(username=username).first()
+            print(f"Email : {email}")
+            user_data: UserORM = session.query(UserORM).filter(UserORM.email==email).first()
             try:
                 if user_data:
                     user: User = User(**user_data.to_dict())

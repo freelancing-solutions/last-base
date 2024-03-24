@@ -36,8 +36,8 @@ async def do_login():
         return await create_response(url_for('auth.get_auth'), 'Login failed. Check your username and password.',
                                      'danger')
 
-    login_user: User | None = await user_controller.login(username=auth_user.username, password=auth_user.password)
-    if login_user and login_user.username == auth_user.username:
+    login_user: User | None = await user_controller.login(email=auth_user.email, password=auth_user.password)
+    if login_user and login_user.email == auth_user.email:
         response = await create_response(url_for('profile.get_profile'))
 
         # Setting Loging Cookie
@@ -98,7 +98,11 @@ async def do_register():
     """
     # TODO - CHECK IF USER IS ALREADY LOGGED IN
     try:
-        register_user: RegisterUser = RegisterUser(**request.form)
+        email = request.form.get('email')
+        password = request.form.get('password')
+        terms = request.form.get('terms')
+        email = email.strip().lower()
+        register_user: RegisterUser = RegisterUser(email=email, username=email, password=password, terms=terms)
     except ValidationError as e:
         auth_logger.error(str(e))
         return await create_response(url_for('auth.get_register'), 'Please fill in all the required fields.', 'danger')

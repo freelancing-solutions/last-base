@@ -29,7 +29,7 @@ class User(BaseModel):
     """
     uid: str
 
-    username: str
+    username: str | None
     password_hash: str
     email: str
     full_name: str | None
@@ -65,7 +65,7 @@ class User(BaseModel):
 
 class CreateUser(BaseModel):
     uid: str
-    username: str
+    username: str | None
     password: str
     email: str
     account_verified: bool = Field(default=False)
@@ -85,7 +85,7 @@ class CreateUser(BaseModel):
 
 class PasswordResetUser(BaseModel):
     uid: str
-    username: str
+    username: str | None
     password: str
     email: str
     account_verified: bool = Field(default=False)
@@ -104,7 +104,7 @@ class PasswordResetUser(BaseModel):
 
 class UserUpdate(BaseModel):
     uid: str
-    username: str
+    username: str | None
     email: str
     account_verified: bool = Field(default=False)
     is_system_admin: bool = Field(default=False)

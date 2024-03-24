@@ -1,12 +1,17 @@
 import uuid
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class Auth(BaseModel):
-    username: str
+    email: str
+    username: str | None
     password: str
     remember: str | None
+
+    @validator('username')
+    def convert_to_lower(cls, value):
+        return value.lower()
 
 
 def generate_uuid_str():
@@ -15,7 +20,8 @@ def generate_uuid_str():
 
 class RegisterUser(BaseModel):
     uid: str = Field(default_factory=generate_uuid_str)
-    username: str
+    username: str | None
     email: str
     password: str
     terms: str
+
