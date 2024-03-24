@@ -142,8 +142,8 @@ async def add_paypal(user: User):
     context = dict(user=user)
     try:
         paypal_email: str = request.form.get('paypal_account')
-        become_seller: str = request.form.get('seller_account')
-        become_buyer: str = request.form.get('buyer_account')
+        become_seller: str = request.form.get('seller_account', True)
+        become_buyer: str = request.form.get('buyer_account', True)
         print(f'Seller : {become_seller}')
     except ValidationError as e:
         _message: str = f"Error : str(e)"
@@ -153,7 +153,8 @@ async def add_paypal(user: User):
     data: PayPal = await user_controller.add_paypal(user=user, paypal_email=paypal_email)
 
     if not isinstance(data, PayPal):
-        _message: str = "Unable to add paypal email to your account"
+        _message: str = ("Unable to add paypal email to your account - likely reason is that this account is already "
+                         "used, if you think this is a mistake please inform us")
         flash(message=_message, category="danger")
 
         return redirect(location=url_for('profile.get_profile'))

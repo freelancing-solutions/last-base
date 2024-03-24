@@ -54,9 +54,9 @@
                 <form class="form-horizontal" action="{{ url_for('market.request_approval_to_sell') }}" method="GET">
                     {% if paypal_account and seller_account and not seller_account.account_verified %}
                         <label class="font-weight-bold text">Allows User/Gamer to Buy and Sell in our Market Place</label>
-                        <button type="submit" class="btn btn-primary btn-sm" onfocus=alert('')>
+                        <button type="submit" class="btn btn-primary btn-sm">
                                 <i class="ti ti-credit-card"></i> Activate Merchant (5 USD)
-                            </button>
+                        </button>
                     {% endif %}
                 </form>
             </div>
