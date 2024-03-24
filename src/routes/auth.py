@@ -30,6 +30,7 @@ async def get_auth():
 @auth_route.post('/login')
 async def do_login():
     try:
+        # Phasing out username when login
         auth_user = Auth(**request.form)
     except ValidationError as e:
         auth_logger.error(str(e))
