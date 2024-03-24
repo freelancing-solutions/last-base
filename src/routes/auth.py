@@ -126,3 +126,26 @@ async def do_register():
 
     flash(message='failed to create new user try again later', category='danger')
     return await create_response(url_for('home.get_home'))
+
+
+@auth_route.get('/dashboard/verify-email')
+async def verify_email():
+    """
+        **verify_email**
+        :return:
+    """
+
+    token: str = request.args.get('token')
+    email: str = request.args.get('email')
+    email_verified: bool = await user_controller.verify_email(email=email, token=token)
+    if email_verified:
+        user: User = await user_controller.get_by_email(email=email)
+        user.account_verified = True
+        _update_user = await user_controller.put(user=user)
+        if _update_user and _update_user.get('account_verified', False):
+            flash(message="Account Verified successfully", category="success")
+        else:
+            flash(message="Your Account could not be verified, please log out", category="danger")
+        return redirect(url_for('home.get_home'), code=302)
+    flash(message="Unable to verify your email please try again later", category="danger")
+    return redirect(url_for('home.get_home'), code=302)
