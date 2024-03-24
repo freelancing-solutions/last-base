@@ -22,7 +22,7 @@ class EmailController(Controllers):
                 session.delete(email_service)
             session.commit()
 
-            email_service_orm = EmailServiceORM(**email_service.to_dict())
+            email_service_orm = EmailServiceORM(**email_service.dict())
             session.add(email_service_orm)
 
             session.commit()
