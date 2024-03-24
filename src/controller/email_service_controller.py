@@ -13,7 +13,7 @@ class EmailController(Controllers):
     def init_app(self, app):
         super().init_app(app=app)
 
-    @error_handler
+
     async def create_email_subscription(self, email_service: EmailService) -> EmailService:
         with self.get_session() as session:
             email_services = session.query(EmailServiceORM).filter(EmailServiceORM.uid == email_service.uid,
