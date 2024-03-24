@@ -159,8 +159,6 @@ async def add_paypal(user: User):
 
         return redirect(location=url_for('profile.get_profile'))
 
-    seller_account: SellerAccount = await market_controller.activate_seller_account(user=user, activate=True)
-    buyer_account: BuyerAccount = await market_controller.activate_buyer_account(user=user, activate=True)
 
     _message: str = "Successfully created or updated your paypal account - please attach your account"
     flash(message=_message, category="success")

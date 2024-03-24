@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, send_from_directory, redirect, flash, url_for, request
 
 from src.authentication import login_required
+from src.database.models.market import SellerAccount, BuyerAccount
 from src.database.models.users import User, PayPal
 from src.main import paypal_controller, user_controller, market_controller
 from src.utils import static_folder
@@ -20,10 +21,15 @@ async def request_approval_to_sell(user: User):
     paypal: PayPal = user_controller.get_paypal_account(uid=user.uid)
     success_url = url_for('market.approval_payment_success', _external=True)
     failure_url = url_for('market.approval_payment_failed', _external=True)
-    payment, is_created = await paypal_controller.create_payment(amount=_approval_amount, user=user, paypal=paypal,
+    payment, is_created = await paypal_controller.create_payment(amount=_approval_amount,
+                                                                 user=user,
+                                                                 paypal=paypal,
                                                                  success_url=success_url, failure_url=failure_url)
     if is_created:
         # Redirect user to PayPal for payment approval
+        seller_account: SellerAccount = await market_controller.activate_seller_account(user=user, activate=True)
+        buyer_account: BuyerAccount = await market_controller.activate_buyer_account(user=user, activate=True)
+
         for link in payment.links:
             if link.method == "REDIRECT":
                 return redirect(link.href)

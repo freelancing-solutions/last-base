@@ -38,10 +38,11 @@ class MarketController(Controllers):
     @error_handler
     async def activate_buyer_account(self, user: User, activate: bool):
         with self.get_session() as session:
-            buyer_account_orm = session.query(BuyerAccountORM).filter(BuyerAccountORM.uid == user.uid).first()
+            buyer_account_orm: BuyerAccountORM = session.query(BuyerAccountORM).filter(BuyerAccountORM.uid == user.uid).first()
 
             if isinstance(buyer_account_orm, BuyerAccountORM):
                 buyer_account_orm.account_activated = activate
+
                 session.merge(buyer_account_orm)
             else:
                 buyer_account_orm = BuyerAccountORM(uid=user.uid, account_activated=True)
