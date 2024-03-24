@@ -111,7 +111,7 @@
 {% block scripts %}
 
 <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var socket = io.connect('wss://' + document.domain + ':' + location.port);
 
     // Function to create a formatted chat message
     function createMessageElement(message) {
