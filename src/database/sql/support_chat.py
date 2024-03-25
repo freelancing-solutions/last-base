@@ -1,6 +1,6 @@
-from sqlalchemy import Column, String, Boolean, ForeignKey, inspect, Integer
+from sqlalchemy import Column, String, Boolean, inspect
 
-from src.database.constants import ID_LEN, NAME_LEN
+from src.database.constants import NAME_LEN
 from src.database.sql import Base, engine
 
 
@@ -38,7 +38,6 @@ class ChatMessageORM(Base):
     message_id: str = Column(String(NAME_LEN), primary_key=True)
     text: str = Column(String(NAME_LEN))
     timestamp: str = Column(String(NAME_LEN))
-
 
     @classmethod
     def create_if_not_table(cls):

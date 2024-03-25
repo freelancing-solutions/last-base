@@ -10,7 +10,6 @@ def create_colour():
     return random.choice(list(colours.values()))
 
 
-
 colours = {
     "Red": "#FF0000",
     "Blue": "#0000FF",
@@ -152,4 +151,3 @@ class ChatController(Controllers):
     async def get_all_users(self) -> list[str]:
         colours_reversed = {value: key for key, value in colours.items()}
         return [colours_reversed[_hex] for _hex in self.user_colour.values()]
-
