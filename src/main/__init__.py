@@ -15,6 +15,7 @@ from src.controller.market_controller import MarketController
 from src.controller.wallet_controller import WalletController
 from src.controller.paypal_controller import PayPalController
 from src.controller.email_service_controller import EmailController
+from src.controller.chat_controller import ChatController
 
 user_controller = UserController()
 game_controller = GameController()
@@ -22,8 +23,10 @@ market_controller = MarketController()
 wallet_controller = WalletController()
 paypal_controller = PayPalController()
 email_service_controller = EmailController()
+chat_controller = ChatController()
 
-_controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller, email_service_controller]
+_controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller,
+                email_service_controller]
 chat_io = SocketIO()
 
 
@@ -81,6 +84,6 @@ def create_app(config):
         wallet_controller.init_app(app=app)
         email_service_controller.init_app(app=app)
         paypal_controller.init_app(app=app, config_instance=config)
-
+        chat_controller.init_app(app=app)
 
     return app, chat_io

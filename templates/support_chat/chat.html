@@ -80,6 +80,7 @@
 {% block content %}
 
 <section id="main-content">
+
 <div class="card">
     <div class="card-header">
         <h3 class="card-title font-weight-bold text-info"><i class="ti ti-email"> </i> Support Chat</h3>
@@ -88,7 +89,22 @@
 
         <label class="font-weight-bold text-danger">Please Use this chat service for Support Only</label>
 
-        <div class="chat-container" id="chat-container"></div>
+        {#      Chat Messages are inserted here  #}
+        <div class="chat-container" id="chat-container">
+            {% for message in message_list %}
+                <div class="chat-message">
+                    <div class="user-icon">
+                        <img src="{{ url_for('static', filename='/images/avatar.png') }}" alt="User Icon">
+                    </div>
+                    <div class="chat-message-content">
+                        <div class="chat-message-text">{{ message.text }}</div>
+                        <div class="chat-message-timestamp">12:30 PM</div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+
     </div>
 
     <div class="card-footer">
@@ -115,19 +131,19 @@
     if (location.hostname === "localhost"){
         protocol = "ws"
     }
-
+    console.log(location.hostname);
     console.log(protocol);
     let socket = io.connect(protocol + '://' + document.domain + ':' + location.port);
 
     // Function to create a formatted chat message
-    function createMessageElement(message) {
+    function add_new_message(message) {
         let messageDiv = document.createElement('div');
         messageDiv.classList.add('chat-message');
 
         let userIconDiv = document.createElement('div');
         userIconDiv.classList.add('user-icon');
         let userIconImg = document.createElement('img');
-        userIconImg.src = '{{ url_for('static', filename='images/avatar.png') }}'; // You can replace this with the actual user icon URL
+        userIconImg.src = '{{ url_for('static', filename='images/user-1.png') }}'; // You can replace this with the actual user icon URL
         userIconDiv.appendChild(userIconImg);
 
         let messageContentDiv = document.createElement('div');
@@ -139,7 +155,8 @@
 
         let timestampDiv = document.createElement('div');
         timestampDiv.classList.add('chat-message-timestamp');
-        timestampDiv.textContent = message.timestamp;
+        let timestamp = new Date(message.timestamp);
+        timestampDiv.textContent = timestamp.toLocaleString();
 
         messageContentDiv.appendChild(messageTextDiv);
         messageContentDiv.appendChild(timestampDiv);
@@ -152,8 +169,9 @@
 
     // Event listener for receiving messages
     socket.on('message', function(data) {
+        console.log("Incoming Message", data);
         let chatContainer = document.getElementById('chat-container');
-        let messageElement = createMessageElement(data);
+        let messageElement = add_new_message(data);
         chatContainer.appendChild(messageElement);
     });
 

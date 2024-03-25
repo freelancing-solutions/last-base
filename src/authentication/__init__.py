@@ -72,3 +72,5 @@ def user_details(route_function):
         return await route_function(user, *args, **kwargs)
 
     return decorated_function
+
+
