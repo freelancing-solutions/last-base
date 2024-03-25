@@ -111,8 +111,11 @@
 {% block scripts %}
 
 <script>
+    let protocol = "wss"
+    if (location.hostname === "localhost"){
+        protocol = "ws"
+    }
 
-    let protocol = location.hostname === 'localhost' ? 'wss' : 'ws';
     console.log(protocol);
     let socket = io.connect(protocol + '://' + document.domain + ':' + location.port);
 
