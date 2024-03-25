@@ -14,7 +14,8 @@ chat_route = Blueprint('chat', __name__)
 async def get_chat(user: User):
     context = dict(user=user)
     message_list: list[ChatMessage] = await chat_controller.get_all_messages()
-    context.update(message_list=message_list)
+    sorted_messages = sorted(message_list, key=lambda msg: msg.timestamp)
+    context.update(message_list=sorted_messages)
 
     return render_template('support_chat/chat.html', **context)
 
