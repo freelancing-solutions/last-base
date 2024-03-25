@@ -156,7 +156,7 @@
         let timestampDiv = document.createElement('div');
         timestampDiv.classList.add('chat-message-timestamp');
         let timestamp = new Date(message.timestamp);
-        timestampDiv.textContent = timestamp.toLocaleString();
+        timestampDiv.textContent = message.timestamp;
 
         messageContentDiv.appendChild(messageTextDiv);
         messageContentDiv.appendChild(timestampDiv);
