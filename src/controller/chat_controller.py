@@ -1,17 +1,86 @@
-import datetime
 import random
 
-from src.controller import Controllers, error_handler
-from src.database.models.email_service import EmailService, EmailSubscriptions
+from src.controller import Controllers
 from src.database.models.support_chat import ChatMessage, ChatUser
-from src.database.models.users import User
-from src.database.sql.email_service import EmailServiceORM, EmailSubscriptionsORM
 from src.database.sql.support_chat import ChatMessageORM, ChatUserORM
 
+
 def create_colour():
-    # Generate a random color code in hexadecimal format
-    color_code = "#{:06x}".format(random.randint(0, 0xFFFFFF))
-    return color_code
+    # Select a random color from the dictionary keys
+    return random.choice(list(colours.values()))
+
+
+
+colours = {
+    "Red": "#FF0000",
+    "Blue": "#0000FF",
+    "Green": "#00FF00",
+    "Yellow": "#FFFF00",
+    "Purple": "#800080",
+    "Orange": "#FFA500",
+    "Pink": "#FFC0CB",
+    "Brown": "#A52A2A",
+    "Black": "#000000",
+
+    "Gray": "#808080",
+    "Cyan": "#00FFFF",
+    "Magenta": "#FF00FF",
+    "Maroon": "#800000",
+    "Olive": "#808000",
+    "Turquoise": "#40E0D0",
+    "Lavender": "#E6E6FA",
+    "Indigo": "#4B0082",
+    "Sapphire": "#0F52BA",
+    "Emerald": "#50C878",
+    "Ruby": "#E0115F",
+    "Coral": "#FF7F50",
+    "Teal": "#008080",
+    "Gold": "#FFD700",
+    "Silver": "#C0C0C0",
+    "Ivory": "#FFFFF0",
+    "Crimson": "#DC143C",
+    "Azure": "#007FFF",
+    "Fuchsia": "#FF00FF",
+    "Mauve": "#E0B0FF",
+    "Peach": "#FFDAB9",
+    "Burgundy": "#800020",
+    "Lilac": "#C8A2C8",
+    "Mint": "#3EB489",
+    "Lemon": "#FFF700",
+    "Salmon": "#FA8072",
+    "Tan": "#D2B48C",
+    "Slate": "#708090",
+    "Orchid": "#DA70D6",
+    "Beige": "#F5F5DC",
+    "Periwinkle": "#CCCCFF",
+    "Chartreuse": "#7FFF00",
+    "Tangerine": "#F28500",
+    "Marigold": "#EAA221",
+    "Aqua": "#00FFFF",
+    "Plum": "#8E4585",
+    "Apricot": "#FBCEB1",
+    "Cinnamon": "#D2691E",
+    "Celadon": "#ACE1AF",
+    "Cobalt": "#0047AB",
+
+    "Denim": "#1560BD",
+    "Fern": "#4F7942",
+    "Garnet": "#733635",
+    "Hazel": "#8E7618",
+    "Jade": "#00A86B",
+    "Mahogany": "#C04000",
+    "Mustard": "#FFDB58",
+    "Navy": "#000080",
+    "Ochre": "#CC7722",
+    "Peacock": "#33A1C9",
+    "Pine": "#01796F",
+    "Raspberry": "#E30B5D",
+    "Rose": "#FF007F",
+    "Sandalwood": "#C2B280",
+    "Scarlet": "#FF2400",
+    "Sepia": "#704214",
+    "Charcoal": "#36454F"
+}
 
 
 class ChatController(Controllers):
@@ -21,7 +90,6 @@ class ChatController(Controllers):
 
     def init_app(self, app):
         super().init_app(app=app)
-
 
     def add_chat_message(self, message: ChatMessage):
         """
@@ -81,6 +149,7 @@ class ChatController(Controllers):
 
             return proc_messages
 
-
-
+    async def get_all_users(self) -> list[str]:
+        colours_reversed = {value: key for key, value in colours.items()}
+        return [colours_reversed[_hex] for _hex in self.user_colour.values()]
 

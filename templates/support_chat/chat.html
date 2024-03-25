@@ -80,8 +80,24 @@
 {% block content %}
 
 <section id="main-content">
+<div class="row">
 
-<div class="card">
+<!-- Online Users Section -->
+<div class="card col-lg-9 col-md-9 col-sm-12">
+    <div class="card-header">
+        <h3 class="card-title font-weight-bold text-success"><i class="ti ti-user"> </i> Online Users</h3>
+    </div>
+    <div class="card-content">
+        {% for user in online_users %}
+            <div class="online-user" >
+                <div class="online-user-name"><span style="color: {{ user }};">{{ user }}</span></div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Chat Messages -->
+<div class="card col-lg-9 col-md-9 col-sm-12">
     <div class="card-header">
         <h3 class="card-title font-weight-bold text-info"><i class="ti ti-email"> </i> Support Chat</h3>
     </div>
@@ -119,6 +135,7 @@
 </div>
 
 
+</div>
 
 </section>
 

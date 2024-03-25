@@ -15,8 +15,8 @@ async def get_chat(user: User):
     context = dict(user=user)
     message_list: list[ChatMessage] = await chat_controller.get_all_messages()
     sorted_messages = sorted(message_list, key=lambda msg: msg.timestamp)
-    context.update(message_list=sorted_messages)
-
+    users_list: list[str] = await chat_controller.get_all_users()
+    context.update(message_list=sorted_messages, online_users=users_list)
     return render_template('support_chat/chat.html', **context)
 
 
