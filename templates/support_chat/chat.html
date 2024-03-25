@@ -111,27 +111,30 @@
 {% block scripts %}
 
 <script>
-    var socket = io.connect('wss://' + document.domain + ':' + location.port);
+
+    let protocol = location.hostname === 'localhost' ? 'wss' : 'ws';
+    console.log(protocol);
+    let socket = io.connect(protocol + '://' + document.domain + ':' + location.port);
 
     // Function to create a formatted chat message
     function createMessageElement(message) {
-        var messageDiv = document.createElement('div');
+        let messageDiv = document.createElement('div');
         messageDiv.classList.add('chat-message');
 
-        var userIconDiv = document.createElement('div');
+        let userIconDiv = document.createElement('div');
         userIconDiv.classList.add('user-icon');
-        var userIconImg = document.createElement('img');
+        let userIconImg = document.createElement('img');
         userIconImg.src = '{{ url_for('static', filename='images/avatar.png') }}'; // You can replace this with the actual user icon URL
         userIconDiv.appendChild(userIconImg);
 
-        var messageContentDiv = document.createElement('div');
+        let messageContentDiv = document.createElement('div');
         messageContentDiv.classList.add('chat-message-content');
 
-        var messageTextDiv = document.createElement('div');
+        let messageTextDiv = document.createElement('div');
         messageTextDiv.classList.add('chat-message-text');
         messageTextDiv.textContent = message.text;
 
-        var timestampDiv = document.createElement('div');
+        let timestampDiv = document.createElement('div');
         timestampDiv.classList.add('chat-message-timestamp');
         timestampDiv.textContent = message.timestamp;
 
@@ -146,15 +149,15 @@
 
     // Event listener for receiving messages
     socket.on('message', function(data) {
-        var chatContainer = document.getElementById('chat-container');
-        var messageElement = createMessageElement(data);
+        let chatContainer = document.getElementById('chat-container');
+        let messageElement = createMessageElement(data);
         chatContainer.appendChild(messageElement);
     });
 
     // Event listener for sending messages
     document.getElementById('message-form').onsubmit = function(e) {
         e.preventDefault();
-        var messageInput = document.getElementById('message-input');
+        let messageInput = document.getElementById('message-input');
         socket.emit('message', { text: messageInput.value });
         messageInput.value = '';
     };
