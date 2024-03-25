@@ -92,7 +92,7 @@
         {#      Chat Messages are inserted here  #}
         <div class="chat-container" id="chat-container">
             {% for message in message_list %}
-                <div class="chat-message">
+                <div class="chat-message" style="color: {{ message.user_colour }}">
                     <div class="user-icon">
                         <img src="{{ url_for('static', filename='/images/avatar.png') }}" alt="User Icon">
                     </div>
@@ -139,6 +139,8 @@
     function add_new_message(message) {
         let messageDiv = document.createElement('div');
         messageDiv.classList.add('chat-message');
+        messageDiv.style.color = message.user_colour;
+
 
         let userIconDiv = document.createElement('div');
         userIconDiv.classList.add('user-icon');

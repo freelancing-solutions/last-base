@@ -39,6 +39,7 @@ class ChatMessageORM(Base):
     text: str = Column(String(NAME_LEN))
     timestamp: str = Column(String(NAME_LEN))
 
+
     @classmethod
     def create_if_not_table(cls):
         if not inspect(engine).has_table(cls.__tablename__):
