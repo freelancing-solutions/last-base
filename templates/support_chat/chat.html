@@ -144,6 +144,41 @@
 {% block scripts %}
 
 <script>
+function time_format(timestamp) {
+    // Convert the timestamp string to a Date object
+    let timestampDt = new Date(timestamp);
+
+    // Get the current date and time
+    let currentDt = new Date();
+
+    // Calculate the difference between the timestamps in milliseconds
+    let timeDifference = currentDt - timestampDt;
+
+    if (timeDifference < 60000) {
+        return "just now";
+    } else if (timeDifference < 3600000) {
+        let minutes = Math.floor(timeDifference / 60000);
+        return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+    } else if (timeDifference < 86400000) {
+        let hours = Math.floor(timeDifference / 3600000);
+        return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+    } else if (currentDt.getDate() === timestampDt.getDate()) {
+        return "today";
+    } else if (currentDt.getDate() - timestampDt.getDate() === 1) {
+        return "yesterday";
+    } else if (timeDifference < 604800000) {
+        let days = Math.floor(timeDifference / 86400000);
+        return days + " day" + (days > 1 ? "s" : "") + " ago";
+    } else if (timeDifference < 2592000000) { // 30 days
+        let weeks = Math.floor(timeDifference / 604800000);
+        return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+    } else {
+        // Return the full timestamp if older than 30 days
+        return timestampDt.getFullYear() + "-" + (timestampDt.getMonth() + 1) + "-" + timestampDt.getDate();
+
+    }
+}
+
     let protocol = "wss"
     if (location.hostname === "localhost"){
         protocol = "ws"
@@ -174,8 +209,8 @@
 
         let timestampDiv = document.createElement('div');
         timestampDiv.classList.add('chat-message-timestamp');
-        let timestamp = new Date(message.timestamp);
-        timestampDiv.textContent = message.timestamp;
+
+        timestampDiv.textContent = time_format(message.timestamp);
 
         messageContentDiv.appendChild(messageTextDiv);
         messageContentDiv.appendChild(timestampDiv);
