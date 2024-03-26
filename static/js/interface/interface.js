@@ -1,26 +1,15 @@
 window.addEventListener("load", async e => {
-    // Define a function to fetch game time
+    // Define global variables to hold server time and interval ID
+    let serverTime;
+    let intervalId;
+
+    // Define a function to fetch game time from the server
     async function fetchGameTime() {
+        console.log("calling the server again");
         try {
             const response = await fetch('/game-time');
             const data = await response.json();
-            const serverTime = new Date(data.time);
-
-            // Set the initial game time
-            updateGameTime(serverTime);
-
-            // Call updateGameTime every second
-            setInterval(() => {
-                const currentTime = new Date(); // Current client time
-                const elapsedTime = currentTime - serverTime; // Elapsed time since server synchronization
-                const timeToUpdate = 5 * 60 * 1000 - elapsedTime; // Time until next server synchronization (5 minutes - elapsed time)
-
-                if (timeToUpdate <= 0) {
-                    fetchGameTime(); // Call fetchGameTime to synchronize with the server
-                } else {
-                    updateGameTime(new Date(serverTime.getTime() + elapsedTime)); // Update game time based on elapsed time
-                }
-            }, 1000); // 1000 milliseconds = 1 second
+            serverTime = new Date(data.time);
         } catch (error) {
             console.error('Error fetching game time:', error);
             document.getElementById('game_time').innerHTML = 'Error fetching game time';
@@ -28,11 +17,14 @@ window.addEventListener("load", async e => {
     }
 
     // Define a function to update the game time displayed on the webpage
-    function updateGameTime(gameTime) {
-        // Extract hours, minutes, and seconds from the gameTime Date object
-        const hours = gameTime.getHours().toString().padStart(2, '0');
-        const minutes = gameTime.getMinutes().toString().padStart(2, '0');
-        const seconds = gameTime.getSeconds().toString().padStart(2, '0');
+    function updateGameTime() {
+        // Add one second to the current displayed time
+        serverTime.setSeconds(serverTime.getSeconds() + 1);
+
+        // Extract hours, minutes, and seconds from the serverTime Date object
+        const hours = serverTime.getHours().toString().padStart(2, '0');
+        const minutes = serverTime.getMinutes().toString().padStart(2, '0');
+        const seconds = serverTime.getSeconds().toString().padStart(2, '0');
 
         // Format the time in military format (24-hour format)
         const militaryTime = `${hours}:${minutes}:${seconds}`;
@@ -42,6 +34,18 @@ window.addEventListener("load", async e => {
         `;
     }
 
-    // Call fetchGameTime initially
+    // Fetch game time from the server initially
     await fetchGameTime();
+
+    // Call updateGameTime every second
+    setInterval(() => {
+        updateGameTime();
+
+        // Check if 5 minutes have elapsed
+        const elapsedTime = new Date() - serverTime;
+        if (elapsedTime >= 5 * 60 * 100000) { // 5 minutes in milliseconds
+            // clearInterval(intervalId); // Stop the current interval
+            fetchGameTime(); // Fetch game time from the server again
+        }
+    }, 1000); // 1000 milliseconds = 1 second
 });
