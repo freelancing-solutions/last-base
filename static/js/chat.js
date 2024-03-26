@@ -91,7 +91,6 @@ function time_format(timestamp) {
 
     // Event listener for receiving messages
     socket.on('message', function(data) {
-        console.log("Incoming Message", data);
         let chatContainer = document.getElementById('chat-container');
         let messageElement = add_new_message(data);
         chatContainer.appendChild(messageElement);
