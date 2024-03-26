@@ -1,24 +1,32 @@
 
-window.addEventListener("load", e => {
-    const all_notifications_link = document.getElementById('notifications_see_all');
-    const login_link = document.getElementById('login_link');
-    const logout_link = document.getElementById('logout_link');
-    const profile_link = document.getElementById('profile_link');
+window.addEventListener("load", async e => {
+    // Define a function to fetch game time
+    async function fetchGameTime() {
+        try {
+            const response = await fetch('/game-time');
+            const data = await response.json();
+            const game_time = new Date(data.time);
 
-    all_notifications_link.addEventListener('click', e => {
-        window.location.href = "/admin/notifications";
-    });
+            // Extract hours, minutes, and seconds from the game_time Date object
+            const hours = game_time.getHours().toString().padStart(2, '0');
+            const minutes = game_time.getMinutes().toString().padStart(2, '0');
+            const seconds = game_time.getSeconds().toString().padStart(2, '0');
 
-    login_link.addEventListener("click", e => {
-        window.location.href = "/admin/login";
-    });
+            // Format the time in military format (24-hour format)
+            const militaryTime = `${hours}:${minutes}:${seconds}`;
 
-    logout_link.addEventListener("click", e => {
-       window.location.href = "/admin/logout";
-    });
+            document.getElementById('game_time').innerHTML = `
+                Game TIME: <span class="font-weight-bold"> ${militaryTime}</span>
+            `;
+        } catch (error) {
+            console.error('Error fetching game time:', error);
+            document.getElementById('game_time').innerHTML = 'Error fetching game time';
+        }
+    }
 
-    profile_link.addEventListener("click", e => {
-        window.location.href = "/";
-    });
+    // Call fetchGameTime initially
+    await fetchGameTime();
 
+    // Call fetchGameTime every minute
+    setInterval(fetchGameTime, 600); // 60000 milliseconds = 1 minute
 });

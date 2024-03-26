@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, send_file, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 from src.authentication import user_details
 from src.database.models.users import User
 from src.utils import static_folder
@@ -17,6 +17,16 @@ def get_time():
     # Return the current time as a JSON response
     return jsonify({'time': current_time_str})
 
+@home_route.get('/game-time')
+def game_time():
+    # Get the current server time in UTC
+    current_time_utc = datetime.utcnow()
+
+    # Convert the datetime object to a string
+    current_time_str = (current_time_utc - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    # Return the current time as a JSON response
+    return jsonify({'time': current_time_str})
 
 @home_route.get("/")
 @user_details
