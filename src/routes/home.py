@@ -2,12 +2,14 @@ from flask import Blueprint, render_template, send_file, jsonify
 from datetime import datetime, timedelta
 from src.authentication import user_details
 from src.database.models.users import User
+from src.main import game_controller
 from src.utils import static_folder
 
 home_route = Blueprint('home', __name__)
 
+
 @home_route.get('/get-time')
-def get_time():
+async def get_time():
     # Get the current server time
     current_time = datetime.utcnow()
 
@@ -17,8 +19,17 @@ def get_time():
     # Return the current time as a JSON response
     return jsonify({'time': current_time_str})
 
+
+@home_route.get('/game-hourly')
+async def get_game_hourly_event():
+    hourly_event: str = await game_controller.get_hourly_event()
+    hourly_event = hourly_event.upper()
+    data = {'event': hourly_event}
+    return jsonify(data)
+
+
 @home_route.get('/game-time')
-def game_time():
+async def game_time():
     # Get the current server time in UTC
     current_time_utc = datetime.utcnow()
 
@@ -27,6 +38,7 @@ def game_time():
 
     # Return the current time as a JSON response
     return jsonify({'time': current_time_str})
+
 
 @home_route.get("/")
 @user_details
@@ -38,7 +50,7 @@ async def get_home(user: User | None):
 
 @home_route.get("/about")
 @user_details
-async def get_about(user: User| None):
+async def get_about(user: User | None):
     context = {'user': user} if user else {}
     return render_template('about.html', **context)
 
@@ -87,6 +99,3 @@ async def download_previous_version(user: User | None):
         return send_file(apk_file_path, as_attachment=True)
     except Exception as e:
         return f"Failed to download Android APK Last Shelter Survival: ()", 500
-
-
-

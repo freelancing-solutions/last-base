@@ -1,3 +1,5 @@
+import time
+from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
 import requests
@@ -12,6 +14,203 @@ from src.controller import Controllers, error_handler
 from src.database.models.game import GameAuth, GameIDS, GiftCode, GiftCodeOut, GameDataInternal, GiftCodesSubscriptions
 from src.database.models.users import User
 from src.database.sql.game import GameAuthORM, GameIDSORM, GiftCodesORM, RedeemCodesORM, GiftCodesSubscriptionORM
+
+# Dictionary containing hourly events for Last Shelter: Survival
+weekdays_events = {
+    "Monday": {
+        "00": "Building + Building Speedups",
+        "01": "Building",
+        "02": "Use Training Speedups + Spend VIP points",
+        "03": "Building + Training Troops + Spend VIP points",
+        "04": "Building Speedups + Research Speedups + Training Speedups",
+        "05": "Building + Tech Research + Training Speedups",
+        "06": "Building + Tech Research + Training Troops",
+        "07": "Building",
+        "08": "Building + Building Speedups",
+        "09": "Building",
+        "10": "Use Training Speedups + Spend VIP points",
+        "11": "Building + Training Troops + Spend VIP points",
+        "12": "Building Speedups + Research Speedups + Training Speedups",
+        "13": "Building + Tech Research + Training Speedups",
+        "14": "Building + Tech Research + Training Troops",
+        "15": "Building",
+        "16": "Building + Building Speedups",
+        "17": "Building",
+        "18": "Use Training Speedups + Spend VIP points",
+        "19": "Building + Training Troops + Spend VIP points",
+        "20": "Building Speedups + Research Speedups + Training Speedups",
+        "21": "Building + Tech Research + Training Speedups",
+        "22": "Building + Tech Research + Training Troops",
+        "23": "Building"
+    },
+    "Tuesday": {
+        "00": "Building + Craft Parts",
+        "01": "Building + Tech Research + Training Speedups",
+        "02": "Building + Craft Parts",
+        "03": "Use Any Speedups",
+        "04": "Building + Tech Research",
+        "05": "Building + Building Speedups + Consume Energy Core",
+        "06": "Building + Tech Research",
+        "07": "Building + Tech Research + Training Troops",
+        "08": "Building + Craft Parts",
+        "09": "Building + Tech Research + Training Speedups",
+        "10": "Building + Craft Parts",
+        "11": "Use Any Speedups",
+        "12": "Building + Tech Research",
+        "13": "Building + Building Speedups + Consume Energy Core",
+        "14": "Building + Tech Research",
+        "15": "Building + Tech Research + Training Troops",
+        "16": "Use Any Speedups",
+        "17": "Building + Tech Research + Craft Parts",
+        "18": "Building + Tech Research + Craft Parts",
+        "19": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "20": "Building + Tech Research + Training Speedups + Consume Energy Core",
+        "21": "Building + Tech Research",
+        "22": "Building + Tech Research + Training Troops",
+        "23": "Building + Tech Research"
+    },
+    "Wednesday": {
+        "00": "Use Any Speedups",
+        "01": "Tech Research + Tech Research Speedups",
+        "02": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "03": "Building + Tech Research + Craft Parts",
+        "04": "Building + Tech Research + Craft Parts",
+        "05": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "06": "Building + Tech Research + Training Speedups + Consume Energy Core",
+        "07": "Building + Tech Research",
+        "08": "Use Any Speedups",
+        "09": "Tech Research + Tech Research Speedups",
+        "10": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "11": "Building + Tech Research + Craft Parts",
+        "12": "Building + Tech Research + Craft Parts",
+        "13": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "14": "Building + Tech Research + Training Speedups + Consume Energy Core",
+        "15": "Building + Tech Research",
+        "16": "Use Any Speedups",
+        "17": "Tech Research + Tech Research Speedups",
+        "18": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "19": "Building + Tech Research + Craft Parts",
+        "20": "Building + Tech Research + Craft Parts",
+        "21": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "22": "Building + Tech Research + Training Speedups + Consume Energy Core",
+        "23": "Building + Tech Research"
+    },
+    "Thursday": {
+        "00": "Hero Recruitment + Kill Zombies",
+        "01": "All Hero Development",
+        "02": "Spend / Acquire Wisdom Medals + Kill Zombies",
+        "03": "All Hero Development",
+        "04": "Hero Recruitment + Spend Wisdom Medals",
+        "05": "All Hero Development",
+        "06": "Spend / Acquire Wisdom Medals + Kill Zombies",
+        "07": "All Hero Development",
+        "08": "Hero Recruitment + Kill Zombies",
+        "09": "All Hero Development",
+        "10": "Spend / Acquire Wisdom Medals + Kill Zombies",
+        "11": "All Hero Development",
+        "12": "Hero Recruitment + Spend Wisdom Medals",
+        "13": "All Hero Development",
+        "14": "Spend / Acquire Wisdom Medals + Kill Zombies",
+        "15": "All Hero Development",
+        "16": "Hero Recruitment + Kill Zombies",
+        "17": "All Hero Development",
+        "18": "Spend / Acquire Wisdom Medals + Kill Zombies",
+        "19": "All Hero Development",
+        "20": "Hero Recruitment + Spend Wisdom Medals",
+        "21": "All Hero Development",
+        "22": "Spend / Acquire Wisdom Medals + Kill Zombies",
+        "23": "All Hero Development"
+    },
+    "Friday": {
+        "00": "Use Any Speedups",
+        "01": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "02": "Building + Tech Research + Training Speedups",
+        "03": "Training Speedups",
+        "04": "Building + Tech Research + Training Speedups",
+        "05": "Building + Training Troops",
+        "06": "Building + Training Troops",
+        "07": "Use Any Speedups",
+        "08": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "09": "Building + Tech Research + Training Speedups",
+        "10": "Training Speedups",
+        "11": "Building + Tech Research + Training Speedups",
+        "12": "Building + Training Troops",
+        "13": "Building + Training Troops",
+        "14": "Use Any Speedups",
+        "15": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "16": "Building + Tech Research + Training Speedups",
+        "17": "Training Speedups",
+        "18": "Building + Tech Research + Training Speedups",
+        "19": "Building + Training Troops",
+        "20": "Building + Training Troops",
+        "21": "Use Any Speedups",
+        "22": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "23": "Building + Tech Research + Training Speedups",
+        "24": "Training Speedups"
+    },
+    "Saturday": {
+
+    },
+    "Sunday": {
+
+    }
+}
+
+# Dictionary containing hourly events for Last Shelter: Survival
+kill_events = {
+    "Saturday": {
+        "00": "Use Any Speedups",
+        "01": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "02": "Building + Tech Research + Training Speedups",
+        "03": "Training Speedups",
+        "04": "Building + Tech Research + Training Speedups",
+        "05": "Building + Training Troops",
+        "06": "Building + Training Troops",
+        "07": "Use Any Speedups",
+        "08": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "09": "Building + Tech Research + Training Speedups",
+        "10": "Training Speedups",
+        "11": "Building + Tech Research + Training Speedups",
+        "12": "Building + Training Troops",
+        "13": "Building + Training Troops",
+        "14": "Use Any Speedups",
+        "15": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "16": "Building + Tech Research + Training Speedups",
+        "17": "Training Speedups",
+        "18": "Building + Tech Research + Training Speedups",
+        "19": "Building + Training Troops",
+        "20": "Building + Training Troops",
+        "21": "Use Any Speedups",
+        "22": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "23": "Building + Tech Research + Training Speedups"
+    },
+    "Sunday": {
+        "00": "Building + Tech Research + Training Speedups",
+        "01": "Training Speedups",
+        "02": "Building + Tech Research + Training Speedups",
+        "03": "Building + Training Troops",
+        "04": "Building + Training Troops",
+        "05": "Use Any Speedups",
+        "06": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "07": "Building + Tech Research + Training Speedups",
+        "08": "Training Speedups",
+        "09": "Building + Tech Research + Training Speedups",
+        "10": "Building + Training Troops",
+        "11": "Building + Training Troops",
+        "12": "Use Any Speedups",
+        "13": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "14": "Building + Tech Research + Training Speedups",
+        "15": "Training Speedups",
+        "16": "Building + Tech Research + Training Speedups",
+        "17": "Building + Training Troops",
+        "18": "Building + Training Troops",
+        "19": "Use Any Speedups",
+        "20": "Building Speedups + Tech Research Speedups + Training Speedups",
+        "21": "Building + Tech Research + Training Speedups",
+        "22": "Training Speedups",
+        "23": "Building + Tech Research + Training Speedups"
+    }
+}
 
 
 class Encryption:
@@ -73,6 +272,25 @@ class GameController(Controllers):
 
     def init_app(self, app: Flask):
         super().init_app(app=app)
+
+    async def get_day_and_hour(self):
+        # Get the current system time in UTC
+        current_time_utc = datetime.utcnow()
+
+        # Adjust the time to UTC - 2
+        current_time_utc_minus_2 = current_time_utc - timedelta(hours=2)
+        day = current_time_utc_minus_2.strftime("%A")  # %A gives the full name of the day (e.g., Monday)
+        hour = current_time_utc_minus_2.strftime("%H")  # %H gives the hour in 24-hour format
+
+        return day, hour
+
+    async def get_hourly_event(self):
+        day, hour = await self.get_day_and_hour()
+
+        if day in weekdays_events and hour in weekdays_events[day]:
+            return weekdays_events[day][hour]
+        if day in kill_events and hour in kill_events[day]:
+            return kill_events[day][hour]
 
     async def game_account_valid(self, email: str, password: str):
         """

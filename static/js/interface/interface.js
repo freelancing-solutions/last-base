@@ -2,6 +2,7 @@ window.addEventListener("load", async e => {
     // Define global variables to hold server time and interval ID
     let serverTime;
     let intervalId;
+    let hourly_event;
 
     // Define a function to fetch game time from the server
     async function fetchGameTime() {
@@ -15,6 +16,7 @@ window.addEventListener("load", async e => {
             document.getElementById('game_time').innerHTML = 'Error fetching game time';
         }
     }
+
 
     // Define a function to update the game time displayed on the webpage
     function updateGameTime() {
@@ -48,4 +50,46 @@ window.addEventListener("load", async e => {
             fetchGameTime(); // Fetch game time from the server again
         }
     }, 1000); // 1000 milliseconds = 1 second
+
+
+
+
+
+async function fetch_hourly_event() {
+    try {
+        const response = await fetch('/game-hourly');
+        const data = await response.json();
+        hourly_event = data.event;
+        console.log("Hourly event fetched successfully at", new Date());
+        console.log('Hourly Event ', hourly_event);
+        document.getElementById('hourly_event').innerHTML = `
+        <span class="font-weight-bold text-danger"> HOURLY EVENT</span> : <span class="text-info"> ${hourly_event} </span>
+        `
+    } catch (error) {
+        console.log("Error fetching hourly event", error);
+    }
+}
+
+await fetch_hourly_event();
+
+async function scheduleHourlyEvent() {
+    try {
+        const timeResponse = await fetch('/game-time');
+        const timeData = await timeResponse.json();
+        const currentTime = new Date(timeData.time);
+        const millisecondsUntilNextHour = (60 - currentTime.getMinutes() - 1) * 60 * 1000 + (60 - currentTime.getSeconds()) * 1000;
+
+        setTimeout(async function() {
+            await fetch_hourly_event(); // Call the function to fetch the hourly event
+            // Schedule the function to be called every hour afterwards
+            setInterval(fetch_hourly_event, 60 * 60 * 1000);
+        }, millisecondsUntilNextHour);
+    } catch (error) {
+        console.log("Error fetching game time", error);
+    }
+}
+
+// Start scheduling the hourly event
+await scheduleHourlyEvent();
+
 });
