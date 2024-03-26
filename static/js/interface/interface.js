@@ -30,7 +30,7 @@ window.addEventListener("load", async e => {
         const militaryTime = `${hours}:${minutes}:${seconds}`;
 
         document.getElementById('game_time').innerHTML = `
-            Game TIME: ${militaryTime}
+            <span class="font-weight-bold text-danger">GAME TIME</span> :<span class="font-weight-bold">${militaryTime}</span>
         `;
     }
 
@@ -38,13 +38,13 @@ window.addEventListener("load", async e => {
     await fetchGameTime();
 
     // Call updateGameTime every second
-    setInterval(() => {
+    intervalId = setInterval(() => {
         updateGameTime();
 
         // Check if 5 minutes have elapsed
         const elapsedTime = new Date() - serverTime;
         if (elapsedTime >= 5 * 60 * 100000) { // 5 minutes in milliseconds
-            // clearInterval(intervalId); // Stop the current interval
+            clearInterval(intervalId); // Stop the current interval
             fetchGameTime(); // Fetch game time from the server again
         }
     }, 1000); // 1000 milliseconds = 1 second
