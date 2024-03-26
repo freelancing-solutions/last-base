@@ -154,7 +154,7 @@ function time_format(timestamp) {
     // Calculate the difference between the timestamps in milliseconds
     let timeDifference = currentDt - timestampDt;
 
-    if (timeDifference < 60000) {
+    if (timeDifference <= 0) {
         return "just now";
     } else if (timeDifference < 3600000) {
         let minutes = Math.floor(timeDifference / 60000);
@@ -175,9 +175,9 @@ function time_format(timestamp) {
     } else {
         // Return the full timestamp if older than 30 days
         return timestampDt.getFullYear() + "-" + (timestampDt.getMonth() + 1) + "-" + timestampDt.getDate();
-
     }
 }
+
 
     let protocol = "wss"
     if (location.hostname === "localhost"){
