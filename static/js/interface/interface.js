@@ -44,7 +44,7 @@ window.addEventListener("load", async e => {
         // Check if 5 minutes have elapsed
         const elapsedTime = new Date() - serverTime;
         if (elapsedTime >= 5 * 60 * 100000) { // 5 minutes in milliseconds
-            clearInterval(intervalId); // Stop the current interval
+            // clearInterval(intervalId); // Stop the current interval
             fetchGameTime(); // Fetch game time from the server again
         }
     }, 1000); // 1000 milliseconds = 1 second
