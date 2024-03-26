@@ -60,14 +60,14 @@ weekdays_events = {
         "13": "Building + Building Speedups + Consume Energy Core",
         "14": "Building + Tech Research",
         "15": "Building + Tech Research + Training Troops",
-        "16": "Use Any Speedups",
-        "17": "Building + Tech Research + Craft Parts",
-        "18": "Building + Tech Research + Craft Parts",
-        "19": "Building Speedups + Tech Research Speedups + Training Speedups",
-        "20": "Building + Tech Research + Training Speedups + Consume Energy Core",
-        "21": "Building + Tech Research",
-        "22": "Building + Tech Research + Training Troops",
-        "23": "Building + Tech Research"
+        "16": "Building + Craft Parts",
+        "17": "Building + Tech Research + Training Speedups",
+        "18": "Building + Craft Parts",
+        "19": "Use Any Speedups",
+        "20": "Building + Tech Research",
+        "21": "Building + Building Speedups + Consume Energy Core",
+        "22": "Building + Tech Research",
+        "23": "Building + Tech Research + Training Troops",
     },
     "Wednesday": {
         "00": "Use Any Speedups",
@@ -147,13 +147,8 @@ weekdays_events = {
         "22": "Building Speedups + Tech Research Speedups + Training Speedups",
         "23": "Building + Tech Research + Training Speedups",
         "24": "Training Speedups"
-    },
-    "Saturday": {
-
-    },
-    "Sunday": {
-
     }
+
 }
 
 # Dictionary containing hourly events for Last Shelter: Survival
@@ -275,14 +270,12 @@ class GameController(Controllers):
 
     async def get_day_and_hour(self):
         # Get the current system time in UTC
+
         current_time_utc = datetime.utcnow()
 
-        # Adjust the time to UTC - 2
-        current_time_utc_minus_2 = current_time_utc - timedelta(hours=2)
-        day = current_time_utc_minus_2.strftime("%A")  # %A gives the full name of the day (e.g., Monday)
-        hour = current_time_utc_minus_2.strftime("%H")  # %H gives the hour in 24-hour format
-
-        return day, hour
+        # Convert the datetime object to a string
+        current_time = (current_time_utc - timedelta(hours=2))
+        return current_time.strftime("%A"), current_time.strftime("%H")
 
     async def get_hourly_event(self):
         day, hour = await self.get_day_and_hour()
