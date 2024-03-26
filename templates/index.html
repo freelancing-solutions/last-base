@@ -10,7 +10,33 @@
             <h2 class=""> Last Shelter - VIP Market </h2>
         </div>
     </div>
-
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Login - Create Account</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% if user %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('auth.do_logout')}}" class="btn btn-danger btn-block">
+                            <i class="ti-power-off"> </i> <strong>Logout</strong>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('auth.get_register') }}" class="btn btn-warning btn-block">
+                            <i class="ti-save"> </i> <strong>Create Account Today</strong>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('auth.get_auth')}}" class="btn btn-primary btn-block">
+                            <i class="ti-user"> </i> <strong>Login</strong>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 
     <div class="card">
         <div class="card-header">
@@ -80,52 +106,17 @@
 
 
 
-        <div class="row">
-            <div class="col-lg-8 col-md-6 col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Gamers</h4>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            {% if user %}
-                                <li class="list-group-item">
-                                    <a href="{{ url_for('auth.do_logout')}}" class="btn btn-danger btn-block">
-                                        <i class="ti-power-off"> </i> <strong>Logout</strong>
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li class="list-group-item">
-                                    <a href="{{ url_for('auth.get_register') }}" class="btn btn-warning btn-block">
-                                        <i class="ti-save"> </i> <strong>Create Account Today</strong>
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="{{ url_for('auth.get_auth')}}" class="btn btn-primary btn-block">
-                                        <i class="ti-user"> </i> <strong>Login</strong>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Last Shelter - <span class="font-weight-bold"> VIP</span></h5>
-                    </div>
-                    <div class="card-body">
-                <span class="card-content">
-                    <h5>A Safe Environment for gamers to get access to gaming services, and also able to sell their game accounts,
-                    skins , more safely. </h5>
-                </span>
-                    </div>
-                </div>
-            </div>
-
+    <div class="card">
+        <div class="card-header">
+            <h5>Last Shelter - <span class="font-weight-bold"> VIP</span></h5>
         </div>
+        <div class="card-body">
+    <span class="card-content">
+        <h5>A Safe Environment for gamers to get access to gaming services, and also able to sell their game accounts,
+        skins , more safely. </h5>
+    </span>
+        </div>
+    </div>
 
 
 
