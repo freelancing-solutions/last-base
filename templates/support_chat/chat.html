@@ -150,6 +150,8 @@ function time_format(timestamp) {
 
     // Get the current date and time
     let currentDt = new Date();
+    currentDt.setUTCHours(currentDt.getUTCHours(), currentDt.getUTCMinutes(), currentDt.getUTCSeconds());
+
 
     // Calculate the difference between the timestamps in milliseconds
     let timeDifference = currentDt - timestampDt;
