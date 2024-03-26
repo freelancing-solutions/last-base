@@ -144,17 +144,22 @@
 {% block scripts %}
 
 <script>
-function getTimeFromServer(callback) {
-    $.get('/get-time', function(response) {
-        callback(new Date(response.time));
-    });
-}
-function time_format(timestamp) {
-    getTimeFromServer(
 
-        function(serverTime) {
+async function getTimeFromServer() {
+    try {
+        const response = await fetch('/get-time');
+        const data = await response.json();
+        return new Date(data.time);
+    } catch (error) {
+        console.error('Error fetching time from server:', error);
+        return null;
+    }
+}
+
+function time_format(timestamp) {
+
         // Use serverTime instead of new Date() for current time
-        let currentDt = serverTime;
+        let currentDt = getTimeFromServer();
 
         // Convert the timestamp string to a Date object in UTC
         let timestampDt = new Date(timestamp);
@@ -184,14 +189,7 @@ function time_format(timestamp) {
             // Return the full timestamp if older than 30 days
             formattedTime = timestampDt.getFullYear() + "-" + (timestampDt.getMonth() + 1) + "-" + timestampDt.getDate();
         }
-        callback(formattedTime);
-
-    }
-
-    );
-
-
-
+    return formattedTime
 }
 
 
