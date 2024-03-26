@@ -154,12 +154,12 @@ function time_format(timestamp) {
     // Calculate the difference between the timestamps in milliseconds
     let timeDifference = currentDt - timestampDt;
 
-    if (timeDifference <= 0) {
+    if (timeDifference <= 60) {
         return "just now";
-    } else if (timeDifference < 3600000) {
+    } else if (timeDifference < 3600) {
         let minutes = Math.floor(timeDifference / 60000);
         return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
-    } else if (timeDifference < 86400000) {
+    } else if (timeDifference < 86400) {
         let hours = Math.floor(timeDifference / 3600000);
         return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
     } else if (currentDt.getDate() === timestampDt.getDate()) {
