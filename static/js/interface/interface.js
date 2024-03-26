@@ -16,7 +16,7 @@ window.addEventListener("load", async e => {
             const militaryTime = `${hours}:${minutes}:${seconds}`;
 
             document.getElementById('game_time').innerHTML = `
-                Game TIME: <span class="font-weight-bold"> ${militaryTime}</span>
+                <span class="font-weight-bold text-danger">Game TIME</span> :<span class="font-weight-bold"> ${militaryTime}</span>
             `;
         } catch (error) {
             console.error('Error fetching game time:', error);
