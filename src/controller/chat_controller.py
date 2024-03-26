@@ -5,7 +5,14 @@ from src.database.models.support_chat import ChatMessage, ChatUser
 from src.database.sql.support_chat import ChatMessageORM, ChatUserORM
 
 
-def create_colour():
+def create_colour(used_hexes: list[str]):
+    count = 0
+    while count < len(colours):
+        chosen = random.choice(list(colours.values()))
+        if chosen not in used_hexes:
+            return chosen
+        count += 1
+
     # Select a random color from the dictionary keys
     return random.choice(list(colours.values()))
 
@@ -109,9 +116,9 @@ class ChatController(Controllers):
                                               timestamp=message.timestamp)
             session.add(chat_message_orm)
             session.commit()
-
-            if message.uid not in self.user_colour.keys():
-                self.user_colour[message.uid] = create_colour()
+            used_hexes = list(self.user_colour.keys())
+            if message.uid not in used_hexes:
+                self.user_colour[message.uid] = create_colour(used_hexes=used_hexes)
 
             message.user_colour = self.user_colour[message.uid]
 
@@ -133,8 +140,9 @@ class ChatController(Controllers):
             # print(f"Found Original Chat Messages : {len(chat_messages)}")
             proc_messages = []
             for message in chat_messages:
-                if message.uid not in self.user_colour.keys():
-                    self.user_colour[message.uid] = create_colour()
+                used_hexes = list(self.user_colour.keys())
+                if message.uid not in used_hexes:
+                    self.user_colour[message.uid] = create_colour(used_hexes=used_hexes)
 
                 message.user_colour = self.user_colour[message.uid]
                 proc_messages.append(message)
