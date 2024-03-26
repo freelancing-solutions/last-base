@@ -154,7 +154,7 @@ function time_format(timestamp) {
     // Calculate the difference between the timestamps in milliseconds
     let timeDifference = currentDt - timestampDt;
 
-    if (timeDifference <= 60) {
+    if (timeDifference <= 6000) {
         return "just now";
     } else if (timeDifference < 3600) {
         let minutes = Math.floor(timeDifference / 60000);
