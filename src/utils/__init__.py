@@ -1,6 +1,6 @@
 from enum import Enum
 from os import path
-
+from datetime import datetime, timedelta
 
 # TODO create a class to contain this enum types for the entire project
 class PaymentMethod(Enum):
@@ -73,3 +73,34 @@ def format_payment_method(value):
         return value.replace("_", " ").title()
     else:
         return "Unknown"
+
+
+def friendlytimestamp(value):
+    # Convert the string timestamp to a datetime object
+    timestamp_dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S.%f')
+
+    # Get the current date and time
+    current_dt = datetime.now()
+
+    # Calculate the difference between the timestamps
+    time_difference = current_dt - timestamp_dt
+
+    if time_difference.total_seconds() < 60:
+        return "just now"
+    elif time_difference.total_seconds() < 3600:
+        minutes = int(time_difference.total_seconds() / 60)
+        return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+    elif time_difference.total_seconds() < 86400:
+        hours = int(time_difference.total_seconds() / 3600)
+        return f"{hours} hour{'s' if hours > 1 else ''} ago"
+    elif current_dt.date() == timestamp_dt.date():
+        return "today"
+    elif current_dt.date() - timestamp_dt.date() == timedelta(days=1):
+        return "yesterday"
+    elif time_difference.days < 7:
+        return f"{time_difference.days} day{'s' if time_difference.days > 1 else ''} ago"
+    elif time_difference.days < 30:
+        weeks = int(time_difference.days / 7)
+        return f"{weeks} week{'s' if weeks > 1 else ''} ago"
+    else:
+        return timestamp_dt.strftime("%Y-%m-%d")

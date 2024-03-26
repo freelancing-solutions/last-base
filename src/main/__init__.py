@@ -4,7 +4,7 @@ from flask_socketio import SocketIO
 from src.controller.encryptor import Encryptor
 from src.emailer import SendMail
 
-from src.utils import format_with_grouping
+from src.utils import format_with_grouping, friendlytimestamp
 
 encryptor = Encryptor()
 send_mail = SendMail()
@@ -60,6 +60,7 @@ def _add_filters(app: Flask):
     :return:
     """
     app.jinja_env.filters['number'] = format_with_grouping
+    app.jinja_env.filters['time'] = friendlytimestamp
 
 
 def create_app(config):
