@@ -145,7 +145,7 @@
 
 <script>
 
-async function getTimeFromServer() {
+function getTimeFromServer() {
     try {
         const response = await fetch('/get-time');
         const data = await response.json();
