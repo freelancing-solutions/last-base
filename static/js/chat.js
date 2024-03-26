@@ -65,7 +65,7 @@ function time_format(timestamp) {
         userIconDiv.classList.add('user-icon');
         let userIconImg = document.createElement('img');
 
-        userIconImg.src = "{{ url_for('static', filename='images/user-1.png', _external=True) }}"; // You can replace this with the actual user icon URL
+        userIconImg.src = "{{ url_for('static', filename='/images/avatar.png') }}"; // You can replace this with the actual user icon URL
         userIconDiv.appendChild(userIconImg);
 
         let messageContentDiv = document.createElement('div');
