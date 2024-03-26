@@ -223,11 +223,7 @@ function time_format(timestamp) {
 
         let timestampDiv = document.createElement('div');
         timestampDiv.classList.add('chat-message-timestamp');
-        time_format(message.timestamp, function(formattedTime) {
-            console.log("Formatted time:", formattedTime);
-            timestampDiv.textContent = formattedTime
-
-        });
+        timestampDiv.textContent = time_format(message.timestamp)
 
 
         messageContentDiv.appendChild(messageTextDiv);
