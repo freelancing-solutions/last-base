@@ -1,0 +1,37 @@
+
+
+{% extends "layouts/page.html" %}
+
+{% block content %}
+
+<section id="main-content">
+
+        <div class="card-body">
+                <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
+            <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
+                   <thead>
+                        <tr>
+                            <td class="font-weight-bold text-info">Account Name</td>
+                            <td class="font-weight-bold text-info">State</td>
+                            <td class="font-weight-bold text-info">Base Level</td>
+                            <td class="font-weight-bold text-info">Base Power</td>
+                            <td class="font-weight-bold text-info">Price</td>
+                        </tr>
+                   </thead>
+                    <tbody>
+                    {% for account in account_listings %}
+                        <tr>
+                            <td>{{ account.base_name }}</td>
+                            <td>{{ account.state }}</td>
+                            <td>{{ account.base_level }}</td>
+                            <td>{{ account.power }}</td>
+                            <td>{{ account.listing_price }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+
+        </div>
+</section>
+
+{% endblock %}

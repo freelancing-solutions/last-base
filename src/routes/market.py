@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, send_from_directory, redirect, flash, url_for, request
 from pydantic import ValidationError
 
-from src.authentication import login_required
+from src.authentication import login_required, user_details
 from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials
 from src.database.models.users import User, PayPal
 from src.main import paypal_controller, user_controller, market_controller, game_controller
@@ -92,6 +92,26 @@ async def get_farm_accounts(user: User):
 async def get_lss_skins(user: User):
     context = {'user': user}
     return render_template('market/skins/skins.html', **context)
+
+
+@market_route.get('/dashboard/market/trader-dashboard')
+@login_required
+async def get_account_trader_dashboard(user: User):
+    try:
+        context = {'user': user}
+        return render_template('market/accounts/tabs/my_dashboard.html', **context)
+    except Exception as e:
+        pass
+
+
+@market_route.get('/dashboard/market/listings')
+@user_details
+async def get_public_market(user: User):
+    try:
+        context = {'user': user}
+        return render_template('market/accounts/tabs/public_listings.html', **context)
+    except Exception as e:
+        pass
 
 
 @market_route.post('/dashboard/market/list-game-account')

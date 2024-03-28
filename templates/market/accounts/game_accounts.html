@@ -24,44 +24,24 @@
             </div>
         </div>
 
-        <div class="card-body">
-                <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
-            <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
-                   <thead>
-                        <tr>
-                            <td class="font-weight-bold text-info">Account Name</td>
-                            <td class="font-weight-bold text-info">State</td>
-                            <td class="font-weight-bold text-info">Base Level</td>
-                            <td class="font-weight-bold text-info">Base Power</td>
-                            <td class="font-weight-bold text-info">Price</td>
-                        </tr>
-                   </thead>
-                    <tbody>
-                    {% for account in account_listings %}
-                        <tr>
-                            <td>{{ account.base_name }}</td>
-                            <td>{{ account.state }}</td>
-                            <td>{{ account.base_level }}</td>
-                            <td>{{ account.power }}</td>
-                            <td>{{ account.listing_price }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-            </table>
-
-        </div>
         <div class="card-footer">
+            <a href="{{ url_for('market.get_public_market') }}" class="btn btn-sm btn-secondary">
+                <span class="font-weight-bold text-white">
+                    <i class="ti ti-shopping-cart"> </i>
+                    Public Market Place
+                </span>
+            </a>
+
+            <a href="{{ url_for('market.get_account_trader_dashboard') }}" class="btn btn-sm btn-secondary">
+                <span class="font-weight-bold text-white">
+                    <i class="ti ti-user"> </i>
+                    My Dashboard
+                </span>
+            </a>
             <a href="#" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#add_account">
                 <span class="font-weight-bold text-white">
                     <i class="ti ti-plus"> </i>
                     Add Account
-                </span>
-            </a>
-
-            <a class="btn btn-sm btn-secondary">
-                <span class="font-weight-bold text-white">
-                    <i class="ti ti-user"> </i>
-                    My Accounts
                 </span>
             </a>
 
