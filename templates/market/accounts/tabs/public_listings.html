@@ -5,7 +5,6 @@
 {% block content %}
 
 <section id="main-content">
-
         <div class="card-body">
                 <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
             <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
@@ -19,9 +18,9 @@
                         </tr>
                    </thead>
                     <tbody>
-                    {% for account in account_listings %}
+                    {% for account in listed_accounts %}
                         <tr>
-                            <td>{{ account.base_name }}</td>
+                            <td><a href="{{ url_for('market.get_public_listing', listing_id=account.listing_id) }}"> {{ account.base_name }}</a></td>
                             <td>{{ account.state }}</td>
                             <td>{{ account.base_level }}</td>
                             <td>{{ account.power }}</td>
@@ -30,8 +29,6 @@
                     {% endfor %}
                     </tbody>
             </table>
-
         </div>
 </section>
-
 {% endblock %}

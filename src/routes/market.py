@@ -110,9 +110,37 @@ async def get_account_trader_dashboard(user: User):
 async def get_public_market(user: User):
     try:
         context = {'user': user}
+        listed_accounts = await market_controller.get_public_listed_accounts()
+        context.update(listed_accounts=listed_accounts)
+
         return render_template('market/accounts/tabs/public_listings.html', **context)
     except Exception as e:
-        pass
+        flash(message="Error tryubg to access public market - please try again later", category="danger")
+        return redirect('main.get_home')
+
+
+@market_route.get('/dashboard/market/listing/<string:listing_id>')
+@user_details
+async def get_public_listing(user: User, listing_id: str):
+    """
+
+    :param user:
+    :param listing_id:
+    :return:
+    """
+    try:
+        context = dict(user=user)
+        listed_account = await market_controller.get_listed_account(listing_id=listing_id)
+        if not listed_account:
+            flash(message="Unable to obtain listed account, please try again later", category="danger")
+            return redirect(url_for('market.get_account_trader_dashboard'))
+
+        context.update(listed_account=listed_account)
+        return render_template('market/accounts/tabs/dashboard_tabs/listed_account_details.html', **context)
+    except Exception as e:
+        print(str(e))
+        flash(message="Unable to obtain listed account details please report this error", category="danger")
+        return redirect(url_for('market.get_account_trader_dashboard'))
 
 
 @market_route.post('/dashboard/market/list-game-account')
@@ -190,7 +218,8 @@ async def list_game_account(user: User):
         account_listing = await market_controller.add_account_market_listing(market_account=market_account,
                                                                              account_credentials=main_account_credentials)
         if not account_listing:
-            flash(message="Unable to create a listing please inform us of this error so we may help resolve it", category="danger")
+            flash(message="Unable to create a listing please inform us of this error so we may help resolve it",
+                  category="danger")
             return redirect(url_for('market.get_account_listings'))
 
         flash(message="Successfully submitted Game Account for listing", category="success")
@@ -215,7 +244,7 @@ async def get_listing_editor(user: User, listing_id: str):
         listed_account = await market_controller.get_listed_account(listing_id=listing_id)
 
         # Verifying if the person requesting the account actually owns the account listing
-        if not(listed_account.uid == user.uid):
+        if not (listed_account.uid == user.uid):
             flash(message="You are not authorized to view or edit this listing", category='danger')
             return redirect(url_for('market.get_account_trader_dashboard'))
 

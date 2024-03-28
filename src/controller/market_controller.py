@@ -39,7 +39,8 @@ class MarketController(Controllers):
     @error_handler
     async def activate_buyer_account(self, user: User, activate: bool):
         with self.get_session() as session:
-            buyer_account_orm: BuyerAccountORM = session.query(BuyerAccountORM).filter(BuyerAccountORM.uid == user.uid).first()
+            buyer_account_orm: BuyerAccountORM = session.query(BuyerAccountORM).filter(
+                BuyerAccountORM.uid == user.uid).first()
 
             if isinstance(buyer_account_orm, BuyerAccountORM):
                 buyer_account_orm.account_activated = activate
@@ -135,8 +136,6 @@ class MarketController(Controllers):
             session.commit()
             return market_account
 
-
-
     @error_handler
     async def get_listed_account(self, listing_id: str) -> MarketMainAccounts | None:
         """
@@ -149,3 +148,15 @@ class MarketController(Controllers):
             if isinstance(listed_account_orm, MarketMainAccountsORM):
                 return MarketMainAccounts(**listed_account_orm.to_dict())
             return None
+
+    @error_handler
+    async def get_public_listed_accounts(self) -> list[MarketMainAccounts]:
+        """
+
+        :return:
+        """
+        with self.get_session() as session:
+            listed_accounts = session.query(MarketMainAccountsORM).filter(
+                MarketMainAccountsORM.listing_active == True).all()
+            return [MarketMainAccounts(**account.to_dict()) for account in listed_accounts
+                    if isinstance(account, MarketMainAccountsORM)]
