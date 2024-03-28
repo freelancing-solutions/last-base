@@ -3,7 +3,7 @@ import asyncio
 from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash
 from pydantic import ValidationError
 
-from src.authentication import login_required, admin_login
+from src.authentication import login_required, admin_login, user_details
 from src.database.models.game import GameAuth, GameIDS, GiftCode
 from src.database.models.profile import ProfileUpdate
 from src.database.models.users import User, UserUpdate
@@ -14,8 +14,11 @@ free_route = Blueprint('free', __name__)
 
 
 @free_route.get('/free/gift-codes')
-async def get_gift_codes():
-    return render_template('free/gift_codes.html')
+@user_details
+async def get_gift_codes(user: User):
+    social_url = url_for('free.get_gift_codes', _external=True)
+    context = dict(user=user, social_url=social_url)
+    return render_template('free/gift_codes.html', **context)
 
 
 @free_route.post('/free/gift-codes/submit-game-id')
