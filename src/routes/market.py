@@ -118,6 +118,11 @@ async def get_public_market(user: User):
 @market_route.post('/dashboard/market/list-game-account')
 @login_required
 async def list_game_account(user: User):
+    """
+        will verify manage and start a game account listing
+    :param user:
+    :return:
+    """
     try:
         context = {'user': user}
         game_id = request.form.get('game_id')
@@ -195,3 +200,28 @@ async def list_game_account(user: User):
         print(str(e))
         flash(message="Please Provide Minimum Game Credentials Needed to Login", category="success")
         return redirect(url_for('market.get_game_accounts'))
+
+
+@market_route.post('/dashboard/market/listed-account/<string:listing_id>')
+@login_required
+async def get_listing_editor(user: User, listing_id: str):
+    """
+
+    :param listing_id:
+    :param user:
+    :return:
+    """
+    try:
+        listed_account = await market_controller.get_listed_account(listing_id=listing_id)
+
+        # Verifying if the person requesting the account actually owns the account listing
+        if not(listed_account.uid == user.uid):
+            flash(message="You are not authorized to view or edit this listing", category='danger')
+            return redirect(url_for('market.get_account_trader_dashboard'))
+
+        context = dict(user=user, listing=listed_account)
+        return render_template('market/accounts/tabs/dashboard_tabs/listing_editor.html', **context)
+    except Exception as e:
+        print(str(e))
+        flash(message="there was an error trying to fetch account listing - please inform admin", category="danger")
+        return redirect('market.get_account_trader_dashboard')

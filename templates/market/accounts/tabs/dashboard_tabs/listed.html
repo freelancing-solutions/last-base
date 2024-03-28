@@ -1,12 +1,9 @@
-
-
-
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title"> Listed Accounts</h3>
+        <h3 class="card-title">Listed Accounts</h3>
     </div>
     <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
-       <thead>
+        <thead>
             <tr>
                 <td class="font-weight-bold text-info">Account Name</td>
                 <td class="font-weight-bold text-info">State</td>
@@ -15,19 +12,26 @@
                 <td class="font-weight-bold text-info">Price</td>
                 <td class="font-weight-bold text-info">Status</td>
             </tr>
-       </thead>
+        </thead>
         <tbody>
-        {% for account in my_account_listings %}
+            {% for account in my_account_listings %}
             <tr>
-                <td>{{ account.base_name }}</td>
+                <td><a href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}"> {{ account.base_name }}</a></td>
                 <td>{{ account.state }}</td>
                 <td>{{ account.base_level }}</td>
                 <td>{{ account.power }}</td>
                 <td>{{ account.listing_price }}</td>
-                <td>{{ account.status }}</td>
+                <td>
+                    {% if account.listing_active %}
+                    <span class="badge badge-success">Active</span>
+                    {% elif account.in_negotiation %}
+                    <span class="badge badge-warning">In Negotiation</span>
+                    {% elif account.is_bought %}
+                    <span class="badge badge-info">Bought</span>
+                    {% endif %}
+                </td>
             </tr>
-        {% endfor %}
+            {% endfor %}
         </tbody>
-</table>
-
+    </table>
 </div>

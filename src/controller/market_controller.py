@@ -136,3 +136,16 @@ class MarketController(Controllers):
             return market_account
 
 
+
+    @error_handler
+    async def get_listed_account(self, listing_id: str) -> MarketMainAccounts | None:
+        """
+
+        :param listing_id:
+        :return:
+        """
+        with self.get_session() as session:
+            listed_account_orm = session.query(MarketMainAccountsORM).filter_by(listing_id=listing_id).first()
+            if isinstance(listed_account_orm, MarketMainAccountsORM):
+                return MarketMainAccounts(**listed_account_orm.to_dict())
+            return None
