@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, send_from_directory, redirect, flash, url_for, request
+from pydantic import ValidationError
 
 from src.authentication import login_required
-from src.database.models.market import SellerAccount, BuyerAccount
+from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials
 from src.database.models.users import User, PayPal
 from src.main import paypal_controller, user_controller, market_controller, game_controller
 from src.utils import static_folder
@@ -103,8 +104,15 @@ async def list_game_account(user: User):
         email = request.form.get('email')
         password = request.form.get('password')
         pin = request.form.get('pin')
+
+        main_account_credentials = MainAccountsCredentials(game_id=game_id,
+                                                           account_email=email,
+                                                           account_password=password,
+                                                           account_pin=pin)
         print(game_id, price, email, password, pin)
-        is_account_valid = await game_controller.game_account_valid(email=email, password=password)
+        is_account_valid = await game_controller.game_account_valid(email=main_account_credentials.account_email,
+                                                                    password=main_account_credentials.account_password)
+
         if not is_account_valid:
             flash(message="Your Game Login Details are invalid", category="danger")
             return redirect(url_for('market.get_game_accounts'))
@@ -113,5 +121,8 @@ async def list_game_account(user: User):
 
         flash(message="Successfully submitted Game Account for listing", category="success")
         return redirect(url_for('market.get_game_accounts'))
-    except Exception as e:
+
+    except ValidationError as e:
         print(str(e))
+        flash(message="Please Provide Minimum Game Credentials Needed to Login", category="success")
+        return redirect(url_for('market.get_game_accounts'))

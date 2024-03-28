@@ -220,6 +220,8 @@ class MainAccountsCredentialsORM(Base):
     account_email: str = Column(String(255))
     account_password: str = Column(String(NAME_LEN))
     account_pin: str = Column(String(NAME_LEN))
+    is_verified: bool = Column(Boolean)
+
 
     @classmethod
     def create_if_not_table(cls):
@@ -236,5 +238,8 @@ class MainAccountsCredentialsORM(Base):
             "game_id": self.game_id,
             "account_email": self.account_email,
             "account_password": self.account_password,
-            "account_pin": self.account_pin
+            "account_pin": self.account_pin,
+            "listing_active": self.listing_active,
+            "in_negotiation": self.in_negotiation,
+            "is_bought": self.is_bought
         }

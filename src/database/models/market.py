@@ -23,7 +23,7 @@ class SellerAccount(BaseModel):
 
 class BuyerAccount(BaseModel):
     uid: str
-    buyer_rating: int = Field(default=0) # A Rating of 1 to 10 Based on Feedback
+    buyer_rating: int = Field(default=0)  # A Rating of 1 to 10 Based on Feedback
     buyer_name: str | None  # Name of the Buyer , Could Also be a nickname
     account_verified: bool = Field(default=False)
 
@@ -115,9 +115,17 @@ class MainAccounts(BaseModel):
     energy_lab_level: int
     energy_lab_password: str
 
+    listing_active: bool
+    in_negotiation: bool
+    is_bought: bool
+
 
 class MainAccountsCredentials(BaseModel):
+    """
+        Verification should verify also the Game ID
+    """
     game_id: str
     account_email: str
     account_password: str
     account_pin: str
+    is_verified: bool = Field(default=False)
