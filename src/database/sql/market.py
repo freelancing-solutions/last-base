@@ -264,6 +264,12 @@ class MarketMainAccountsORM(Base):
     universal_sp_medals = Column(Integer)
     total_skins = Column(Integer)
 
+    gold_sets_vehicles = Column(Integer)
+    gold_sets_fighters = Column(Integer)
+    gold_sets_shooters = Column(Integer)
+    bane_blade_sets = Column(Integer)
+
+    state_season = Column(Integer)
     season_heroes = Column(Integer)
     sp_heroes = Column(Integer)
     amount_spent_packages = Column(Integer)  # Amount Spent on Packages

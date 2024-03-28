@@ -122,6 +122,11 @@ class MarketMainAccounts(BaseModel):
     total_gold_cards: int = Field(default=0)
     total_skins: int = Field(default=0)
 
+    gold_sets_vehicles = Field(default=0)
+    gold_sets_fighters = Field(default=0)
+    gold_sets_shooters = Field(default=0)
+    bane_blade_sets = Field(default=0)
+
     state_season: int = Field(default=1)
     season_heroes: int = Field(default=0)
     sp_heroes: int = Field(default=0)
