@@ -258,10 +258,10 @@ class MarketMainAccountsORM(Base):
     base_level = Column(Integer)  # Base Level of the Account
     item_price = Column(Integer)  # Price for the Account
 
-    image_url = Column(String)
+    image_url = Column(String(255))
 
     total_gold_cards = Column(Integer)
-    universal_sp_medals = Column(Integer)
+    total_hero_tokens = Column(Integer)
     total_skins = Column(Integer)
 
     gold_sets_vehicles = Column(Integer)
@@ -269,13 +269,19 @@ class MarketMainAccountsORM(Base):
     gold_sets_shooters = Column(Integer)
     bane_blade_sets = Column(Integer)
 
+    fighter_units_level = Column(Integer)
+    shooter_units_level = Column(Integer)
+    vehicle_units_level = Column(Integer)
+
     state_season = Column(Integer)
     season_heroes = Column(Integer)
     sp_heroes = Column(Integer)
+    universal_sp_medals = Column(Integer)
+
     amount_spent_packages = Column(Integer)  # Amount Spent on Packages
     vip_shop = Column(Boolean)
     energy_lab_level = Column(Integer)
-    energy_lab_password = Column(String)
+    energy_lab_password = Column(String(12))
 
     listing_active = Column(Boolean)
     in_negotiation = Column(Boolean)
@@ -303,10 +309,19 @@ class MarketMainAccountsORM(Base):
             "item_price": self.item_price,
             "image_url": self.image_url,
             "total_gold_cards": self.total_gold_cards,
-            "universal_sp_medals": self.universal_sp_medals,
+            "total_hero_tokens": self.total_hero_tokens,
             "total_skins": self.total_skins,
+            "gold_sets_vehicles": self.gold_sets_vehicles,
+            "gold_sets_fighters": self.gold_sets_fighters,
+            "gold_sets_shooters": self.gold_sets_shooters,
+            "bane_blade_sets": self.bane_blade_sets,
+            "fighter_units_level": self.fighter_units_level,
+            "shooter_units_level": self.shooter_units_level,
+            "vehicle_units_level": self.vehicle_units_level,
+            "state_season": self.state_season,
             "season_heroes": self.season_heroes,
             "sp_heroes": self.sp_heroes,
+            "universal_sp_medals": self.universal_sp_medals,
             "amount_spent_packages": self.amount_spent_packages,
             "vip_shop": self.vip_shop,
             "energy_lab_level": self.energy_lab_level,
