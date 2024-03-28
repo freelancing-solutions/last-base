@@ -125,19 +125,48 @@ async def list_game_account(user: User):
         password = request.form.get('password')
         pin = request.form.get('pin')
 
+        # Obtain a record of the seller
+        seller_account = await market_controller.get_seller_account(uid=user.uid)
+
+        if not (seller_account.account_activated and seller_account.account_verified):
+            flash(message="You are not verified to sell in our market place - please verify your account then "
+                          "continue with your listing", category="danger")
+            return redirect(url_for('profile.get_profile'))
+
+        # Check the Seller rating if it's lower than 3 then indicate to seller that rating is too low
+        # and allow him to improve the rating
+        if seller_account.seller_rating < 3:
+            flash(message="Seller Rating too low - please improve your seller rating", category="danger")
+            return redirect(url_for('market.get_account_trader_dashboard'))
+
+        # creating account credentials record
         main_account_credentials = MainAccountsCredentials(game_id=game_id,
                                                            account_email=email,
                                                            account_password=password,
                                                            account_pin=pin)
-        print(game_id, price, email, password, pin)
+        # print(game_id, price, email, password, pin)
         is_account_valid = await game_controller.game_account_valid(email=main_account_credentials.account_email,
                                                                     password=main_account_credentials.account_password)
+        print("Game Account Valid: ", is_account_valid)
 
+        # checking if account is valid, if not inform user then exit
         if not is_account_valid:
+            # TODO consider subtracting seller rating on multiple submissions - which are negative
+            # TODO also subtract seller rating for every listing that is bogus
+
             flash(message="Your Game Login Details are invalid", category="danger")
             return redirect(url_for('market.get_game_accounts'))
 
-        print("Game Account Valid: ", is_account_valid)
+        main_account_credentials.is_verified = True
+
+        # Starting by listing the credentials
+        game_account_credentials = await market_controller.add_game_account_credentials(
+            game_account=main_account_credentials)
+        if not isinstance(game_account_credentials, MainAccountsCredentials):
+            flash(message="This account has already being listed for sale- if you believe this is a mistake please "
+                          "let us know", category="danger")
+
+            return redirect(url_for('market.get_game_accounts'))
 
         flash(message="Successfully submitted Game Account for listing", category="success")
         return redirect(url_for('market.get_game_accounts'))

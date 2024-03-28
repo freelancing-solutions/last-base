@@ -1,9 +1,9 @@
 import requests
 from flask import Flask
 from src.controller import Controllers, error_handler
-from src.database.models.market import SellerAccount, BuyerAccount
+from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials
 from src.database.models.users import User
-from src.database.sql.market import SellerAccountORM, BuyerAccountORM
+from src.database.sql.market import SellerAccountORM, BuyerAccountORM, MainAccountsCredentialsORM
 
 
 class MarketController(Controllers):
@@ -88,3 +88,21 @@ class MarketController(Controllers):
                 session.commit()
                 return True
             return False
+
+    @error_handler
+    async def add_game_account_credentials(self, game_account: MainAccountsCredentials):
+        """
+
+        :param game_account:
+        :return:
+        """
+        with self.get_session() as session:
+            account_creds_orm = session.query(MainAccountsCredentialsORM).filter(
+                MainAccountsCredentialsORM.account_email == game_account.account_email).first()
+            if isinstance(account_creds_orm, MainAccountsCredentialsORM):
+                return None
+
+            session.add(MainAccountsCredentialsORM(**game_account.dict()))
+            session.commit()
+            return game_account
+
