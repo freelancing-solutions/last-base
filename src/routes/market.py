@@ -159,7 +159,7 @@ async def list_game_account(user: User):
 
         main_account_credentials.is_verified = True
 
-        # Starting by listing the credentials
+        # Starting by adding the credentials
         game_account_credentials = await market_controller.add_game_account_credentials(
             game_account=main_account_credentials)
         if not isinstance(game_account_credentials, MainAccountsCredentials):
@@ -167,7 +167,8 @@ async def list_game_account(user: User):
                           "let us know", category="danger")
 
             return redirect(url_for('market.get_game_accounts'))
-
+        game_data = await game_controller.get_game_by_game_id(uid=user.uid, game_id=main_account_credentials.game_id)
+        print(f"Game Data : {game_data.dict()}")
         flash(message="Successfully submitted Game Account for listing", category="success")
         return redirect(url_for('market.get_game_accounts'))
 
