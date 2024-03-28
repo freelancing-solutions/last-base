@@ -111,7 +111,8 @@ async def get_public_market(user: User):
     try:
         context = {'user': user}
         listed_accounts = await market_controller.get_public_listed_accounts()
-        context.update(listed_accounts=listed_accounts)
+        social_url = url_for('market.get_public_market', _external=True)
+        context = dict(user=user, social_url=social_url, listed_accounts=listed_accounts)
 
         return render_template('market/accounts/tabs/public_listings.html', **context)
     except Exception as e:
@@ -134,8 +135,8 @@ async def get_public_listing(user: User, listing_id: str):
         if not listed_account:
             flash(message="Unable to obtain listed account, please try again later", category="danger")
             return redirect(url_for('market.get_account_trader_dashboard'))
-
-        context.update(listed_account=listed_account)
+        social_url = url_for('market.get_public_listing', _external=True)
+        context = dict(user=user, social_url=social_url, listed_account=listed_account)
         return render_template('market/accounts/tabs/dashboard_tabs/listed_account_details.html', **context)
     except Exception as e:
         print(str(e))
