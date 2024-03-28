@@ -302,8 +302,7 @@ class GameController(Controllers):
         response = requests.post(url=self._account_verification_endpoint, data=form_data)
         if response.ok:
             response_data = response.json()
-            if response_data.get('code') == 10000:
-                return True
+            return response_data.get('code') == 10000
         return False
 
     @error_handler

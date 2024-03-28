@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, send_from_directory, redirect, fla
 from src.authentication import login_required
 from src.database.models.market import SellerAccount, BuyerAccount
 from src.database.models.users import User, PayPal
-from src.main import paypal_controller, user_controller, market_controller
+from src.main import paypal_controller, user_controller, market_controller, game_controller
 from src.utils import static_folder
 
 market_route = Blueprint('market', __name__)
@@ -91,3 +91,27 @@ async def get_farm_accounts(user: User):
 async def get_lss_skins(user: User):
     context = {'user': user}
     return render_template('market/skins/skins.html', **context)
+
+
+@market_route.post('/dashboard/market/list-game-account')
+@login_required
+async def list_game_account(user: User):
+    try:
+        context = {'user': user}
+        game_id = request.form.get('game_id')
+        price = request.form.get('price')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        pin = request.form.get('pin')
+        print(game_id, price, email, password, pin)
+        is_account_valid = await game_controller.game_account_valid(email=email, password=password)
+        if not is_account_valid:
+            flash(message="Your Game Login Details are invalid", category="danger")
+            return redirect(url_for('market.get_game_accounts'))
+
+        print("Game Account Valid: ", is_account_valid)
+
+        flash(message="Successfully submitted Game Account for listing", category="success")
+        return redirect(url_for('market.get_game_accounts'))
+    except Exception as e:
+        print(str(e))

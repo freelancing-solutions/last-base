@@ -5,24 +5,27 @@
 <section id="main-content">
     <div class="card fluid">
         <div class="card-header">
-            <h2 class="card-title font-weight-bold">
+            <h3 class="card-title font-weight-bold">
                 <i class="ti ti-shopping-cart"> </i>
                 Buy &amp; Sell Game Accounts
-            </h2>
+            </h3>
             <div>
                 <hr/>
-
                 <label class="font-weight-bold text-info">Game Accounts Passwords and Login Emails are automatically verified with the Game Servers
                     before being listed here</label>
-                <label class="font-weight-bold text-info"> Note: That at any time before your account is actually bought the developers will not be aware of your actual game password</label>
-                <label class="font-weight-bold text-info"> If a user expresses a desire to buy your account and has money in his or her Escrow Account, you
-                can also place your game account in Escrow upon which the passwords and login will be changed and then handed over to the buyer, and the money handed over to the seller</label>
-
+                    <label class="font-weight-bold">- Your Account will only successfully be listed if you submit correct login credentials</label>
+                    <label class="font-weight-bold">- Once a Buyer is found (and has enough funds in escrow) We will send the buyer the game login details if you accept the purchase agreement</label>
+                    <label class="font-weight-bold">- If the buyer is satisfied, and wants to proceed with the account purchase you will get notified after which you can transfer your email login details to the buyer</label>
+                    <label class="font-weight-bold">- The buyer must then login and change account passwords, after this step is completed - the buyer gives us a notice and we send the money to the seller</label>
+                    <label class="font-weight-bold">- All parties involved are never in possession of the full credentials required to take over an account before buying</label>
+                    <label class="font-weight-bold">- The Seller also cannot retake the account and run away with the funds, as the funds are placed in escrow</label>
+                    <label class="font-weight-bold">- A minimum of ten percent transaction fee will be applied to all transactions</label>
+                    <label class="font-weight-bold">- All parties involved in this market place are pre verified before being allowed to participate</label>
             </div>
         </div>
 
         <div class="card-body">
-                <h3 class="title"><i class="ti ti-game"></i> Account Listings</h3>
+                <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
             <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
                    <thead>
                         <tr>
@@ -48,7 +51,7 @@
 
         </div>
         <div class="card-footer">
-            <a class="btn btn-sm btn-secondary">
+            <a href="#" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#add_account">
                 <span class="font-weight-bold text-white">
                     <i class="ti ti-plus"> </i>
                     Add Account
@@ -72,3 +75,5 @@
 </section>
 
 {% endblock %}
+
+{% include 'market/accounts/modals/add_game_account.html' %}
