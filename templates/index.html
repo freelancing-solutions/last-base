@@ -1,5 +1,6 @@
 
 {% extends "layouts/page.html" %}
+
 {% block content %}
 
 
@@ -53,7 +54,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="title">Services</h3>
+            <h3 class="title">What we do ?</h3>
         </div>
 
             <ol>
@@ -117,31 +118,40 @@
 
     </div>
 
-
-
-
-
-
-
-
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Added Benefits</h3>
-            </div>
-
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item">Secure, Verified &amp; Fast Market Place for Gamers</li>
-                    <li class="list-group-item">Game Accounts for Sale - Logins are Automatically Verified</li>
-                    <li class="list-group-item">Automated In-Game Gift Codes</li>
-                    <li class="list-group-item">Automated Email Services to create multiple game accounts</li>
-                    <li class="list-group-item">Get informed of latest in game developments faster</li>
-                    <li class="list-group-item">Access to well written In Game Tutorials &amp; Tips</li>
-                </ul>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Added Benefits</h3>
         </div>
 
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">Secure, Verified &amp; Fast Market Place for Gamers</li>
+                <li class="list-group-item">Game Accounts for Sale - Logins are Automatically Verified</li>
+                <li class="list-group-item">Automated In-Game Gift Codes</li>
+                <li class="list-group-item">Automated Email Services to create multiple game accounts</li>
+                <li class="list-group-item">Get informed of latest in game developments faster</li>
+                <li class="list-group-item">Access to well written In Game Tutorials &amp; Tips</li>
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="footer-copyright">
+<div class="social-sharing">
+    <!-- Facebook Share Button -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url }}" target="_blank" rel="noopener noreferrer" class="social-icon">
+        <i class="fab fa-facebook-f"></i>
+    </a>
 
+    <!-- Discord Share Button -->
+    <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=0&scope=bot" target="_blank" rel="noopener noreferrer" class="social-icon">
+        <i class="fab fa-discord"></i>
+    </a>
+
+    <!-- Twitter Share Button -->
+    <a href="https://twitter.com/intent/tweet?url={{ url }}" target="_blank" rel="noopener noreferrer" class="social-icon">
+        <i class="fab fa-twitter"></i>
+    </a>
+</div>
 
 </section>
 {% endblock %}

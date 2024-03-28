@@ -31,6 +31,21 @@
         <link href="{{ url_for('static', filename='css/lib/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/lib/helper.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+<style>
+
+.social-sharing {
+    display: flex;
+    justify-content: right; /* Align buttons horizontally in the center */
+}
+
+.social-icon {
+    margin: 0 5px; /* Add spacing between buttons */
+    font-size: 24px; /* Adjust the icon size */
+}
+
+</style>
+
     {% endblock %}
 
     {% block custom_css %}
@@ -60,7 +75,6 @@
                     </div>
                     <!-- /# column -->
                     <div class="col-lg-12 p-l-0 title-margin-left">
-
                             <div class="page-title">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item active">
@@ -71,7 +85,17 @@
                                     </li>
                                 </ol>
                             </div>
+                            <div class="social-sharing">
+                                <!-- Facebook Share Button -->
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ url }}" target="_blank" rel="noopener noreferrer" class="social-icon">
+                                <i class="ti ti-facebook"></i>
+                                </a>
 
+                                <!-- Twitter Share Button -->
+                                <a href="https://twitter.com/intent/tweet?url={{ url }}" target="_blank" rel="noopener noreferrer" class="social-icon">
+                                <i class="ti ti-twitter"></i>
+                                </a>
+                            </div>
                     </div>
                     <!-- /# column -->
                 </div>
