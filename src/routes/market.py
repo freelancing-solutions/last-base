@@ -221,6 +221,7 @@ async def get_listing_editor(user: User, listing_id: str):
 
         context = dict(user=user, listing=listed_account)
         return render_template('market/accounts/tabs/dashboard_tabs/listing_editor.html', **context)
+
     except Exception as e:
         print(str(e))
         flash(message="there was an error trying to fetch account listing - please inform admin", category="danger")
