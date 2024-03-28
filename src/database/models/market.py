@@ -1,6 +1,8 @@
+import uuid
 from datetime import date, datetime
 from enum import Enum
 
+from flask import url_for
 from pydantic import BaseModel, Field, Extra
 
 
@@ -92,32 +94,47 @@ class FarmCredentials(BaseModel):
 
 #################################################################################################
 
+def create_id():
+    return str(uuid.uuid4())
 
-class MainAccounts(BaseModel):
+
+def default_listing_image():
+    return url_for('static', filename='images/lss/base.jpg')
+
+
+class MarketMainAccounts(BaseModel):
     """
         A Structure that allows users to sell Main Accounts
     """
+    listing_id: str = Field(default_factory=create_id)
     uid: str  # ID of the user making the Account Sale
-    state: int  # The State number the Account is in
-    base_level: int  # Base Level of the Account
-    item_price: int  # Price for the Account
+    game_id: str
+    game_uid: str
+    # The State number the Account is in
+    state: int
+    # Base Level of the Account
+    base_level: int
+    # Price for the Account
+    item_price: int
 
-    image_url: str
+    image_url: str = Field(default_factory=default_listing_image)
 
-    total_gold_cards: int
-    universal_sp_medals: int
-    total_skins: int
+    total_gold_cards: int = Field(default=0)
+    total_skins: int = Field(default=0)
 
-    season_heroes: int
-    sp_heroes: int
-    amount_spent_packages: int  # Amount Spent on Packages
-    vip_shop: bool
-    energy_lab_level: int
-    energy_lab_password: str
+    state_season: int = Field(default=1)
+    season_heroes: int = Field(default=0)
+    sp_heroes: int = Field(default=0)
+    universal_sp_medals: int = Field(default=0)
 
-    listing_active: bool
-    in_negotiation: bool
-    is_bought: bool
+    amount_spent_packages: int = Field(default=0)  # Amount Spent on Packages
+    vip_shop: bool = Field(default=False)
+    energy_lab_level: int = Field(default=1)
+    energy_lab_password: str | None
+
+    listing_active: bool = Field(default=False)
+    in_negotiation: bool = Field(default=False)
+    is_bought: bool = Field(default=False)
 
 
 class MainAccountsCredentials(BaseModel):

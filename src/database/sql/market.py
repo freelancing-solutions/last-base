@@ -243,3 +243,69 @@ class MainAccountsCredentialsORM(Base):
             "in_negotiation": self.in_negotiation,
             "is_bought": self.is_bought
         }
+
+
+class MarketMainAccountsORM(Base):
+    """
+    ORM Model for listing accounts in the market place
+    """
+    __tablename__ = 'main_accounts_market'
+    listing_id = Column(String(NAME_LEN), primary_key=True)
+    uid = Column(String(NAME_LEN))  # ID of the user making the Account Sale
+    game_id = Column(String(NAME_LEN))
+    game_uid = Column(String(NAME_LEN))
+    state = Column(Integer)  # The State number the Account is in
+    base_level = Column(Integer)  # Base Level of the Account
+    item_price = Column(Integer)  # Price for the Account
+
+    image_url = Column(String)
+
+    total_gold_cards = Column(Integer)
+    universal_sp_medals = Column(Integer)
+    total_skins = Column(Integer)
+
+    season_heroes = Column(Integer)
+    sp_heroes = Column(Integer)
+    amount_spent_packages = Column(Integer)  # Amount Spent on Packages
+    vip_shop = Column(Boolean)
+    energy_lab_level = Column(Integer)
+    energy_lab_password = Column(String)
+
+    listing_active = Column(Boolean)
+    in_negotiation = Column(Boolean)
+    is_bought = Column(Boolean)
+
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "listing_id": self.listing_id,
+            "uid": self.uid,
+            "game_id": self.game_id,
+            "game_uid": self.game_uid,
+            "state": self.state,
+            "base_level": self.base_level,
+            "item_price": self.item_price,
+            "image_url": self.image_url,
+            "total_gold_cards": self.total_gold_cards,
+            "universal_sp_medals": self.universal_sp_medals,
+            "total_skins": self.total_skins,
+            "season_heroes": self.season_heroes,
+            "sp_heroes": self.sp_heroes,
+            "amount_spent_packages": self.amount_spent_packages,
+            "vip_shop": self.vip_shop,
+            "energy_lab_level": self.energy_lab_level,
+            "energy_lab_password": self.energy_lab_password,
+            "listing_active": self.listing_active,
+            "in_negotiation": self.in_negotiation,
+            "is_bought": self.is_bought
+        }

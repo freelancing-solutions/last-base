@@ -498,13 +498,13 @@ class GameController(Controllers):
                     isinstance(game_account, GameIDSORM)]
 
     @error_handler
-    async def get_game_by_game_id(self, uid: str, game_id: str) -> GameDataInternal | dict[str, str]:
+    async def get_game_by_game_id(self, uid: str, game_id: str) -> GameDataInternal | None:
         with self.get_session() as session:
             game_account: GameIDSORM = session.query(GameIDSORM).filter(GameIDSORM.uid == uid,
                                                                         GameIDSORM.game_id == game_id).first()
             if isinstance(game_account, GameIDSORM):
                 return GameDataInternal(**game_account.to_dict())
-            return {}
+            return None
 
     @error_handler
     async def update_game_account_type(self, game_id: str, account_type: str):

@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, send_from_directory, redirect, fla
 from pydantic import ValidationError
 
 from src.authentication import login_required, user_details
-from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials
+from src.database.models.game import GameDataInternal
+from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials, MarketMainAccounts
 from src.database.models.users import User, PayPal
 from src.main import paypal_controller, user_controller, market_controller, game_controller
 from src.utils import static_folder
@@ -157,6 +158,15 @@ async def list_game_account(user: User):
             flash(message="Your Game Login Details are invalid", category="danger")
             return redirect(url_for('market.get_game_accounts'))
 
+        # This will mean that accounts must first be listed in the owner profile before they can be sold
+        game_data = await game_controller.get_game_by_game_id(uid=user.uid, game_id=main_account_credentials.game_id)
+        if not isinstance(game_data, GameDataInternal):
+            flash(message="Please Ensure to claim your account in your profile before you can list it for sale",
+                  category="danger")
+            return redirect(url_for('profile.get_profile'))
+
+        print(f"Game Data : {game_data.dict()}")
+
         main_account_credentials.is_verified = True
 
         # Starting by adding the credentials
@@ -167,8 +177,17 @@ async def list_game_account(user: User):
                           "let us know", category="danger")
 
             return redirect(url_for('market.get_game_accounts'))
-        game_data = await game_controller.get_game_by_game_id(uid=user.uid, game_id=main_account_credentials.game_id)
-        print(f"Game Data : {game_data.dict()}")
+
+        market_account = MarketMainAccounts(uid=user.uid, game_id=game_data.game_id, game_uid=game_data.game_uid,
+                                            state=game_data.state, base_level=game_data.base_level,
+                                            base_name=game_data.base_name, item_price=price)
+
+        account_listing = await market_controller.add_account_market_listing(market_account=market_account,
+                                                                             account_credentials=main_account_credentials)
+        if not account_listing:
+            flash(message="Unable to create a listing please inform us of this error so we may help resolve it", category="danger")
+            return redirect(url_for('market.get_account_listings'))
+
         flash(message="Successfully submitted Game Account for listing", category="success")
         return redirect(url_for('market.get_game_accounts'))
 

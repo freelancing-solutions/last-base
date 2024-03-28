@@ -1,9 +1,10 @@
 import requests
 from flask import Flask
 from src.controller import Controllers, error_handler
-from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials
+from src.database.models.game import GameDataInternal
+from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials, MarketMainAccounts
 from src.database.models.users import User
-from src.database.sql.market import SellerAccountORM, BuyerAccountORM, MainAccountsCredentialsORM
+from src.database.sql.market import SellerAccountORM, BuyerAccountORM, MainAccountsCredentialsORM, MarketMainAccountsORM
 
 
 class MarketController(Controllers):
@@ -78,10 +79,17 @@ class MarketController(Controllers):
 
     @error_handler
     async def approved_for_market(self, uid: str, is_approved: bool = False):
+        """
+            On Approval the selle rating will start at 5
+        :param uid:
+        :param is_approved:
+        :return:
+        """
         with self.get_session() as session:
             seller_account_orm = session.query(SellerAccountORM).filter(SellerAccountORM.uid == uid).first()
             if isinstance(seller_account_orm, SellerAccountORM):
                 seller_account_orm.account_verified = is_approved
+                seller_account_orm.seller_rating = 5
 
                 session.merge(seller_account_orm)
 
@@ -105,4 +113,26 @@ class MarketController(Controllers):
             session.add(MainAccountsCredentialsORM(**game_account.dict()))
             session.commit()
             return game_account
+
+    @error_handler
+    async def add_account_market_listing(self,
+                                         market_account: MarketMainAccounts,
+                                         account_credentials: MainAccountsCredentials):
+        """
+
+        :param market_account:
+        :param account_data:
+        :param account_credentials:
+        :return:
+        """
+        with self.get_session() as session:
+            listed_account_orm = session.query(MarketMainAccountsORM).filter_by(game_id=market_account.game_id).first()
+            if isinstance(listed_account_orm, MarketMainAccountsORM):
+                return None
+            new_listing_orm = MarketMainAccountsORM(**market_account.dict())
+
+            session.add(new_listing_orm)
+            session.commit()
+            return market_account
+
 
