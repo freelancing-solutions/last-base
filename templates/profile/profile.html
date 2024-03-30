@@ -11,7 +11,7 @@
 <section id="main-content">
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title font-weight-bold text-info"> Gamer Profile</h2>
+            <h2 class="card-title font-weight-bold text-info"> <i class="ti ti-user"> </i> User Profile</h2>
 
         </div>
         <div class="card-body">
@@ -69,9 +69,11 @@
 <hr/>
 <div class="card">
 <div class="card-header">
-    <h3 class="title">Merchant Accounts</h3>
-    <label class="font-weight-bold text-info">Manage your Wallet and Accounts</label>
+    <h3 class="card-title font-weight-bold text-info"><i class="ti ti-shopping-cart"> </i> Merchant Accounts</h3>
+
 </div>
+
+    <label class="font-weight-bold text-info">Create your Wallet and Merchant Accounts - in order to start buying and selling in our market place</label>
     <div class="card-body">
                 {% if paypal_account and paypal_account.paypal_email %}
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addPayPalAccount">
