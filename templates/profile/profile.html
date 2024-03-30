@@ -11,12 +11,14 @@
 <section id="main-content">
     <div class="card">
         <div class="card-header">
-            <h2 class="title"> Gamer Profile</h2>
-            <label class="font-weight-bold text-info">Manage your Profile, Note you need your Game ID, to create a usable Profile </label>
+            <h2 class="card-title font-weight-bold text-info"> Gamer Profile</h2>
+
         </div>
         <div class="card-body">
 
         <form method="POST" class="form-horizontal" action="{{ url_for('profile.update_profile')}}" id="profileForm">
+        <label class="font-weight-bold text-info">Manage your Profile, Note you need your Game ID, to create a usable Profile </label>
+
         {% if profile and profile.main_game_id %}
                 <input type="hidden" name="main_game_id" value="{{ profile.main_game_id }}" />
         {% endif %}
