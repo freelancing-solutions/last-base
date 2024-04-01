@@ -15,7 +15,7 @@
         <form class="form-horizontal" action="{{ url_for('free.submit_game_id') }}" method="POST">
             <div class="form-group">
                 <label class="font-weight-bold">Submit Game Id's <span class="text-info">Limit Each Game ID with a Comma, for example</span> BDASFG99,KLX098XC </label>
-                <textarea class="form-control" name="game_id" rows="3" placeholder="BDASFG99,KLX098XC"></textarea>
+                <textarea class="form-control" name="game_id" rows="5" placeholder="Enter game IDs separated by commas, semicolons, periods, or spaces"></textarea>
             </div>
             {% if results %}
                 <table class="table tab-content">
