@@ -17,8 +17,8 @@ class EmailController(Controllers):
         with self.get_session() as session:
             email_services = session.query(EmailServiceORM).filter(EmailServiceORM.uid == email_service.uid,
                                                                    EmailServiceORM.subscription_active == False).all()
-            for email_service in email_services:
-                session.delete(email_service)
+            for email_service_ in email_services:
+                session.delete(email_service_)
             session.commit()
 
             email_service_orm = EmailServiceORM(**email_service.dict())
@@ -81,6 +81,7 @@ class EmailController(Controllers):
             else:
 
                 return None
+
     async def get_email_service_subscription(self, subscription_id: str) -> list[EmailSubscriptions]:
         """
 
@@ -90,7 +91,8 @@ class EmailController(Controllers):
         with self.get_session() as session:
             email_subscription_orm = session.query(EmailSubscriptionsORM).filter(
                 EmailSubscriptionsORM.subscription_id == subscription_id).all()
-            return [EmailSubscriptions(**sub.to_dict()) for sub in email_subscription_orm if isinstance(sub, EmailSubscriptionsORM)]
+            return [EmailSubscriptions(**sub.to_dict()) for sub in email_subscription_orm if
+                    isinstance(sub, EmailSubscriptionsORM)]
 
     @error_handler
     async def get_all_active_subscriptions(self) -> list[EmailService]:
@@ -139,7 +141,6 @@ class EmailController(Controllers):
                 return email_subscription.email_address
             return None
 
-
     async def email_stub_exist(self, email_stub: str):
         """
 
@@ -149,4 +150,3 @@ class EmailController(Controllers):
         with self.get_session() as session:
             email_subscription_orm = session.query(EmailServiceORM.email_stub == email_stub).first()
             return isinstance(email_subscription_orm, EmailServiceORM)
-
