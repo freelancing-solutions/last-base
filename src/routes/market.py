@@ -11,6 +11,14 @@ from src.utils import static_folder
 market_route = Blueprint('market', __name__)
 
 
+
+
+@market_route.get('/dashboard/market/listing-accounts')
+@login_required
+async def get_how_to(user: User):
+    context = dict(user=user)
+    return render_template('market/how_to.html', **context)
+
 @market_route.get('/dashboard/market/request-approval')
 @login_required
 async def request_approval_to_sell(user: User):
