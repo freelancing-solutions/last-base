@@ -15,27 +15,34 @@
         </div>
         <div class="card">
             <h2 class="card-title font-weight-bold text-info"> Our Mission</h2>
-            <p>Our mission is to empower Last Shelter Survival players by offering them a secure and convenient marketplace to trade in-game items. Whether you're looking to expand your collection of game accounts, enhance your farms, or acquire unique skins, our platform strives to make the process easy and enjoyable.</p>
+            <p>Our mission is to empower Last Shelter Survival players by offering them a secure and convenient marketplace to trade in-game items.
+                We also offer them tools and services to help make their gaming experience more enjoyable.</p>
         </div>
         <div class="card">
             <h2 class="card-title font-weight-bold text-info">What We Offer</h2>
             <p>Last Shelter Survival Marketplace allows users to:</p>
-            <ul>
-                <li>Buy and sell game accounts</li>
-                <li>Trade Farms</li>
-                <li>Exchange skins</li>
-                <!-- Add more specific items/services here -->
+            <ul class="list-group">
+                <li class="list-group-item">Buy and Sell Game accounts</li>
+                <li class="list-group-item">Email Service</li>
+                <li class="list-group-item">Gift Codes Redemption</li>
             </ul>
         </div>
         <div class="card">
-            <h2 class="card-title font-weight-bold text-info">Get in Touch</h2>
-            <p>If you have any questions, feedback, or suggestions, please don't hesitate to contact us.
-                We're here to assist you and enhance your gaming experience on Last Shelter Survival.</p>
-            <p>Email: support@last-shelter.vip</p>
-            <a href="{{ url_for('chat.get_chat') }}" class="font-weight-bold text-info">
-                <i class="ti ti-comment"> </i>
-                Support Chat
-            </a>
+            <div class="card-header">
+                <h2 class="card-title font-weight-bold text-info">Get in Touch</h2>
+            </div>
+            <ol class="list-group">
+                <li class="list-group-item">If you have any questions, feedback, or suggestions, please don't hesitate to contact us.
+                    We're here to assist you and enhance your gaming experience on Last Shelter Survival.</li>
+                <li class="list-group-item"> Email: <a href="mailto:support@last-shelter.vip">support@last-shelter.vip</a></li>
+
+                <li class="list-group-item">
+                    <a href="{{ url_for('chat.get_chat') }}" class="font-weight-bold text-info">
+                    <i class="ti ti-comment"> </i>
+                    Support Chat
+                    </a>
+                </li>
+            </ol>
 
         </div>
 <div class="card">
