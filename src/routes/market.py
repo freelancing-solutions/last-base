@@ -176,8 +176,10 @@ async def list_game_account(user: User):
         seller_account = await market_controller.get_seller_account(uid=user.uid)
 
         if not (seller_account.account_activated and seller_account.account_verified):
-            flash(message="You are not verified to sell in our market place - please verify your account then "
-                          "continue with your listing - you can verify your account by activating your Merchant Account Below", category="danger")
+            flash(message="You are not Authorized to Sell in our Market Place - please Verify your Account then "
+                          "Continue with your Listing, You can verify your Account by Activating your Merchant "
+                          "Account Below", category="danger")
+
             return redirect(url_for('profile.get_profile'))
 
         # Check the Seller rating if it's lower than 3 then indicate to seller that rating is too low
