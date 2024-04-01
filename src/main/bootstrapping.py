@@ -17,5 +17,5 @@ def bootstrapper():
                          GiftCodesSubscriptionORM, WithdrawalRequestsORM, EmailSubscriptionsORM, ChatMessageORM,
                          MainAccountsCredentialsORM, MarketMainAccountsORM]
 
-    for cls in classes_to_create:
-        cls.create_if_not_table()
+    # for cls in classes_to_create:
+    #     cls.create_if_not_table()
