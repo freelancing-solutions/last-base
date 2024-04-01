@@ -266,7 +266,7 @@ async def get_listing_editor(user: User, listing_id: str):
 
     except Exception as e:
         print(str(e))
-        flash(message="there was an error trying to fetch account listing - please inform admin", category="danger")
+        flash(message="There was an error trying to fetch account listing - please inform admin", category="danger")
         return redirect('market.get_account_trader_dashboard')
 
 
