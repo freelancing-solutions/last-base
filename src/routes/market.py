@@ -324,7 +324,7 @@ async def do_update_listing(user: User):
 
         listed_account_ = await market_controller.update_listed_account(listed_account)
         if listed_account_:
-            flash(message="succcssfully updated listed account", category="success")
+            flash(message="Successfully updated listed account", category="success")
             return redirect(url_for('market.list_game_account'))
 
         flash(message="Error listing your account please try again later if problem persists inform admin", category="danger")
