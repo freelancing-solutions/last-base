@@ -160,3 +160,53 @@ class MarketController(Controllers):
                 MarketMainAccountsORM.listing_active == True).all()
             return [MarketMainAccounts(**account.to_dict()) for account in listed_accounts
                     if isinstance(account, MarketMainAccountsORM)]
+
+    async def get_listed_account_by_listing_id(self, listing_id: str) -> MarketMainAccounts | None:
+        """
+
+        :param listing_id:
+        :return:
+        """
+
+        with self.get_session() as session:
+            listed_account_orm = session.query(MarketMainAccountsORM).filter(MarketMainAccountsORM.listing_id == listing_id).first()
+            if isinstance(listed_account_orm, MarketMainAccountsORM):
+                return MarketMainAccounts(**listed_account_orm.to_dict())
+            return None
+
+    async def update_listed_account(self, listed_account: MarketMainAccounts):
+        """
+
+        :param listed_account:
+        :return:
+        """
+        with self.get_session() as session:
+            listing_id = listed_account.listing_id
+            listed_account_orm = session.query(MarketMainAccountsORM).filter(MarketMainAccountsORM.listing_id == listing_id).first()
+            if isinstance(listed_account_orm, MarketMainAccountsORM):
+                # Update the attributes of the ORM object with the new values
+                listed_account_orm.uid = listed_account.uid
+                listed_account_orm.total_gold_cards = listed_account.total_gold_cards
+                listed_account_orm.total_hero_tokens = listed_account.total_hero_tokens
+                listed_account_orm.total_skins = listed_account.total_skins
+                listed_account_orm.gold_sets_vehicles = listed_account.gold_sets_vehicles
+                listed_account_orm.gold_sets_fighters = listed_account.gold_sets_fighters
+                listed_account_orm.gold_sets_shooters = listed_account.gold_sets_shooters
+                listed_account_orm.bane_blade_sets = listed_account.bane_blade_sets
+                listed_account_orm.fighter_units_level = listed_account.fighter_units_level
+                listed_account_orm.shooter_units_level = listed_account.shooter_units_level
+                listed_account_orm.vehicle_units_level = listed_account.vehicle_units_level
+                listed_account_orm.state_season = listed_account.state_season
+                listed_account_orm.season_heroes = listed_account.season_heroes
+                listed_account_orm.sp_heroes = listed_account.sp_heroes
+                listed_account_orm.universal_sp_medals = listed_account.universal_sp_medals
+                listed_account_orm.amount_spent_packages = listed_account.amount_spent_packages
+                listed_account_orm.vip_shop = listed_account.vip_shop
+                listed_account_orm.energy_lab_level = listed_account.energy_lab_level
+                listed_account_orm.energy_lab_password = listed_account.energy_lab_password
+
+                # Commit the changes to the database
+                session.commit()
+                return listed_account
+            return None
+

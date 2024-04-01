@@ -108,6 +108,10 @@ async def get_lss_skins(user: User):
 async def get_account_trader_dashboard(user: User):
     try:
         context = {'user': user}
+        seller_account = await market_controller.get_seller_account(uid=user.uid)
+        buyer_account = await market_controller.get_buyer_account(uid=user.uid)
+        context.update(seller_account=seller_account)
+        context.update(buyer_account=buyer_account)
         return render_template('market/accounts/tabs/my_dashboard.html', **context)
     except Exception as e:
         pass
@@ -264,3 +268,61 @@ async def get_listing_editor(user: User, listing_id: str):
         print(str(e))
         flash(message="there was an error trying to fetch account listing - please inform admin", category="danger")
         return redirect('market.get_account_trader_dashboard')
+
+
+@market_route.post('/dashboard/market/update-listed-account')
+@login_required
+async def do_update_listing(user: User):
+    # Extract form data from the request
+    form_data = request.form
+
+    # Retrieve listing information
+    listing_id = form_data.get('listing_id')
+    total_gold_cards = int(form_data.get('total_gold_cards'))
+    total_hero_tokens = int(form_data.get('total_hero_tokens'))
+    total_skins = int(form_data.get('total_skins'))
+    gold_sets_vehicles = int(form_data.get('gold_sets_vehicles'))
+    gold_sets_fighters = int(form_data.get('gold_sets_fighters'))
+    gold_sets_shooters = int(form_data.get('gold_sets_shooters'))
+    bane_blade_sets = int(form_data.get('bane_blade_sets'))
+    fighter_units_level = int(form_data.get('fighter_units_level'))
+    shooter_units_level = int(form_data.get('shooter_units_level'))
+    vehicle_units_level = int(form_data.get('vehicle_units_level'))
+    state_season = int(form_data.get('state_season'))
+    season_heroes = int(form_data.get('season_heroes'))
+    sp_heroes = int(form_data.get('sp_heroes'))
+    universal_sp_medals = int(form_data.get('universal_sp_medals'))
+    amount_spent_packages = int(form_data.get('amount_spent_packages'))
+    vip_shop = form_data.get('vip_shop') == 'on'  # Convert checkbox value to boolean
+    energy_lab_level = int(form_data.get('energy_lab_level'))
+    energy_lab_password = form_data.get('energy_lab_password')
+
+    listed_account = await market_controller.get_listed_account_by_listing_id(listing_id=listing_id)
+    if isinstance(listed_account, MarketMainAccounts):
+        listed_account.uid = user.uid
+        listed_account.total_gold_cards = total_gold_cards
+        listed_account.total_hero_tokens = total_hero_tokens
+        listed_account.total_skins = total_skins
+        listed_account.gold_sets_vehicles = gold_sets_vehicles
+        listed_account.gold_sets_fighters = gold_sets_fighters
+        listed_account.gold_sets_shooters = gold_sets_shooters
+        listed_account.bane_blade_sets = bane_blade_sets
+        listed_account.fighter_units_level = fighter_units_level
+        listed_account.shooter_units_level = shooter_units_level
+        listed_account.vehicle_units_level = vehicle_units_level
+        listed_account.state_season = state_season
+        listed_account.season_heroes = season_heroes
+        listed_account.sp_heroes = sp_heroes
+        listed_account.universal_sp_medals = universal_sp_medals
+        listed_account.amount_spent_packages = amount_spent_packages
+        listed_account.vip_shop = vip_shop
+        listed_account.energy_lab_level = energy_lab_level
+        listed_account.energy_lab_password = energy_lab_password
+        listed_account.listing_active = True
+        listed_account.in_negotiation = False
+        listed_account.is_bought = False
+
+        listed_account_ = await market_controller.update_listed_account(listed_account)
+        if listed_account_:
+            flash(message="succcssfully updated listed account")
+            return redirect(url_for('market.list_game_account'))
