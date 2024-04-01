@@ -15,16 +15,17 @@ email_route = Blueprint('email', __name__)
 async def get_email(user: User):
     context = dict(user=user)
     email_service: EmailService = await email_service_controller.get_email_service(user=user)
-    email_subscription_list: list[EmailSubscriptions] = await email_service_controller.get_email_service_subscription(
-        subscription_id=email_service.subscription_id)
+    if email_service:
+        email_subscription_list: list[EmailSubscriptions] = await email_service_controller.get_email_service_subscription(
+            subscription_id=email_service.subscription_id)
 
-    if email_service and email_service.subscription_active and not email_service.subscription_running:
-        context.update(email_service=email_service)
-        return render_template('email/subscription.html', **context)
+        if email_service.subscription_active and not email_service.subscription_running:
+            context.update(email_service=email_service)
+            return render_template('email/subscription.html', **context)
 
-    if email_service and email_service.subscription_active and email_service.subscription_running:
-        context.update(email_service=email_service, email_subscription_list=email_subscription_list)
-        return render_template('email/active.html', **context)
+        if email_service.subscription_active and email_service.subscription_running:
+            context.update(email_service=email_service, email_subscription_list=email_subscription_list)
+            return render_template('email/active.html', **context)
 
     return render_template('email/email_service.html', **context)
 

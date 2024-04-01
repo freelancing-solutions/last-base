@@ -79,6 +79,7 @@ class EmailController(Controllers):
             if isinstance(email_service_orm, EmailServiceORM):
                 return EmailService(**email_service_orm.to_dict())
             else:
+
                 return None
     async def get_email_service_subscription(self, subscription_id: str) -> list[EmailSubscriptions]:
         """
