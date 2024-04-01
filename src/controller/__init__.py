@@ -15,15 +15,16 @@ class Controllers:
         **Controllers**
             registers controllers
     """
+    session_limit: int = 5
 
     def __init__(self, session_maker=Session):
-        self.sessions = [session_maker() for _ in range(5)]
+        self.sessions = [session_maker() for _ in range(self.session_limit)]
         self.logger = init_logger(self.__class__.__name__)
 
     def get_session(self) -> Session:
         if self.sessions:
             return self.sessions.pop()
-        self.sessions = [Session() for _ in range(20)]
+        self.sessions = [Session() for _ in range(self.session_limit)]
         return self.get_session()
 
     def setup_error_handler(self, app: Flask):
