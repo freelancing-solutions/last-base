@@ -25,34 +25,29 @@ async def get_gift_codes(user: User):
 async def submit_game_id():
     try:
         game_ids = request.form.get('game_id')
-        game_id_list = []
-
-        # Splitting game IDs based on ',' or ';' and adding them to game_id_list
-        if "," in game_ids:
-            game_id_list = game_ids.split(",")
-        elif ";" in game_ids:
-            game_id_list = game_ids.split(";")
-        else:
-            game_id_list = [game_ids] if len(game_ids) == 8 else []
-
-        # Ensure game_id_list does not exceed ten items
-        if len(game_id_list) > 10:
-            flash(message="Please provide a maximum of ten game ID's - or consider creating an account for a premium "
-                          "service", category="danger")
+        game_ids = game_ids.strip().upper()
+        if not game_ids:
+            flash(message="Please provide game ID's", category="danger")
             return redirect(url_for('free.get_gift_codes'))
 
-        if not game_id_list:
-            flash(message="Please provide game ID's", category="danger")
+        # Split game IDs based on delimiters and filter out empty strings
+        delimiters = [",", ";", ".", " "]
+        game_id_list = []
+        for delimiter in delimiters:
+            for game_id in game_ids.split(delimiter):
+                if game_id:
+                    game_id_list.append(game_id)
+            break
+
+        if len(game_id_list) > 50:
+            flash(message="Please provide a maximum of 50 game ID's - or consider creating an account for a premium "
+                          "service", category="danger")
             return redirect(url_for('free.get_gift_codes'))
 
         gift_codes = await game_controller.get_active_gift_codes()
         codes_list = [gift_code.code for gift_code in gift_codes if gift_code]
-        # print(codes_list)
-        # print(game_id_list)
-        routines = []
-        for game_id in game_id_list:
-            for gift_code in codes_list:
-                routines.append(game_controller.redeem_external(game_id=game_id, gift_code=gift_code))
+        routines = [game_controller.redeem_external(game_id=game_id, gift_code=gift_code) for game_id in game_id_list for gift_code in codes_list]
+
         results = await asyncio.gather(*routines)
 
         mes = (f"Completed code redemption - complete successfully - {len(game_id_list)} Accounts Where gifted - Check "
@@ -63,7 +58,6 @@ async def submit_game_id():
         return render_template('free/gift_codes.html', **context)
 
     except Exception as e:
-        print(str(e))
-        flash(message="Completed code redemption - with possible errors", category="danger")
+        flash(message=f"An error occurred: {str(e)}", category="danger")
         return redirect(url_for('free.get_gift_codes'))
 
