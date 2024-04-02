@@ -122,7 +122,7 @@ class Firewall:
         if request.host not in self.allowed_hosts:
             print(f"Request Host: {request.host}")
             print(f"Allowed Host: {self.allowed_hosts}")
-            abort(401, 'Host not allowed')
+            # abort(401, 'Host not allowed')
 
     def is_edge_ip_allowed(self):
         """
