@@ -120,8 +120,8 @@ class Firewall:
         if header_host.casefold() != request.host.casefold():
             abort(401, 'Bad Host Header')
         if request.host not in self.allowed_hosts:
-            print(request.host)
-            print(self.allowed_hosts)
+            print(f"Request Host: {request.host}")
+            print(f"Allowed Host: {self.allowed_hosts}")
             abort(401, 'Host not allowed')
 
     def is_edge_ip_allowed(self):
