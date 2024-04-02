@@ -16,6 +16,7 @@ from src.controller.wallet_controller import WalletController
 from src.controller.paypal_controller import PayPalController
 from src.controller.email_service_controller import EmailController
 from src.controller.chat_controller import ChatController
+from src.firewall import Firewall
 
 user_controller = UserController()
 game_controller = GameController()
@@ -29,7 +30,7 @@ _controllers = [user_controller, game_controller, market_controller, wallet_cont
                 email_service_controller]
 chat_io = SocketIO()
 
-
+firewall = Firewall()
 def _add_blue_prints(app: Flask):
     """
         this function adds blueprints
@@ -69,12 +70,12 @@ def create_app(config):
     app.template_folder = template_folder()
     app.static_folder = static_folder()
     app.config['SECRET_KEY'] = config.SECRET_KEY
-    app.config['BASE_URL'] = "https://move-it.site"
+    app.config['BASE_URL'] = "https://last-shelter.vip"
 
     with app.app_context():
         from src.main.bootstrapping import bootstrapper
         bootstrapper()
-
+        firewall.init_app(app=app)
         _add_blue_prints(app)
         _add_filters(app)
         chat_io.init_app(app)
