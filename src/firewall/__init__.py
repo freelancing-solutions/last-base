@@ -119,9 +119,10 @@ class Firewall:
 
         if header_host.casefold() != request.host.casefold():
             abort(401, 'Bad Host Header')
+
         if request.host not in self.allowed_hosts:
-            print(f"Request Host: {request.host}")
-            print(f"Allowed Host: {self.allowed_hosts}")
+            self._logger.info(f"Request Host: {request.host}")
+            pass
             # abort(401, 'Host not allowed')
 
     def is_edge_ip_allowed(self):
@@ -131,7 +132,7 @@ class Firewall:
         """
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
-            print(f"IP Address not allowed: {edge_ip}")
+            self._logger.info(f"IP Address not allowed: {edge_ip}")
             # abort(401, 'IP Address not allowed')
 
     def check_if_request_malicious(self):
@@ -160,8 +161,7 @@ class Firewall:
             self._logger.info("Attack patterns regex failure on path")
             abort(401, 'Request path is malformed - Path Parameter is Malicious')
 
-    @staticmethod
-    def verify_client_secret_token():
+    def verify_client_secret_token(self):
         """
         **verify_client_secret_token**
             check if cloud_flare signed the request with a secret token
@@ -169,6 +169,7 @@ class Firewall:
         """
         client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
         if not client_secret_token:
+            self._logger.error("Invalid Client Secret Token - Request Aborted")
             abort(401, 'Request not Authenticated - token missing')
 
         expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN
@@ -176,16 +177,18 @@ class Firewall:
             abort(401, 'Request not Authenticated')
 
         if not hmac.compare_digest(client_secret_token, expected_secret_token):
+            self._logger.error("Secret Tokens not Matching Aborting this Request")
             abort(401, 'Request Origin not Trusted - token mismatch')
 
-    @staticmethod
-    def get_client_ip() -> str:
+    def get_client_ip(self) -> str:
         """
         **get_client_ip**
             will return the actual client ip address of the client making the request
         """
         ip = request.headers.get('cf-connecting-ip')
-        return ip.split(',')[0]
+        ip = ip.split(',')[0]
+        self._logger.info(f"Client IP Address : {ip}")
+        return ip
 
     @staticmethod
     def get_edge_server_ip(headers) -> str:
