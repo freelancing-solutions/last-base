@@ -61,6 +61,7 @@
         <ol class="font-weight-bold text-info">
             <li>Benefits of our Premium Service includes - Access to More Codes than in our free version</li>
             <li>Codes are Redeemed whenever they get available and without any action from you and or us</li>
+            {% if not user %}
             <li class="font-italic text-danger">
                 <a href="{{ url_for('auth.get_register') }}" class="btn btn-primary">
                     <i class="ti ti-user"> </i>
@@ -70,8 +71,14 @@
                     <i class="ti ti-user"> </i>
                     Login
                 </a>
-
             </li>
+            {% else %}
+                <a href="{{ url_for('profile.get_gift_codes') }}" class="btn btn-primary">
+                    <i class="ti ti-user"> </i>
+                    Subscribe to Premium
+                </a>
+
+            {% endif %}
         </ol>
     </div>
 
