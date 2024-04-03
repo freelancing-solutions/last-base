@@ -27,10 +27,10 @@
                         <div class="card mb-3">
                             <div class="card-body bg-dark  text-white font-weight-bold">
                                 <h5 class="card-title text-white font-weight-bold">{{ game_data.base_name }}</h5>
-                                <p class="card-text">Power: {{ game_data.power| number }}</p>
-                                <p class="card-text font-italic text-danger">State: {{ game_data.state }}</p>
+                                <p class="card-text text-white">Power: {{ game_data.power| number }}</p>
+                                <p class="card-text font-italic text-white-50">State: {{ game_data.state }}</p>
                                 <!-- Display level only on larger screens -->
-                                <p class="card-text font-italic text-danger d-none d-md-block">Level: {{ game_data.base_level }}</p>
+                                <p class="card-text font-italic text-white-50 d-none d-md-block">Level: {{ game_data.base_level }}</p>
                             </div>
                         </div>
                     </div>
