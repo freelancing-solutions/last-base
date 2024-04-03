@@ -10,13 +10,13 @@
                     Game Accounts</h2>
                 <h2 class="card-title font-weight-bold text-info d-block d-sm-none">Accounts</h2>
             </div>
-
-            <div class="row">
                 <span class="font-weight-bold text-darken-4">
                     <span class="text-white btn btn-sm btn-secondary">
                     Total Game Accounts: {{ total_accounts | number}}
                     </span>
                 </span>
+
+            <div class="row">
 
                     {% for game_data in game_accounts %}
                     <div class="col-12 col-md-6">
