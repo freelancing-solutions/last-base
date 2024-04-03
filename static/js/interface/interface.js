@@ -67,8 +67,7 @@ async function fetch_hourly_event() {
         console.log("Hourly event fetched successfully at", new Date());
         console.log('Hourly Event ', hourly_event);
         document.getElementById('hourly_event').innerHTML = `
-        <span class="font-weight-bold text-danger d-block d-sm-inline"> HOURLY EVENT</span> : <span class="text-info d-block d-sm-inline"> ${hourly_event} </span>
-        `
+        <span class="font-weight-bold text-danger d-block d-sm-inline"> HOURLY EVENT</span> : <span class="text-info"> ${hourly_event} </span>`
     } catch (error) {
         console.log("Error fetching hourly event", error);
     }
