@@ -62,10 +62,15 @@
             <li>Benefits of our Premium Service includes - Access to More Codes than in our free version</li>
             <li>Codes are Redeemed whenever they get available and without any action from you and or us</li>
             <li class="font-italic text-danger">
-                <a href="{{ url_for('auth.get_register') }}" class="btn btn-lg btn-primary">
+                <a href="{{ url_for('auth.get_register') }}" class="btn btn-primary">
                     <i class="ti ti-user"> </i>
-                    CREATE YOUR ACCOUNT TODAY - REGISTER
+                    Create Account
                 </a>
+                <a href="{{ url_for('auth.get_auth') }}" class="btn btn-warning">
+                    <i class="ti ti-user"> </i>
+                    Login
+                </a>
+
             </li>
         </ol>
     </div>
