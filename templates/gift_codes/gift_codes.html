@@ -25,30 +25,64 @@
         <div class="row d-flex">
             <div class="col-lg-9 col-md-6 col-sm-6">
             <div class="table-responsive-md table-responsive-sm">
-                <table class="table table-striped">
-                    <thead>
-                        <tr class="font-weight-bold text-info">
-    {#                        <td><strong>Game ID</strong></td>#}
-                            <td><strong>Name</strong></td>
-                            <td class="font-italic text-danger d-none d-sm-table-cell d-md-table-cell"><strong>Level</strong></td>
-                            <td class="d-none d-sm-table-cell d-md-table-cell"><strong>Power</strong></td>
-                            <td class="font-italic text-danger align-left"><strong>State</strong></td>
-    {#                        <td><strong>Last Login</strong></td>#}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for game_data in game_data_list %}
-                        <tr>
-    {#                        <td>{{ game_data.uid }}</td>#}
-                            <td class="font-weight-bold">{{ game_data.base_name }}</td>
-                            <td class="font-italic text-danger d-none d-sm-table-cell d-md-table-cell">{{ game_data.base_level }}</td>
-                            <td class="d-none d-sm-table-cell d-md-table-cell">{{ game_data.power| number }}</td>
-                            <td class="font-weight-bold font-italic text-danger">{{ game_data.state }}</td>
-    {#                        <td>{{ game_data.last_login_time }}</td>#}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+{#                <table class="table table-striped">#}
+{#                    <thead>#}
+{#                        <tr class="font-weight-bold text-info">#}
+{##}
+{#                            <td><strong>Name</strong></td>#}
+{#                            <td class="font-italic text-danger d-none d-sm-table-cell d-md-table-cell"><strong>Level</strong></td>#}
+{#                            <td class="d-none d-sm-table-cell d-md-table-cell"><strong>Power</strong></td>#}
+{#                            <td class="font-italic text-danger align-left"><strong>State</strong></td>#}
+{##}
+{#                        </tr>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    {% for game_data in game_data_list %}#}
+{#                        <tr>#}
+{##}
+{#                            <td class="font-weight-bold">{{ game_data.base_name }}</td>#}
+{#                            <td class="font-italic text-danger d-none d-sm-table-cell d-md-table-cell">{{ game_data.base_level }}</td>#}
+{#                            <td class="d-none d-sm-table-cell d-md-table-cell">{{ game_data.power| number }}</td>#}
+{#                            <td class="font-weight-bold font-italic text-danger">{{ game_data.state }}</td>#}
+{##}
+{#                        </tr>#}
+{#                    {% endfor %}#}
+{#                    </tbody>#}
+{#                </table>#}
+<div class="container">
+    <div class="row">
+        {% for game_data in game_data_list %}
+        <div class="col-12 col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold">{{ game_data.base_name }}</h5>
+                    <p class="card-text">Power: {{ game_data.power| number }}</p>
+                    <p class="card-text font-italic text-danger">State: {{ game_data.state }}</p>
+                    <!-- Display level only on larger screens -->
+                    <p class="card-text font-italic text-danger d-none d-md-block">Level: {{ game_data.base_level }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        {% for game_data in game_data_list %}
+        <div class="col-12 col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold">{{ game_data.base_name }}</h5>
+                    <p class="card-text">Power: {{ game_data.power| number }}</p>
+                    <p class="card-text font-italic text-danger">State: {{ game_data.state }}</p>
+                    <!-- Display level only on larger screens -->
+                    <p class="card-text font-italic text-danger d-none d-md-block">Level: {{ game_data.base_level }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
                 <div class="card-footer">
                     <a href="#" class="btn btn-sm btn-primary mr-2 mr-md-12 mb-2 mb-md-0" data-toggle="modal" data-target="#showAddGameID">
