@@ -5,23 +5,19 @@
 <section id="main-content">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Listing Editor</h3>
+            <h3 class="card-title font-weight-bold text-info">
+                <i class="ti ti-file"> </i>
+                Listing Editor
+            </h3>
         </div>
         <div class="card-body">
         <span class="font-weight-bold text-info">It is essential to ensure that the information entered into this form is accurate - any misleading information may result in negative ratings</span>
             <form method="POST" action="{{ url_for('market.do_update_listing') }}">
-                <div class="form-group">
-                    <label class="font-weight-bold text-info" for="uid">User ID:</label>
-                    <input class="form-control" type="text" id="uid" name="uid" value="{{ listing.uid }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label class="font-weight-bold text-info" for="game_id">Game ID:</label>
-                    <input  class="form-control" type="text" id="game_id" name="game_id" value="{{ listing.game_id }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label class="font-weight-bold text-info" for="game_uid">Game UID:</label>
-                    <input  class="form-control" type="text" id="game_uid" name="game_uid" value="{{ listing.game_uid }}" readonly>
-                </div>
+
+                <input  class="form-control" type="hidden" id="uid" name="uid" value="{{ listing.uid }}" readonly>
+                <input  class="form-control" type="hidden" id="game_id" name="game_id" value="{{ listing.game_id }}" readonly>
+                <input  class="form-control" type="hidden" id="game_uid" name="game_uid" value="{{ listing.game_uid }}" readonly>
+
                 <div class="form-group">
                     <label class="font-weight-bold text-info" for="state">State:</label>
                     <input  class="form-control" type="number" id="state" name="state" value="{{ listing.state }}" readonly>
@@ -88,7 +84,7 @@
                     <input  class="form-control" type="number" id="season_heroes" name="season_heroes" value="{{ listing.season_heroes }}">
                 </div>
                 <div class="form-group">
-                    <label class="font-weight-bold text-info" for="sp_heroes">SP Heroes:</label>
+                    <label class="font-weight-bold text-info" for="sp_heroes">Active SP Heroes:</label>
                     <input  class="form-control" type="number" id="sp_heroes" name="sp_heroes" value="{{ listing.sp_heroes }}">
                 </div>
                 <div class="form-group">
@@ -109,7 +105,11 @@
                 </div>
                 <div class="form-group">
                     <label class="font-weight-bold text-info" for="energy_lab_password">Energy Lab Password:</label>
-                    <input  class="form-control" type="text" id="energy_lab_password" name="energy_lab_password" value="{{ listing.energy_lab_password }}">
+                    {% if listing.energy_lab_password %}
+                        <input  class="form-control" type="text" id="energy_lab_password" name="energy_lab_password" value="{{ listing.energy_lab_password }}">
+                    {% else %}
+                        <input  class="form-control" type="text" id="energy_lab_password" name="energy_lab_password" placeholder="Enter your Energy Lab Pin">
+                    {% endif %}
                 </div>
 
                 <button type="submit" class="btn btn-primary">

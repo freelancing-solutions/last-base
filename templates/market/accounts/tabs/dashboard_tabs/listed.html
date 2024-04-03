@@ -1,6 +1,9 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Listed Accounts</h3>
+        <h3 class="card-title font-weight-bold text-info">
+            <i class="ti ti-game"> </i>
+            Listed Accounts
+        </h3>
     </div>
     <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
         <thead>
@@ -16,7 +19,7 @@
             {% for account in my_account_listings %}
             <tr>
             {% if not account.listing_active %}
-                <td><a href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}"> {{ account.game_id }}</a></td>
+                <td><a class="font-weight-bold text-info" href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}" info="Edit Listing" > {{ account.game_id }} </a></td>
             {% else %}
                 <td><a href="#"> {{ account.base_id }}</a></td>
             {% endif %}
