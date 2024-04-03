@@ -116,14 +116,14 @@ class Firewall:
         header_host = request.headers.get('Host')
         self._logger.info(f'Host is : {header_host}')
         self._logger.info(f'allowed hosts : {self.allowed_hosts}')
+        self._logger.info(f"Request Host: {request.host}")
 
         if header_host.casefold() != request.host.casefold():
             abort(401, 'Bad Host Header')
-
-        if request.host not in self.allowed_hosts:
-            self._logger.info(f"Request Host: {request.host}")
-            pass
-            # abort(401, 'Host not allowed')
+        for host in self.allowed_hosts:
+            if not request.host.endswith(host):
+                self._logger.error(f"Host not allowed: {host}")
+                abort(401, 'Host not allowed')
 
     def is_edge_ip_allowed(self):
         """
