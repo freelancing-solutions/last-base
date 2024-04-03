@@ -220,8 +220,8 @@ async def list_game_account(user: User):
         game_account_credentials = await market_controller.add_game_account_credentials(
             game_account=main_account_credentials)
         if not isinstance(game_account_credentials, MainAccountsCredentials):
-            flash(message="This account has already being listed for sale- if you believe this is a mistake please "
-                          "let us know", category="danger")
+            flash(message="This account has already being listed for sale - or there was an error listing the "
+                          "account- if you believe this is a mistake please let us know", category="danger")
 
             return redirect(url_for('market.get_game_accounts'))
 
