@@ -32,7 +32,7 @@ window.addEventListener("load", async e => {
         const militaryTime = `${hours}:${minutes}:${seconds}`;
 
         document.getElementById('game_time').innerHTML = `
-            <span class="font-weight-bold text-danger d-block d-sm-inline">GAME TIME</span> :<span class="font-weight-bold">${militaryTime}</span>
+            <span class="font-weight-bold text-danger d-block d-sm-inline">GAME TIME :<span class="font-weight-bold">${militaryTime}</span></span>
         `;
     }
 
