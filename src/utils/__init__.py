@@ -2,6 +2,7 @@ from enum import Enum
 from os import path
 from datetime import datetime, timedelta
 
+
 # TODO create a class to contain this enum types for the entire project
 class PaymentMethod(Enum):
     CREDIT_CARD = "credit_card"

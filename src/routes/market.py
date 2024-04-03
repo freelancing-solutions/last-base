@@ -28,7 +28,7 @@ async def request_approval_to_sell(user: User):
     :return:
     """
     _approval_amount: int = 5
-    paypal: PayPal = user_controller.get_paypal_account(uid=user.uid)
+    paypal: PayPal = await user_controller.get_paypal_account(uid=user.uid)
     success_url = url_for('market.approval_payment_success', _external=True)
     failure_url = url_for('market.approval_payment_failed', _external=True)
     payment, is_created = await paypal_controller.create_payment(amount=_approval_amount,
