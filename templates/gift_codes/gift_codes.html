@@ -29,10 +29,11 @@
                         <div class="card mb-3 bg-secondary">
                             <div class="card-body text-white font-weight-bold">
                                 <ol class="list-group">
-                                <li class="list-group-item bg-secondary">
-                                    <a class="card-title font-weight-bold text-info" href="{{ url_for('profile.edit_base', game_id=game_data.game_id) }}" title="Open To Edit Base">
-                                    <span class="text-info">{{ game_data.base_name }}</span>
-                                </a></li>
+                                    <li class="list-group-item bg-secondary">
+                                        <a class="card-title font-weight-bold text-info" href="{{ url_for('profile.edit_base', game_id=game_data.game_id) }}" title="Open To Edit Base">
+                                        <span class="text-info">{{ game_data.base_name }}</span>
+                                        </a>
+                                    </li>
                                     <li class="list-group-item bg-secondary"><span class="card-title text-white font-weight-bold">Account Type : <span class="text-info">{{ game_data.account_type }}</span></span></li>
                                     <li class="list-group-item bg-secondary"><span class="card-text text-white font-weight-bold">Power: <span class="text-info">{{ game_data.power| number }}</span></span></li>
                                     <li class="list-group-item bg-secondary"><span class="card-text font-italic text-white font-weight-bold">State: <span class="text-info">{{ game_data.state }}</span></span></li>

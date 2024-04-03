@@ -201,11 +201,11 @@ async def do_verification(user: User):
 @profile_route.get('/dashboard/gift-codes')
 @login_required
 async def get_gift_codes(user: User):
-    game_data_list = await game_controller.get_users_game_ids(uid=user.uid)
+    game_accounts = await game_controller.get_users_game_ids(uid=user.uid)
     active_gift_codes = await game_controller.get_active_gift_codes()
-    total_bases: int = len(game_data_list)
+    total_bases: int = len(game_accounts)
     gift_codes_subscription = await game_controller.get_gift_code_subscription(user=user)
-    context = dict(user=user, total_bases=total_bases, game_data_list=game_data_list,
+    context = dict(user=user, total_bases=total_bases, game_accounts=game_accounts,
                    active_gift_codes=active_gift_codes, subscription=gift_codes_subscription)
     return render_template('gift_codes/gift_codes.html', **context)
 
