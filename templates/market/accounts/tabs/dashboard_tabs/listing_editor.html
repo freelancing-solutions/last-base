@@ -12,7 +12,8 @@
         </div>
         <div class="card-body">
         <span class="font-weight-bold text-info">It is essential to ensure that the information entered into this form is accurate - any misleading information may result in negative ratings</span>
-            <form method="POST" action="{{ url_for('market.do_update_listing') }}">
+
+            <form method="POST" action="{{ url_for('market.do_update_listed_account') }}">
 
                 <input  class="form-control" type="hidden" id="uid" name="uid" value="{{ listing.uid }}" readonly>
                 <input  class="form-control" type="hidden" id="game_id" name="game_id" value="{{ listing.game_id }}" readonly>

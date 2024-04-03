@@ -275,7 +275,7 @@ async def get_listing_editor(user: User, listing_id: str):
 
 @market_route.post('/dashboard/market/do-update-listed-account')
 @login_required
-async def do_update_listing(user: User):
+async def do_update_listed_account(user: User):
     # Extract form data from the request
     form_data = request.form
 
@@ -328,8 +328,8 @@ async def do_update_listing(user: User):
         listed_account_ = await market_controller.update_listed_account(listed_account)
         if listed_account_:
             flash(message="Successfully updated listed account", category="success")
-            return redirect(url_for('market.list_game_account'))
+            return redirect(url_for('market.get_account_trader_dashboard'))
 
     flash(message="Error listing your account please try again later if problem persists inform admin",
           category="danger")
-    return redirect(url_for('market.list_game_account'))
+    return redirect(url_for('market.get_account_trader_dashboard'))
