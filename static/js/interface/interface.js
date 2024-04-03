@@ -1,3 +1,21 @@
+    function addLineBreakIfSmallScreen() {
+        // Check if screen width is less than or equal to 576 pixels (Bootstrap's sm breakpoint)
+        if (window.innerWidth <= 576) {
+            // Append line break to the content
+            document.getElementById('game_time').innerHTML += '<br>';
+        }
+    }
+
+    // Call the function when the page loads
+    window.onload = function() {
+        addLineBreakIfSmallScreen();
+    };
+
+    // Call the function when the window is resized
+    window.onresize = function() {
+        addLineBreakIfSmallScreen();
+    };
+
 window.addEventListener("load", async e => {
     // Define global variables to hold server time and interval ID
     let serverTime;
@@ -32,8 +50,10 @@ window.addEventListener("load", async e => {
         const militaryTime = `${hours}:${minutes}:${seconds}`;
 
         document.getElementById('game_time').innerHTML = `
-            <span class="font-weight-bold text-danger d-block d-sm-inline">GAME TIME :<span class="font-weight-bold">${militaryTime}</span></span>
+            <span class="font-weight-bold text-danger d-block d-sm-inline">GAME TIME :<span class="font-weight-bold text-info">${militaryTime}</span></span>
+            
         `;
+
     }
 
     // Fetch game time from the server initially
