@@ -273,7 +273,7 @@ async def get_listing_editor(user: User, listing_id: str):
         return redirect('market.get_account_trader_dashboard')
 
 
-@market_route.post('/dashboard/market/update-listed-account')
+@market_route.post('/dashboard/market/do-update-listed-account')
 @login_required
 async def do_update_listing(user: User):
     # Extract form data from the request
