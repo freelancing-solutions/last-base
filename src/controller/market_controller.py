@@ -157,6 +157,7 @@ class MarketController(Controllers):
         with self.get_session() as session:
             listed_accounts = session.query(MarketMainAccountsORM).filter(
                 MarketMainAccountsORM.listing_active == True).all()
+
             return [MarketMainAccounts(**account.to_dict()) for account in listed_accounts
                     if isinstance(account, MarketMainAccountsORM)]
 

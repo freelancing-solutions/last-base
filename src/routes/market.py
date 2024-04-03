@@ -122,12 +122,14 @@ async def get_account_trader_dashboard(user: User):
 @user_details
 async def get_public_market(user: User):
     try:
-        context = {'user': user}
+
         listed_accounts = await market_controller.get_public_listed_accounts()
+        print(listed_accounts)
         social_url = url_for('market.get_public_market', _external=True)
         context = dict(user=user, social_url=social_url, listed_accounts=listed_accounts)
 
         return render_template('market/accounts/tabs/public_listings.html', **context)
+
     except Exception as e:
         flash(message="Error tryubg to access public market - please try again later", category="danger")
         return redirect('main.get_home')
@@ -321,6 +323,7 @@ async def do_update_listed_account(user: User):
         listed_account.vip_shop = vip_shop
         listed_account.energy_lab_level = energy_lab_level
         listed_account.energy_lab_password = energy_lab_password
+
         listed_account.listing_active = True
         listed_account.in_negotiation = False
         listed_account.is_bought = False
