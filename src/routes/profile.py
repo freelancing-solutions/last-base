@@ -225,6 +225,7 @@ async def get_gift_codes(user: User):
     # Render the template with the context data
     return render_template('gift_codes/gift_codes.html', **context)
 
+
 @profile_route.post('/dashboard/gift-codes')
 @login_required
 async def add_game_ids(user: User):
