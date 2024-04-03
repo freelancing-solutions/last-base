@@ -12,6 +12,12 @@
             </div>
 
             <div class="row">
+                <span class="font-weight-bold text-darken-4">
+                    <span class="text-white btn btn-sm btn-secondary">
+                    Total Game Accounts: {{ total_accounts | number}}
+                    </span>
+                </span>
+
                     {% for game_data in game_accounts %}
                     <div class="col-12 col-md-6">
                         <div class="card mb-3 bg-secondary">
@@ -58,7 +64,7 @@
 
                 <span class="font-weight-bold text-darken-4">
                     <span class="text-white btn btn-sm btn-secondary">
-                    Total: {{ total_accounts | number}}
+                    Total Game Accounts: {{ total_accounts | number}}
                     </span>
                 </span>
 
