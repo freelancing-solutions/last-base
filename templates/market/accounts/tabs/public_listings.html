@@ -24,13 +24,17 @@
                                             <span class="card-text text-white font-weight-bold">Base Level: <span class="text-info">{{ account.base_level }}</span></span>
                                         </li>
                                         <li class="list-group-item bg-secondary">
-                                            <span class="card-text text-white font-weight-bold">Base Power: <span class="text-info">{{ account.power }}</span></span>
+                                            <span class="card-text text-white font-weight-bold">Price: <span class="text-info">{{ account.item_price }}</span></span>
                                         </li>
                                         <li class="list-group-item bg-secondary">
-                                            <span class="card-text text-white font-weight-bold">Price: <span class="text-info">{{ account.listing_price }}</span></span>
-                                        </li>
-                                        <li class="list-group-item bg-secondary">
-                                            <button type="btn btn-primary">Buy</button>
+                                            <button class="btn btn-primary">
+                                                Base Detail
+                                            </button>
+
+                                            <button class="btn btn-primary">
+                                                Buy
+                                            </button>
+
                                         </li>
                                     </ul>
                                 </div>
@@ -38,20 +42,22 @@
                         {% endfor %}
 
                     </div>
-                        {% if not listed_accounts %}
-                            {% include "market/snippets/howto.html" %}
-                        {% endif %}
-                        <div class="card-footer">
-                            <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add_account">
-                                <span class="font-weight-bold text-white">
-                                    <i class="ti ti-plus"> </i>
-                                    Start Account Listing
-                                </span>
-                            </a>
-                        </div>
+
 
 
                 </div>
+                {% if not listed_accounts %}
+                    {% include "market/snippets/howto.html" %}
+                {% endif %}
+                <div class="card-footer">
+                    <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add_account">
+                        <span class="font-weight-bold text-white">
+                            <i class="ti ti-plus"> </i>
+                            Start Account Listing
+                        </span>
+                    </a>
+                </div>
+
             </div>
     </section>
 {% endblock %}
