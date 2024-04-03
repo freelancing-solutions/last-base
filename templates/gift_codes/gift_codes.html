@@ -24,14 +24,22 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
 
                 <div class="row">
-                    {% for game_data in game_data_list %}
+                    {% for game_data in game_accounts %}
                     <div class="col-12 col-md-6">
                         <div class="card mb-3 bg-secondary">
-                            <div class="card-body bg-secondary  text-white font-weight-bold">
-                                <h5 class="card-title text-info font-weight-bold">{{ game_data.base_name }}</h5>
-                                <p class="card-text text-white font-weight-bold">Power: {{ game_data.power| number }}</p>
-                                <p class="card-text font-italic text-white font-weight-bold">State: {{ game_data.state }}</p>
-                                <p class="card-text font-italic text-white d-none d-md-block font-weight-bold">Level: {{ game_data.base_level }}</p>
+                            <div class="card-body text-white font-weight-bold">
+                                <ol class="list-group">
+                                <li class="list-group-item bg-secondary">
+                                    <a class="card-title font-weight-bold text-info" href="{{ url_for('profile.edit_base', game_id=game_data.game_id) }}" title="Open To Edit Base">
+                                    <span class="text-info">{{ game_data.base_name }}</span>
+                                </a></li>
+                                    <li class="list-group-item bg-secondary"><span class="card-title text-white font-weight-bold">Account Type : <span class="text-info">{{ game_data.account_type }}</span></span></li>
+                                    <li class="list-group-item bg-secondary"><span class="card-text text-white font-weight-bold">Power: <span class="text-info">{{ game_data.power| number }}</span></span></li>
+                                    <li class="list-group-item bg-secondary"><span class="card-text font-italic text-white font-weight-bold">State: <span class="text-info">{{ game_data.state }}</span></span></li>
+                                    <li class="list-group-item bg-secondary"><span class="card-text font-italic text-white d-none d-md-block font-weight-bold">Level: <span class="text-info">{{ game_data.base_level }}</span></span></li>
+                                    <li class="list-group-item"> <a class="btn btn-primary btn-sm" href="#" title="Delete Account from Gift Codes List">Delete Account</a> </li>
+                                </ol>
+
                             </div>
                         </div>
                     </div>
