@@ -122,7 +122,7 @@ class Firewall:
             abort(401, 'Bad Host Header')
         for host in self.allowed_hosts:
             if not request.host.endswith(host):
-                self._logger.error(f"Host not allowed: {host}")
+                self._logger.error(f"Host not allowed: {request.host}")
                 abort(401, 'Host not allowed')
 
     def is_edge_ip_allowed(self):
