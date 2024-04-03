@@ -58,12 +58,27 @@
                     {% include "market/snippets/howto.html" %}
                 {% endif %}
                 <div class="card-footer">
+                    {% if user %}
                     <a href="#" class="btn  btn-primary" data-toggle="modal" data-target="#add_account">
                         <span class="font-weight-bold text-white">
                             <i class="ti ti-plus"> </i>
                             Start Account Listing
                         </span>
                     </a>
+                    {% else %}
+                        <span class="font-weight-bold text-info">To Start Buying and Selling Please create an account or Login</span>
+                        <div class="card-footer">
+                            <a class="btn btn-primary" href="{{ url_for('auth.get_register') }}">
+                                <i class="ti ti-user"></i>
+                                Create Account
+                            </a>
+                            <a class="btn btn-warning" href="{{ url_for('auth.get_auth') }}">
+                                <i class="ti ti-user"></i>
+                                Login
+                            </a>
+
+                        </div>
+                    {% endif %}
                 </div>
                 </div>
 
