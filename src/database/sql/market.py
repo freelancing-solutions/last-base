@@ -239,9 +239,7 @@ class MainAccountsCredentialsORM(Base):
             "account_email": self.account_email,
             "account_password": self.account_password,
             "account_pin": self.account_pin,
-            "listing_active": self.listing_active,
-            "in_negotiation": self.in_negotiation,
-            "is_bought": self.is_bought
+            "is_verified": self.is_verified,
         }
 
 
