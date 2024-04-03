@@ -124,7 +124,8 @@ async def get_public_market(user: User):
     try:
 
         listed_accounts = await market_controller.get_public_listed_accounts()
-        print(listed_accounts)
+
+        print(f"listed accounts : {listed_accounts}")
         social_url = url_for('market.get_public_market', _external=True)
         context = dict(user=user, social_url=social_url, listed_accounts=listed_accounts)
 

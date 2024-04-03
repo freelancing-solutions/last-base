@@ -213,6 +213,9 @@ class MarketController(Controllers):
                 listed_account_orm.vip_shop = listed_account.vip_shop
                 listed_account_orm.energy_lab_level = listed_account.energy_lab_level
                 listed_account_orm.energy_lab_password = listed_account.energy_lab_password
+                listed_account_orm.listing_active = listed_account.listing_active
+                listed_account_orm.is_bought = listed_account.is_bought
+                listed_account_orm.in_negotiation = listed_account.in_negotiation
 
                 # Commit the changes to the database
                 session.commit()
