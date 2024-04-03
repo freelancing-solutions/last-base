@@ -120,11 +120,10 @@ class MarketController(Controllers):
                                          market_account: MarketMainAccounts,
                                          account_credentials: MainAccountsCredentials):
         """
-
-        :param market_account:
-        :param account_data:
-        :param account_credentials:
-        :return:
+            :param market_account:
+            :param account_data:
+            :param account_credentials:
+            :return:
         """
         with self.get_session() as session:
             listed_account_orm = session.query(MarketMainAccountsORM).filter_by(game_id=market_account.game_id).first()
