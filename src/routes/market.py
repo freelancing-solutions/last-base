@@ -109,8 +109,10 @@ async def get_account_trader_dashboard(user: User):
         context = {'user': user}
         seller_account = await market_controller.get_seller_account(uid=user.uid)
         buyer_account = await market_controller.get_buyer_account(uid=user.uid)
+        my_account_listings = await  market_controller.get_user_listed_accounts(uid=user.uid)
         context.update(seller_account=seller_account)
         context.update(buyer_account=buyer_account)
+        context.update(my_account_listings=my_account_listings)
         return render_template('market/accounts/tabs/my_dashboard.html', **context)
     except Exception as e:
         pass
@@ -245,7 +247,7 @@ async def list_game_account(user: User):
         return redirect(url_for('market.get_game_accounts'))
 
 
-@market_route.post('/dashboard/market/listed-account/<string:listing_id>')
+@market_route.get('/dashboard/market/listed-account/<string:listing_id>')
 @login_required
 async def get_listing_editor(user: User, listing_id: str):
     """

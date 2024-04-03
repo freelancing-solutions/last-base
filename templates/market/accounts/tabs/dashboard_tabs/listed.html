@@ -5,10 +5,9 @@
     <table class="table table-bordered table-striped table-responsive-sm table-responsive-md">
         <thead>
             <tr>
-                <td class="font-weight-bold text-info">Account Name</td>
+                <td class="font-weight-bold text-info">Game ID</td>
                 <td class="font-weight-bold text-info">State</td>
                 <td class="font-weight-bold text-info">Base Level</td>
-                <td class="font-weight-bold text-info">Base Power</td>
                 <td class="font-weight-bold text-info">Price</td>
                 <td class="font-weight-bold text-info">Status</td>
             </tr>
@@ -17,14 +16,14 @@
             {% for account in my_account_listings %}
             <tr>
             {% if not account.listing_active %}
-                <td><a href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}"> {{ account.base_name }}</a></td>
+                <td><a href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}"> {{ account.game_id }}</a></td>
             {% else %}
-                <td><a href="#"> {{ account.base_name }}</a></td>
+                <td><a href="#"> {{ account.base_id }}</a></td>
             {% endif %}
                 <td>{{ account.state }}</td>
                 <td>{{ account.base_level }}</td>
-                <td>{{ account.power }}</td>
-                <td>{{ account.listing_price }}</td>
+
+                <td>{{ account.item_price }}</td>
                 <td>
                     {% if account.listing_active %}
                     <span class="badge badge-success">Active</span>

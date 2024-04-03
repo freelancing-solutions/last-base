@@ -160,6 +160,13 @@ class MarketController(Controllers):
             return [MarketMainAccounts(**account.to_dict()) for account in listed_accounts
                     if isinstance(account, MarketMainAccountsORM)]
 
+    async def get_user_listed_accounts(self, uid: str) -> list[MarketMainAccounts]:
+        with self.get_session() as session:
+            listed_accounts = session.query(MarketMainAccountsORM).filter(
+                MarketMainAccountsORM.uid == uid).all()
+            return [MarketMainAccounts(**account.to_dict()) for account in listed_accounts
+                    if isinstance(account, MarketMainAccountsORM)]
+
     async def get_listed_account_by_listing_id(self, listing_id: str) -> MarketMainAccounts | None:
         """
 
@@ -168,7 +175,8 @@ class MarketController(Controllers):
         """
 
         with self.get_session() as session:
-            listed_account_orm = session.query(MarketMainAccountsORM).filter(MarketMainAccountsORM.listing_id == listing_id).first()
+            listed_account_orm = session.query(MarketMainAccountsORM).filter(
+                MarketMainAccountsORM.listing_id == listing_id).first()
             if isinstance(listed_account_orm, MarketMainAccountsORM):
                 return MarketMainAccounts(**listed_account_orm.to_dict())
             return None
@@ -181,7 +189,8 @@ class MarketController(Controllers):
         """
         with self.get_session() as session:
             listing_id = listed_account.listing_id
-            listed_account_orm = session.query(MarketMainAccountsORM).filter(MarketMainAccountsORM.listing_id == listing_id).first()
+            listed_account_orm = session.query(MarketMainAccountsORM).filter(
+                MarketMainAccountsORM.listing_id == listing_id).first()
             if isinstance(listed_account_orm, MarketMainAccountsORM):
                 # Update the attributes of the ORM object with the new values
                 listed_account_orm.uid = listed_account.uid
@@ -208,4 +217,3 @@ class MarketController(Controllers):
                 session.commit()
                 return listed_account
             return None
-
