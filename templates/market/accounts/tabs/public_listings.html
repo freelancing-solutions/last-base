@@ -1,51 +1,44 @@
-
-
 {% extends "layouts/page.html" %}
-
 {% block content %}
-
     {% include "layouts/social.html" %}
-
-<section id="main-content">
-        <div class="card-body">
-            <div class="card-header">
-                <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
-            </div>
-
-            <div class="row">
-
-            <!-- account listings -->
-                {% for account in listed_accounts %}
-                <div class="col-12 col-md-6">
-                    <div class="card mb-3 bg-secondary">
-                        <div class="card-body text-white font-weight-bold">
-                            <a class="card-title font-weight-bold text-info" href="{{ url_for('market.get_public_listing', listing_id=account.listing_id) }}" title="Open To Edit Base">
-                                <span class="text-info">{{ account.base_name }}</span>
-                            </a>
-                            <ul class="list-group">
-                                <li class="list-group-item bg-secondary">
-                                    <span class="card-text text-white font-weight-bold">State: <span class="text-info">{{ account.state }}</span></span>
-                                </li>
-                                <li class="list-group-item bg-secondary">
-                                    <span class="card-text text-white font-weight-bold">Base Level: <span class="text-info">{{ account.base_level }}</span></span>
-                                </li>
-                                <li class="list-group-item bg-secondary">
-                                    <span class="card-text text-white font-weight-bold">Base Power: <span class="text-info">{{ account.power }}</span></span>
-                                </li>
-                                <li class="list-group-item bg-secondary">
-                                    <span class="card-text text-white font-weight-bold">Price: <span class="text-info">{{ account.listing_price }}</span></span>
-                                </li>
-                            </ul>
-                            <a class="btn btn-primary btn-sm" href="{{ url_for('profile.edit_base', game_id=account.game_id) }}" title="Open To Edit Base">Edit Account</a>
+    <section id="main-content">
+            <div class="card-body">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
+                </div>
+                <div class="row">
+                <!-- account listings -->
+                    {% for account in listed_accounts %}
+                    <div class="col-12 col-md-6">
+                        <div class="card mb-3 bg-secondary">
+                            <div class="card-body text-white font-weight-bold">
+                                <a class="card-title font-weight-bold text-info" href="{{ url_for('market.get_public_listing', listing_id=account.listing_id) }}" title="Open To Edit Base">
+                                    <span class="text-info">{{ account.base_name }}</span>
+                                </a>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-secondary">
+                                        <span class="card-text text-white font-weight-bold">State: <span class="text-info">{{ account.state }}</span></span>
+                                    </li>
+                                    <li class="list-group-item bg-secondary">
+                                        <span class="card-text text-white font-weight-bold">Base Level: <span class="text-info">{{ account.base_level }}</span></span>
+                                    </li>
+                                    <li class="list-group-item bg-secondary">
+                                        <span class="card-text text-white font-weight-bold">Base Power: <span class="text-info">{{ account.power }}</span></span>
+                                    </li>
+                                    <li class="list-group-item bg-secondary">
+                                        <span class="card-text text-white font-weight-bold">Price: <span class="text-info">{{ account.listing_price }}</span></span>
+                                    </li>
+                                </ul>
+                                <a class="btn btn-primary btn-sm" href="{{ url_for('profile.edit_base', game_id=account.game_id) }}" title="Open To Edit Base">Edit Account</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                {% endfor %}
-                {% if not listed_accounts %}
-                    {% include "market/snippets/howto.html" %}
-                {% endif %}
+                    {% endfor %}
+                    {% if not listed_accounts %}
+                        {% include "market/snippets/howto.html" %}
+                    {% endif %}
 
+                </div>
             </div>
-        </div>
-</section>
+    </section>
 {% endblock %}
