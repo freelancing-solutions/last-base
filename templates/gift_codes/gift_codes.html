@@ -27,10 +27,9 @@
                         <div class="card mb-3 bg-secondary">
                             <div class="card-body bg-secondary  text-white font-weight-bold">
                                 <h5 class="card-title text-info font-weight-bold">{{ game_data.base_name }}</h5>
-                                <p class="card-text text-white">Power: {{ game_data.power| number }}</p>
-                                <p class="card-text font-italic text-white">State: {{ game_data.state }}</p>
-                                <!-- Display level only on larger screens -->
-                                <p class="card-text font-italic text-white d-none d-md-block">Level: {{ game_data.base_level }}</p>
+                                <p class="card-text text-white font-weight-bold">Power: {{ game_data.power| number }}</p>
+                                <p class="card-text font-italic text-white font-weight-bold">State: {{ game_data.state }}</p>
+                                <p class="card-text font-italic text-white d-none d-md-block font-weight-bold">Level: {{ game_data.base_level }}</p>
                             </div>
                         </div>
                     </div>
