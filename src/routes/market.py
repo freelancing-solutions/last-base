@@ -299,7 +299,7 @@ async def do_update_listed_account(user: User):
     vip_shop = form_data.get('vip_shop') == 'on'  # Convert checkbox value to boolean
     energy_lab_level = int(form_data.get('energy_lab_level'))
     energy_lab_password = form_data.get('energy_lab_password')
-
+    print(f"Listing ID : {listing_id}")
     listed_account = await market_controller.get_listed_account_by_listing_id(listing_id=listing_id)
     if isinstance(listed_account, MarketMainAccounts):
         listed_account.uid = user.uid
