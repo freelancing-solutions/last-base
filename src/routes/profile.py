@@ -1,3 +1,5 @@
+import asyncio
+
 from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, flash
 from pydantic import ValidationError
 
@@ -201,14 +203,27 @@ async def do_verification(user: User):
 @profile_route.get('/dashboard/gift-codes')
 @login_required
 async def get_gift_codes(user: User):
-    game_accounts = await game_controller.get_users_game_ids(uid=user.uid)
-    active_gift_codes = await game_controller.get_active_gift_codes()
-    total_bases: int = len(game_accounts)
-    gift_codes_subscription = await game_controller.get_gift_code_subscription(user=user)
-    context = dict(user=user, total_bases=total_bases, game_accounts=game_accounts,
-                   active_gift_codes=active_gift_codes, subscription=gift_codes_subscription)
-    return render_template('gift_codes/gift_codes.html', **context)
+    # Fetch necessary data asynchronously
+    game_accounts, active_gift_codes, gift_codes_subscription = await asyncio.gather(
+        game_controller.get_users_game_ids(uid=user.uid),
+        game_controller.get_active_gift_codes(),
+        game_controller.get_gift_code_subscription(user=user)
+    )
 
+    # Calculate total_bases
+    total_bases = len(game_accounts)
+
+    # Prepare context for template rendering
+    context = {
+        'user': user,
+        'total_bases': total_bases,
+        'game_accounts': game_accounts,
+        'active_gift_codes': active_gift_codes,
+        'subscription': gift_codes_subscription
+    }
+
+    # Render the template with the context data
+    return render_template('gift_codes/gift_codes.html', **context)
 
 @profile_route.post('/dashboard/gift-codes')
 @login_required
