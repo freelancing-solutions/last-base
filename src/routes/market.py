@@ -11,13 +11,12 @@ from src.utils import static_folder
 market_route = Blueprint('market', __name__)
 
 
-
-
 @market_route.get('/dashboard/market/listing-accounts')
 @login_required
 async def get_how_to(user: User):
     context = dict(user=user)
     return render_template('market/how_to.html', **context)
+
 
 @market_route.get('/dashboard/market/request-approval')
 @login_required
@@ -56,7 +55,7 @@ async def approval_payment_success(user: User):
     :param user:
     :return:
     """
-    _payload = request.json
+    _payload = request.json()
     _signature = request.headers.get('Paypal-Transmission-Sig')
     request_valid = await paypal_controller.verify_signature(payload=_payload, signature=_signature)
     if not request_valid:
@@ -175,7 +174,7 @@ async def list_game_account(user: User):
         # Obtain a record of the seller
         seller_account = await market_controller.get_seller_account(uid=user.uid)
 
-        if not (seller_account.account_activated and seller_account.account_verified):
+        if not user.is_system_admin and not (seller_account.account_activated and seller_account.account_verified):
             flash(message="You are not Authorized to Sell in our Market Place - please Verify your Account then "
                           "Continue with your Listing, You can verify your Account by Activating your Merchant "
                           "Account Below", category="danger")
@@ -184,7 +183,7 @@ async def list_game_account(user: User):
 
         # Check the Seller rating if it's lower than 3 then indicate to seller that rating is too low
         # and allow him to improve the rating
-        if seller_account.seller_rating < 3:
+        if not user.is_system_admin and (seller_account.seller_rating < 3):
             flash(message="Seller Rating too low - please improve your seller rating", category="danger")
             return redirect(url_for('market.get_account_trader_dashboard'))
 
@@ -329,5 +328,6 @@ async def do_update_listing(user: User):
             flash(message="Successfully updated listed account", category="success")
             return redirect(url_for('market.list_game_account'))
 
-        flash(message="Error listing your account please try again later if problem persists inform admin", category="danger")
+        flash(message="Error listing your account please try again later if problem persists inform admin",
+              category="danger")
         return redirect(url_for('market.list_game_account'))
