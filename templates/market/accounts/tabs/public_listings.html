@@ -59,6 +59,9 @@
         </div>
     </div>
     {% endfor %}
+    {% if not listed_accounts %}
+        {% include "market/snippets/howto.html" %}
+    {% endif %}
 </div>
 
 
