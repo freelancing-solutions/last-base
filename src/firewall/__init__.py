@@ -133,7 +133,7 @@ class Firewall:
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
             self._logger.info(f"IP Address not allowed: {edge_ip}")
-            # abort(401, 'IP Address not allowed')
+            abort(401, 'IP Address not allowed')
 
     def check_if_request_malicious(self):
         """
