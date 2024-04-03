@@ -81,6 +81,7 @@
                         </div>
                         </div>
                     {% else %}
+                        {% if total_accounts %}
                         <div class="card">
                         <div class="card-header">
                             <h2 class="card-title">Subscription</h2>
@@ -94,6 +95,9 @@
                                     </a>
                             </div>
                         </div>
+                        {% else %}
+                            <span>In order to subscribe to our gift code service please ensure to add your game accounts and farms</span>
+                        {% endif %}
                     {% endif %}
 
             </div>
