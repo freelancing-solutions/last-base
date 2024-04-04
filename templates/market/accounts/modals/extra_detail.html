@@ -1,6 +1,6 @@
 <!-- Additional Data Modal -->
 <div class="modal fade" id="additionalDataModal" tabindex="-1" role="dialog" aria-labelledby="additionalDataModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modl-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="additionalDataModalLabel">Heroes, Units &amp; Energy Lab</h5>
@@ -31,7 +31,7 @@
                 <p>Universal SP Medals: {{ listed_account.universal_sp_medals }}</p>
             </div>
             <div class="col-lg-6 col-md-6">
-                <p>Amount Spent on Packages: {{ listed_account.amount_spent_packages }}</p>
+                <p>Money Spent: {{ listed_account.amount_spent_packages| number }} USD</p>
                 <p>Total Skins: {{ listed_account.total_skins }}</p>
                 <p>VIP Shop: {% if listed_account.vip_shop %}Yes{% else %}No{% endif %}</p>
                 <p>Energy Lab Level: {{ listed_account.energy_lab_level }}</p>
