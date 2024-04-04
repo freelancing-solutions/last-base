@@ -340,3 +340,15 @@ async def do_update_listed_account(user: User):
     flash(message="Error listing your account please try again later if problem persists inform admin",
           category="danger")
     return redirect(url_for('market.get_account_trader_dashboard'))
+
+
+@market_route.post('/dashboard/market/make-offer/<string:listing_id>')
+@login_required
+async def make_offer(user: User, listing_id: str):
+    """
+
+    :param user:
+    :param listing_id:
+    :return:
+    """
+    pass
