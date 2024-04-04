@@ -18,10 +18,10 @@
                         <p>State: {{ listed_account.state }}</p>
                         <p>Item Price: {{ listed_account.item_price | number }} USD</p>
 
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-primary">
                             <i class="ti ti-settings"> </i>
                             Show Parts</button>
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-primary">
                             <i class="ti ti-archive"> </i>
                             Show Extra Detail</button>
                     </div>
@@ -43,7 +43,10 @@
                         {% else %}
                             <p class="text-danger"><i class="fas fa-times-circle text-danger"></i> Unverified Account</p>
                         {% endif %}
-
+                    <button class="btn btn-primary">
+                        <i class="ti ti-money"> </i>
+                        Make an Offer
+                    </button>
                     </div>
                 </div>
             </div>
