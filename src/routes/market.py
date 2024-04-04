@@ -147,12 +147,14 @@ async def get_public_listing(user: User, listing_id: str):
     """
     try:
         context = dict(user=user)
-        listed_account = await market_controller.get_listed_account(listing_id=listing_id)
+        listed_account: MarketMainAccounts = await market_controller.get_listed_account(listing_id=listing_id)
         if not listed_account:
             flash(message="Unable to obtain listed account, please try again later", category="danger")
             return redirect(url_for('market.get_account_trader_dashboard'))
-        social_url = url_for('market.get_public_listing', _external=True)
-        context = dict(user=user, social_url=social_url, listed_account=listed_account)
+        social_url = url_for('market.get_public_listing', listing_id=listing_id, _external=True)
+        base_detail: GameDataInternal = await game_controller.fetch_game_by_game_id(game_id=listed_account.game_id)
+
+        context = dict(user=user, social_url=social_url, listed_account=listed_account, base_detail=base_detail)
         return render_template('market/accounts/tabs/dashboard_tabs/listed_account_details.html', **context)
     except Exception as e:
         print(str(e))

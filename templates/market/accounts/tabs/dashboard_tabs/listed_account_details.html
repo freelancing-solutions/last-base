@@ -1,0 +1,30 @@
+{% extends "layouts/page.html" %}
+{% block content %}
+    {% include "layouts/social.html" %}
+    <section id="main-content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title font-weight-bold text-info">
+                    <i class="ti ti-user"> </i>
+                    Account Detail</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Base Name: {{ base_detail.base_name }}</h5>
+                        <p>Base Level: {{ listed_account.base_level }}</p>
+                        <p>Account Type: {{ base_detail.account_type }}</p>
+                        <p>State: {{ listed_account.state }}</p>
+                        <p>Item Price: {{ listed_account.item_price | number }} USD</p>
+                        <p>Game ID: {{ listed_account.game_id }}</p>
+
+                    </div>
+                    <div class="col-md-6">
+                        <img src="{{ listed_account.image_url }}" alt="Listing Image" class="img-fluid">
+                    </div>
+                </div>
+                <!-- Add more details here as needed -->
+            </div>
+        </div>
+    </section>
+{% endblock %}

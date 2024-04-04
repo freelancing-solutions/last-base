@@ -143,7 +143,10 @@ class MarketController(Controllers):
         :return:
         """
         with self.get_session() as session:
-            listed_account_orm = session.query(MarketMainAccountsORM).filter_by(listing_id=listing_id).first()
+
+            listed_account_orm = session.query(MarketMainAccountsORM).filter(
+                MarketMainAccountsORM.listing_id==listing_id).first()
+
             if isinstance(listed_account_orm, MarketMainAccountsORM):
                 return MarketMainAccounts(**listed_account_orm.to_dict())
             return None
