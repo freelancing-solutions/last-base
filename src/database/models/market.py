@@ -156,3 +156,15 @@ class MainAccountsCredentials(BaseModel):
     account_password: str
     account_pin: str
     is_verified: bool = Field(default=False)
+
+
+class AccountOffers(BaseModel):
+    offer_id: str = Field(default_factory=create_id)
+    listing_id: str
+    buyer_uid: str
+    seller_uid: str
+    offer_amount: int
+    asking_amount: int
+    offer_notes: str
+    offer_accepted: bool = Field(default=False)
+    date_accepted: date | None

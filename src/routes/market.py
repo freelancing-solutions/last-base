@@ -3,9 +3,10 @@ from pydantic import ValidationError
 
 from src.authentication import login_required, user_details
 from src.database.models.game import GameDataInternal
-from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials, MarketMainAccounts
+from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials, MarketMainAccounts, \
+    AccountOffers
 from src.database.models.users import User, PayPal
-from src.main import paypal_controller, user_controller, market_controller, game_controller
+from src.main import paypal_controller, user_controller, market_controller, game_controller, wallet_controller
 from src.utils import static_folder
 
 market_route = Blueprint('market', __name__)
@@ -155,7 +156,8 @@ async def get_public_listing(user: User, listing_id: str):
         base_detail: GameDataInternal = await game_controller.fetch_game_by_game_id(game_id=listed_account.game_id)
         seller_account: SellerAccount = await market_controller.get_seller_account(uid=listed_account.uid)
 
-        context = dict(user=user, social_url=social_url, listed_account=listed_account, base_detail=base_detail, seller_account=seller_account)
+        context = dict(user=user, social_url=social_url, listed_account=listed_account, base_detail=base_detail,
+                       seller_account=seller_account)
         return render_template('market/accounts/tabs/dashboard_tabs/listed_account_details.html', **context)
     except Exception as e:
         print(str(e))
@@ -351,4 +353,37 @@ async def make_offer(user: User, listing_id: str):
     :param listing_id:
     :return:
     """
-    pass
+    try:
+
+        offer_amount = int(request.form.get('offer_amount'))
+        offer_notes = request.form.get('offer_notes')
+        offer_notes = offer_notes.strip().lower()
+        listed_account = await market_controller.get_listed_account_by_listing_id(listing_id=listing_id)
+
+        wallet = await wallet_controller.get_wallet(uid=user.uid)
+        if wallet.escrow < offer_amount:
+            message = ("There is not enough funds in your escrow account please transfer enough funds from your "
+                       "balance to your escrow account to finance your offer")
+            flash(message=message, category="danger")
+            return redirect(url_for('profile.get_profile'))
+
+        account_offers = AccountOffers(buyer_uid=user.uid, seller_uid=listed_account.uid, offer_amount=offer_amount,
+                                       asking_amount=listed_account.item_price, offer_notes=offer_notes,
+                                       offer_accepted=False)
+
+        created_offer: AccountOffers = await wallet_controller.create_offer(account_offers=account_offers)
+        # TODO - increase the number of days the escrowed amount may remain in escrow by another 7 days
+        if created_offer:
+            message = "Offer Successfully created - if the seller accepts this offer we will proceed with the next step"
+            flash(message=message, category="success")
+            return redirect(url_for("market.get_public_listing", listing_id=listing_id))
+
+        message = "There was an error making an offer, please try again, if the error persists please inform admin"
+        flash(message=message, category="danger")
+        return redirect(url_for("market.get_public_listing", listing_id=listing_id))
+
+    except Exception as e:
+        print(str(e))
+        message = "There was an error making an offer, please try again, if the error persists please inform admin"
+        flash(message=message, category="danger")
+        return redirect(url_for("market.get_public_listing", listing_id=listing_id))

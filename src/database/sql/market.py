@@ -328,3 +328,39 @@ class MarketMainAccountsORM(Base):
             "in_negotiation": self.in_negotiation,
             "is_bought": self.is_bought
         }
+
+
+class AccountOffersORM(Base):
+    __tablename__ = "account_offers"
+    offer_id = Column(String(NAME_LEN), primary_key=True)
+    listing_id = Column(String(NAME_LEN))
+    buyer_uid = Column(String(NAME_LEN))
+    seller_uid = Column(String(NAME_LEN))
+    offer_amount = Column(Integer)
+    asking_amount = Column(Integer)
+    offer_notes = Column(String(255))
+    offer_accepted = Column(Boolean)
+    date_accepted = Column(Date)
+
+    @classmethod
+    def create_if_not_table(cls):
+        if not inspect(engine).has_table(cls.__tablename__):
+            Base.metadata.create_all(bind=engine)
+
+    @classmethod
+    def delete_table(cls):
+        if inspect(engine).has_table(cls.__tablename__):
+            cls.__table__.drop(bind=engine)
+
+    def to_dict(self):
+        return {
+            "offer_id": self.offer_id,
+            "buyer_uid": self.buyer_uid,
+            "listing_id": self.listing_id,
+            "seller_uid": self.seller_uid,
+            "offer_amount": self.offer_amount,
+            "asking_amount": self.asking_amount,
+            "offer_notes": self.offer_notes,
+            "offer_accepted": self.offer_accepted,
+            "date_accepted": self.date_accepted
+        }

@@ -2,9 +2,11 @@ import requests
 from flask import Flask
 from src.controller import Controllers, error_handler
 from src.database.models.game import GameDataInternal
-from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials, MarketMainAccounts
+from src.database.models.market import SellerAccount, BuyerAccount, MainAccountsCredentials, MarketMainAccounts, \
+    AccountOffers
 from src.database.models.users import User
-from src.database.sql.market import SellerAccountORM, BuyerAccountORM, MainAccountsCredentialsORM, MarketMainAccountsORM
+from src.database.sql.market import SellerAccountORM, BuyerAccountORM, MainAccountsCredentialsORM, \
+    MarketMainAccountsORM, AccountOffersORM
 
 
 class MarketController(Controllers):
@@ -224,3 +226,14 @@ class MarketController(Controllers):
                 session.commit()
                 return listed_account
             return None
+
+
+    async def create_offer(self, account_offers: AccountOffers) -> AccountOffers | None:
+        with self.get_session() as session:
+            account_offer_orm = session.query(AccountOffersORM).filter(AccountOffersORM.offer_id == account_offers.offer_id).first()
+            if isinstance(account_offer_orm, AccountOffersORM):
+                return None
+            session.add(AccountOffersORM(**account_offers.dict()))
+            session.commit()
+
+            return account_offers
