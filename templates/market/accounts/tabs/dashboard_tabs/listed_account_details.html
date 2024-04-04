@@ -12,12 +12,12 @@
                 <div class="row">
                     <div class="col-md-6">
 
-                        <h5>Base Name: {{ base_detail.base_name }}</h5>
-                        <p>Game ID: {{ listed_account.game_id }}</p>
-                        <p>Base Level: {{ listed_account.base_level }}</p>
-                        <p>Account Type: {{ base_detail.account_type }}</p>
-                        <p>State: {{ listed_account.state }}</p>
-                        <p>Item Price: {{ listed_account.item_price | number }} USD</p>
+                        <h5 class="font-weight-bold">Base Name: <span class="text-success">{{ base_detail.base_name }}</span></h5>
+                        <p  class="font-weight-bold">Game ID: <span class="text-info">{{ listed_account.game_id }}</span></p>
+                        <p  class="font-weight-bold">Base Level: <span class="text-info">{{ listed_account.base_level }}</span></p>
+                        <p  class="font-weight-bold">Account Type: <span class="text-info">{{ base_detail.account_type }}</span></p>
+                        <p  class="font-weight-bold">State: <span class="text-info">{{ listed_account.state }}</span></p>
+                        <p  class="font-weight-bold"><span class="text-warning">Item Price: {{ listed_account.item_price | number }} USD</span></p>
 
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#partsModal">
                             <i class="ti ti-settings"></i>
