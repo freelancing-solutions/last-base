@@ -18,28 +18,12 @@
                 <textarea class="form-control" name="game_id" rows="5" placeholder="Enter game IDs separated by commas, semicolons, periods, or spaces"></textarea>
             </div>
             {% if results %}
-                <table class="table tab-content">
-                    <thead>
-                        <tr>
-                            <td class="font-weight-bold text-info">Base Name</td>
-                            <td class="font-weight-bold text-info">Game ID</td>
-                            <td class="font-weight-bold text-info">Code</td>
-                            <td class="font-weight-bold text-info">MSG</td>
-                            <td class="font-weight-bold text-info">Result</td>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <ul>
                         {% for result in results %}
-                            <tr>
-                                <td class="font-weight-bold text-info">{{ result.name }}</td>
-                                <td>{{ result.game_id }}</td>
-                                <td class="{% if 'expired' in result.msg %}text-danger{% else %}text-info{% endif %}">{{ result.code }}</td>
-                                <td>{{ result.msg }}</td>
-                                <td>{{ result.status }}</td>
-                            </tr>
+                            <li><span class="font-weight-bold"> <span class="text-info">Base : </span> {{ result.name }}, <span class="text-success">msg: </span>{{ result.msg }},  <span class="text-info">status: </span>{{ result.status }}</span></li>
+                            <hr/>
                         {% endfor %}
-                    </tbody>
-                </table>
+                </ul>
             {% endif %}
             <div class="form-group">
                 <button class="btn btn-secondary">

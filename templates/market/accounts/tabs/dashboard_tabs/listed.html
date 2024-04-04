@@ -21,7 +21,7 @@
             {% if not account.listing_active %}
                 <td><a class="font-weight-bold text-info" href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}" info="Edit Listing" > {{ account.game_id }} </a></td>
             {% else %}
-                <td><a href="#"> {{ account.base_id }}</a></td>
+                <td><a class="font-weight-bold text-success" href="{{ url_for('market.get_listing_editor', listing_id=account.listing_id) }}"> {{ account.game_id }}</a></td>
             {% endif %}
                 <td>{{ account.state }}</td>
                 <td>{{ account.base_level }}</td>
