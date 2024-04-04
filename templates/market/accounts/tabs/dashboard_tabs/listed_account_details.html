@@ -15,8 +15,10 @@
                         <h5 class="font-weight-bold">Base Name: <span class="text-success">{{ base_detail.base_name }}</span></h5>
                         <p  class="font-weight-bold">Game ID: <span class="text-info">{{ listed_account.game_id }}</span></p>
                         <p  class="font-weight-bold">Base Level: <span class="text-info">{{ listed_account.base_level }}</span></p>
+                        <p  class="font-weight-bold">Base Power: <span class="text-info">{{ base_detail.power| number }}</span></p>
                         <p  class="font-weight-bold">Account Type: <span class="text-info">{{ base_detail.account_type }}</span></p>
                         <p  class="font-weight-bold">State: <span class="text-info">{{ listed_account.state }}</span></p>
+
                         <p  class="font-weight-bold"><span class="text-warning">Asking Price: {{ listed_account.item_price | number }} USD</span></p>
 
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#partsModal">
@@ -48,6 +50,8 @@
                         {% else %}
                             <p class="text-danger"><i class="fas fa-times-circle text-danger"></i> Unverified Account</p>
                         {% endif %}
+                    <p  class="font-weight-bold"><span class="text-warning">Asking Price: {{ listed_account.item_price | number }} USD</span></p>
+
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#makeOfferModal">
                         <i class="ti ti-money"> </i>
                         Make an Offer

@@ -8,6 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <form method="POST" action="{{ url_for('market.make_offer', listing_id=listed_account.listing_id) }}">
                 <div class="modal-body">
                     <h3 class="font-weight-bold text-info">{{ base_detail.base_name }}</h3>
@@ -29,6 +30,7 @@
                     <button type="submit" class="btn btn-primary">Submit Offer</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
