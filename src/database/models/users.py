@@ -28,7 +28,6 @@ class User(BaseModel):
     - contact_number (str): The contact number of the user.
     """
     uid: str
-
     username: str | None
     password_hash: str
     email: str

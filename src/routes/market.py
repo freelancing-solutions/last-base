@@ -153,8 +153,9 @@ async def get_public_listing(user: User, listing_id: str):
             return redirect(url_for('market.get_account_trader_dashboard'))
         social_url = url_for('market.get_public_listing', listing_id=listing_id, _external=True)
         base_detail: GameDataInternal = await game_controller.fetch_game_by_game_id(game_id=listed_account.game_id)
+        seller_account: SellerAccount = await market_controller.get_seller_account(uid=listed_account.uid)
 
-        context = dict(user=user, social_url=social_url, listed_account=listed_account, base_detail=base_detail)
+        context = dict(user=user, social_url=social_url, listed_account=listed_account, base_detail=base_detail, seller_account=seller_account)
         return render_template('market/accounts/tabs/dashboard_tabs/listed_account_details.html', **context)
     except Exception as e:
         print(str(e))
