@@ -18,10 +18,9 @@
                 <textarea class="form-control" name="game_id" rows="5" placeholder="Enter game IDs separated by commas, semicolons, periods, or spaces"></textarea>
             </div>
             {% if results %}
-                <ul>
+                <ul class="list-group">
                         {% for result in results %}
-                            <li><span class="font-weight-bold"> <span class="text-info">Base : </span> {{ result.name }}, <span class="text-success">msg: </span>{{ result.msg }},  <span class="text-info">status: </span>{{ result.status }}</span></li>
-                            <hr/>
+                            <li class="list-group-item"><span class="font-weight-bold"> <span class="text-info">Base : </span> {{ result.name }}, <span class="text-success">msg: </span>{{ result.msg }},  <span class="text-info">status: </span>{{ result.status }}</span></li>
                         {% endfor %}
                 </ul>
             {% endif %}
