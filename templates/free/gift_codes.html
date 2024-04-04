@@ -5,9 +5,9 @@
 {% include "layouts/social.html" %}
 <section id="main-content">
 <div class="card">
-        <div class="card-header">
-            <h3 class="card-title font-weight-bold"><i class="ti-gift"></i> Free Gift Codes - <span class="text-danger">Redeem Upto 50 Bases at Once</span></h3>
-        </div>
+    <div class="card-header">
+        <h3 class="card-title font-weight-bold"><i class="ti-gift"></i> Free Gift Codes - <span class="text-danger">Redeem Upto 50 Bases at Once</span></h3>
+    </div>
 
     <div class="card-body">
         <label class="text-info font-weight-bold">This service allows gamers to submit upto 50 game id's for Gift Codes Redemption - Note that
@@ -18,11 +18,14 @@
                 <textarea class="form-control" name="game_id" rows="5" placeholder="Enter game IDs separated by commas, semicolons, periods, or spaces"></textarea>
             </div>
             {% if results %}
+            <div class="form-group">
+                <label class="font-weight-bold text-info">Results</label>
                 <ul class="list-group">
                         {% for result in results %}
                             <li class="list-group-item"><span class="font-weight-bold"> <span class="text-info">Base : </span> {{ result.name }}, <span class="text-success">msg: </span>{{ result.msg }},  <span class="text-info">status: </span>{{ result.status }}</span></li>
                         {% endfor %}
                 </ul>
+            </div>
             {% endif %}
             <div class="form-group">
                 <button class="btn btn-secondary">
@@ -32,6 +35,7 @@
             </div>
         </form>
     </div>
+
     <div class="card-footer">
         <div class="card-header">
             <h3 class="card-title font-weight-bold">Premium Gift Code Service</h3>
@@ -64,6 +68,7 @@
             {% endif %}
         </ol>
     </div>
+
 
 </div>
 
