@@ -1,0 +1,30 @@
+<!-- Additional Data Modal -->
+<div class="modal fade" id="additionalDataModal" tabindex="-1" role="dialog" aria-labelledby="additionalDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="additionalDataModalLabel">Additional Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Fighter Units Level: {{ listed_account.fighter_units_level }}</p>
+                <p>Shooter Units Level: {{ listed_account.shooter_units_level }}</p>
+                <p>Vehicle Units Level: {{ listed_account.vehicle_units_level }}</p>
+                <p>State Season: {{ listed_account.state_season }}</p>
+                <p>Season Heroes: {{ listed_account.season_heroes }}</p>
+                <p>SP Heroes: {{ listed_account.sp_heroes }}</p>
+                <p>Universal SP Medals: {{ listed_account.universal_sp_medals }}</p>
+                <p>Amount Spent on Packages: {{ listed_account.amount_spent_packages }}</p>
+                <p>VIP Shop: {% if listed_account.vip_shop %}Yes{% else %}No{% endif %}</p>
+                <p>Energy Lab Level: {{ listed_account.energy_lab_level }}</p>
+                <p>Energy Lab Password: {{ listed_account.energy_lab_password or "Not set" }}</p>
+                <!-- Add more data fields here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
