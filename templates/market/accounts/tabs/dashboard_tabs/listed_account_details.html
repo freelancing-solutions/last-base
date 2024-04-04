@@ -33,15 +33,16 @@
                         <img src="{{ listed_account.image_url }}" alt="Listing Image" class="img-fluid">
                     </div>
                 </div>
+            <hr/>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5>Seller Details</h5>
+                        <h5 class="font-weight-bold text-info">Seller Details</h5>
 
                         {% if seller_account.seller_name %}
-                            <p>Seller Name: {{ seller_account.seller_name }}</p>
+                            <p class="font-weight-bold">Seller Name: {{ seller_account.seller_name }}</p>
                         {% endif %}
-                        <p>Seller Rating: {{ seller_account.seller_rating | number }}</p>
-                        <p>Total Accounts Sold: {{ seller_account.total_items_sold | number }}</p>
+                        <p class="font-weight-bold">Seller Rating: {{ seller_account.seller_rating | number }}</p>
+                        <p class="font-weight-bold">Total Accounts Sold: {{ seller_account.total_items_sold | number }}</p>
                         {% if seller_account.account_verified %}
                             <p class="text-success"><i class="fas fa-check-circle text-success"></i> Verified Account</p>
                         {% else %}
@@ -52,6 +53,17 @@
                         Make an Offer
                     </button>
                     </div>
+                <div class="col-md-6">
+                    <h5 class="font-weight-bold text-info">Seller History</h5>
+                    <textarea class="form-control" rows="8" name="seller_history">
+
+                    </textarea>
+                    <!-- lets create a seller home page -->
+                    <hr/>
+                    <a href="#" class="font-weight-bold text-info">Visit Seller Home Page</a>
+
+                </div>
+
                 </div>
             </div>
         </div>
