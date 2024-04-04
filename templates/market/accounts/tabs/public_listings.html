@@ -2,9 +2,13 @@
 {% block content %}
     {% include "layouts/social.html" %}
     <section id="main-content">
+<div class="card">
+    <img src="{{ url_for('static', filename="images/lss/lss.jpg") }}" class="card-img-top img-fluid" alt="Last-shelter.vip">
+</div>
+
             <div class="card-body">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="ti ti-game"></i> Account Listings</h3>
+                    <h3 class="card-title font-weight-bold"><i class="ti ti-game"></i> Public Market Place</h3>
                 </div>
                 <div class="card-body">
 
@@ -19,21 +23,21 @@
                                         <a class="card-title font-weight-bold text-info" href="{{ url_for('market.get_public_listing', listing_id=account.listing_id) }}" title="Open To Edit Base">
                                             <span class="text-info">{{ account.base_name }}</span>
                                         </a>
-                                        <ul class="list-group">
+                                        <ul class="list-group title-margin-right">
 
-                                            <li class="list-group-item bg-secondary">
+                                            <li class="list-group-item bg-secondary title-margin-right">
                                                 <span class="card-text text-white font-weight-bold">State: <span class="text-info">{{ account.state }}</span></span>
                                             </li>
 
-                                            <li class="list-group-item bg-secondary">
+                                            <li class="list-group-item bg-secondary title-margin-right">
                                                 <span class="card-text text-white font-weight-bold">Base Level: <span class="text-info">{{ account.base_level }}</span></span>
                                             </li>
 
-                                            <li class="list-group-item bg-secondary">
+                                            <li class="list-group-item bg-secondary title-margin-right">
                                                 <span class="card-text text-white font-weight-bold">Price: <span class="text-info">{{ account.item_price }}</span></span>
                                             </li>
 
-                                            <li class="list-group-item bg-secondary">
+                                            <li class="list-group-item bg-secondary title-margin-right">
                                                 <a class="btn btn-primary m-b-2 m-r-2" href="{{ url_for('market.get_public_listing', listing_id=account.listing_id) }}">
                                                     <i class="ti ti-file"> </i>
                                                     Base Detail
@@ -83,6 +87,7 @@
                 </div>
 
             </div>
+
     </section>
 {% endblock %}
 
