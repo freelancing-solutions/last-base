@@ -3,24 +3,43 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="additionalDataModalLabel">Additional Data</h5>
+                <h5 class="modal-title" id="additionalDataModalLabel">Heroes, Units &amp; Energy Lab</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+            <p>State Season: {{ listed_account.state_season }}</p>
+            <div class="row">
+            <div class="col-lg-6 col-md-6">
                 <p>Fighter Units Level: {{ listed_account.fighter_units_level }}</p>
                 <p>Shooter Units Level: {{ listed_account.shooter_units_level }}</p>
                 <p>Vehicle Units Level: {{ listed_account.vehicle_units_level }}</p>
-                <p>State Season: {{ listed_account.state_season }}</p>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <img src="{{ url_for('static', filename='images/lss/heroes.jpg') }}" alt="Listing Image" class="img-fluid">
+                <!-- include image here -->
+            </div>
+
+            </div>
+            <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <p>Gold Recruitment Cards: {{ listed_account.total_gold_cards }}</p>
+                <p>Total Hero Tokens: {{ listed_account.total_hero_tokens }} </p>
                 <p>Season Heroes: {{ listed_account.season_heroes }}</p>
                 <p>SP Heroes: {{ listed_account.sp_heroes }}</p>
                 <p>Universal SP Medals: {{ listed_account.universal_sp_medals }}</p>
+            </div>
+            <div class="col-lg-6 col-md-6">
                 <p>Amount Spent on Packages: {{ listed_account.amount_spent_packages }}</p>
+                <p>Total Skins: {{ listed_account.total_skins }}</p>
                 <p>VIP Shop: {% if listed_account.vip_shop %}Yes{% else %}No{% endif %}</p>
                 <p>Energy Lab Level: {{ listed_account.energy_lab_level }}</p>
                 <p>Energy Lab Password: {{ listed_account.energy_lab_password or "Not set" }}</p>
                 <!-- Add more data fields here -->
+            </div>
+            </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
