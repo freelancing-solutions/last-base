@@ -10,10 +10,10 @@
             </div>
             <div class="modal-body">
                 <img src="{{ url_for('static', filename='images/lss/baneblade.jpg') }}" class="img-fluid mb-3" alt="Listing Image">
-                <p>Gold Sets Vehicles : {{ listed_account.gold_sets_vehicles }}</p>
-                <p>Gold APC Set Fighters : {{ listed_account.gold_sets_fighters }}</p>
-                <p>Gold APC Set Shooters : {{ listed_account.gold_sets_shooters }}</p>
-                <p>Baneblade Sets : {{ listed_account.bane_blade_sets }}</p>
+                <p class="font-weight-bold">Gold Sets Vehicles : <span class="text-info">{{ listed_account.gold_sets_vehicles }}</span></p>
+                <p class="font-weight-bold">Gold APC Set Fighters : <span class="text-info">{{ listed_account.gold_sets_fighters }}</span></p>
+                <p class="font-weight-bold">Gold APC Set Shooters : <span class="text-info">{{ listed_account.gold_sets_shooters }}</span></p>
+                <p class="font-weight-bold">Baneblade Sets : <span class="text-info">{{ listed_account.bane_blade_sets }}</span></p>
                 <!-- Add more parts information here -->
             </div>
             <div class="modal-footer">

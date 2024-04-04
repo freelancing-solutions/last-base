@@ -47,7 +47,7 @@
                         {% else %}
                             <p class="text-danger"><i class="fas fa-times-circle text-danger"></i> Unverified Account</p>
                         {% endif %}
-                    <button class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#makeOfferModal">
                         <i class="ti ti-money"> </i>
                         Make an Offer
                     </button>
@@ -60,3 +60,4 @@
 
 {% include "market/accounts/modals/apc_parts.html" %}
 {% include "market/accounts/modals/extra_detail.html" %}
+{% include "market/accounts/modals/offer_modal.html" %}
