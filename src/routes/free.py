@@ -46,8 +46,10 @@ async def submit_game_id(user: User):
             return redirect(url_for('free.get_gift_codes'))
 
         game_ids_base = GameIDS(game_id_list=game_id_list)
-
-        store_game_ids = await game_controller.add_game_ids(game_ids=game_ids_base, uid="11111111")
+        try:
+            store_game_ids = await game_controller.add_game_ids(game_ids=game_ids_base, uid="11111111")
+        except Exception as e:
+            print(str(e))
 
         gift_codes = await game_controller.get_active_gift_codes()
         codes_list = [gift_code.code for gift_code in gift_codes if gift_code]
