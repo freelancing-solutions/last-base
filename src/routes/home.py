@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, send_file, jsonify, url_for
+from flask import Blueprint, render_template, send_file, jsonify, url_for, flash, redirect
 from datetime import datetime, timedelta
 from src.authentication import user_details
 from src.database.models.users import User
@@ -107,3 +107,22 @@ async def download_previous_version(user: User | None):
         return send_file(apk_file_path, as_attachment=True)
     except Exception as e:
         return f"Failed to download Android APK Last Shelter Survival: ()", 500
+
+
+@home_route.get("/how-last-shelter-works")
+@user_details
+async def get_how(user: User):
+    """
+
+    :param user:
+    :return:
+    """
+
+    try:
+        context = {'user': user} if user else {}
+        return render_template('how.html', **context)
+    except Exception as e:
+        print(str(e))
+        flash("Error accessing how things work try again later", category="danger")
+        return redirect(url_for('home.get_home'))
+
