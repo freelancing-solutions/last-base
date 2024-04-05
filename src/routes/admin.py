@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, flash
 from pydantic import ValidationError
 
 from src.authentication import admin_login
-from src.database.models.game import GiftCode
+from src.database.models.game import GiftCode, GameDataInternal
 from src.database.models.users import User, UserUpdate
 from src.main import user_controller, game_controller, email_service_controller
 
@@ -21,7 +21,8 @@ async def get_admin(user: User):
 async def get_gift_code(user: User):
     context = dict(user=user)
     gift_codes: list[GiftCode] = await game_controller.get_all_gift_codes()
-    context = dict(user=user, gift_codes=gift_codes)
+    free_users: list[GameDataInternal] = await game_controller.get_game_accounts(uid="11111111")
+    context = dict(user=user, gift_codes=gift_codes, free_users=free_users)
     return render_template('admin/gift_code.html', **context)
 
 

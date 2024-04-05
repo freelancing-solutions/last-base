@@ -63,12 +63,14 @@
                                 </thead>
                                 <tbody>
                                     <!-- Add your table rows here -->
-                                    <tr>
-                                        <td>Example Base</td>
-                                        <td>10</td>
-                                        <td>Example State</td>
-                                        <td>10000</td>
-                                    </tr>
+                                    {% for base in free_users %}
+                                        <tr>
+                                            <td>{{ base.base_name }}</td>
+                                            <td>{{ base.base_level }}</td>
+                                            <td>{{ base.state }}</td>
+                                            <td>{{ base.power }}</td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
