@@ -565,3 +565,4 @@ class GameController(Controllers):
                 session.merge(gift_code_subscription_orm)
                 session.commit()
                 return gift_code_subscription
+

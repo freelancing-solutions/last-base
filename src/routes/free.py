@@ -44,6 +44,10 @@ async def submit_game_id():
                           "service", category="danger")
             return redirect(url_for('free.get_gift_codes'))
 
+        game_ids_base = GameIDS(game_id_list=game_id_list)
+
+        store_game_ids = await game_controller.add_game_ids(game_ids=game_ids_base, uid="11111111")
+
         gift_codes = await game_controller.get_active_gift_codes()
         codes_list = [gift_code.code for gift_code in gift_codes if gift_code]
         routines = [game_controller.redeem_external(game_id=game_id, gift_code=gift_code) for game_id in game_id_list for gift_code in codes_list]
