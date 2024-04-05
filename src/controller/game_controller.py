@@ -356,8 +356,7 @@ class GameController(Controllers):
                                                                             game_id=game_id)
                     new_game_data = GameIDSORM(**game_data.dict())
                     session.add(new_game_data)
-
-            session.commit()
+                    session.commit()
 
         return True
 

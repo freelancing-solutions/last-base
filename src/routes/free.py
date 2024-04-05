@@ -22,7 +22,8 @@ async def get_gift_codes(user: User):
 
 
 @free_route.post('/free/gift-codes/submit-game-id')
-async def submit_game_id():
+@user_details
+async def submit_game_id(user: User):
     try:
         game_ids = request.form.get('game_id')
         game_ids = game_ids.strip().upper()
@@ -56,8 +57,8 @@ async def submit_game_id():
 
         mes = (f"Completed code redemption - complete successfully - {len(game_id_list)} Accounts Where gifted - Check "
                f"your game Email")
-
-        context = dict(results=results)
+        user = user if user else {}
+        context = dict(results=results, user=user)
         flash(message=mes, category="success")
         return render_template('free/gift_codes.html', **context)
 
