@@ -343,7 +343,7 @@ class GameController(Controllers):
             return [GameDataInternal(**game_data.to_dict()) for game_data in
                     session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()]
 
-    @error_handler
+
     async def add_game_ids(self, uid: str, game_ids: GameIDS):
         with self.get_session() as session:
             for game_id in game_ids.game_id_list:
