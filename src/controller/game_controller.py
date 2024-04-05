@@ -343,7 +343,6 @@ class GameController(Controllers):
             return [GameDataInternal(**game_data.to_dict()) for game_data in
                     session.query(GameIDSORM).filter(GameIDSORM.uid == uid).all()]
 
-
     async def add_game_ids(self, uid: str, game_ids: GameIDS):
         with self.get_session() as session:
             for game_id in game_ids.game_id_list:
@@ -356,6 +355,7 @@ class GameController(Controllers):
                                                                             game_id=game_id)
                     new_game_data = GameIDSORM(**game_data.dict())
                     session.add(new_game_data)
+
             session.commit()
 
         return True
