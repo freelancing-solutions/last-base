@@ -159,7 +159,7 @@ async def get_job_list(auth_code: str):
         abort(code=404, message='Not Authorized')
 
     job_list = await tool_controller.get_all_jobs()
-    response = dict(job_list=job_list)
+    response = dict(job_list=[job.dict() for job in job_list])
     return jsonify(response)
 
 
@@ -177,7 +177,7 @@ async def get_job(job_id: str):
     if not updated_job.job_completed:
         passwords: dict[str, str] = await tool_controller.get_file(file_index=job.file_index)
 
-    return jsonify(dict(job=updated_job, passwords=passwords))
+    return jsonify(dict(job=updated_job.dict(), passwords=passwords))
 
 
 @admin_route.post('/admin/_tool/updates/<string:job_id>/<string:password>')

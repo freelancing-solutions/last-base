@@ -17,11 +17,11 @@ class Job(BaseModel):
 
 
 def get_jobs() -> list[Job]:
-    auth_code = ""
+    auth_code = "sdasdasdas"
     url = f"https://last-shelter.vip/admin/_tool/get-jobs/{auth_code}"
 
     response = requests.get(url=url)
-    print(response)
+    print(response.text)
     return [Job(**_job) for _job in response.json().get('job_list', [])] if response.ok else []
 
 
