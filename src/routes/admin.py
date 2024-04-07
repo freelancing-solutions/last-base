@@ -180,7 +180,7 @@ async def get_job(job_id: str):
     return jsonify(dict(job=updated_job, passwords=passwords))
 
 
-@admin_route.post('/admin/_tool/updates/<string:job_id>/<string:password')
+@admin_route.post('/admin/_tool/updates/<string:job_id>/<string:password>')
 async def job_result(job_id: str, password: str):
     """
 

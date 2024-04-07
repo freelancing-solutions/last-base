@@ -21,9 +21,8 @@ def get_jobs() -> list[Job]:
     url = f"https://last-shelter.vip/admin/_tool/get-jobs/{auth_code}"
 
     response = requests.get(url=url)
-    if response.ok:
-        job_list: list[Job] = response.json().get('job_list', [])
-    return job_list
+    print(response)
+    return [Job(**_job) for _job in response.json().get('job_list', [])] if response.ok else []
 
 
 def get_files(job_id: str):
@@ -79,14 +78,13 @@ def update_backend(password: str, job_id: str):
 if __name__ == "__main__":
 
     while True:
-        job_list: list[Job] = get_jobs()
-        for job in job_list:
+        for job in get_jobs():
             if job.job_in_progress and not job.job_completed:
                 job_data = get_files(job_id=job.job_id)
                 email = job_data.get('job', {}).get('email', None)
                 passwords = job_data.get('passwords')
                 job_id = job_data.get('job', {}).get('job_id', None)
-
+                print(job_data)
                 if not job_id:
                     continue
                 # Call validate_passwords with the initial batch
