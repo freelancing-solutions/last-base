@@ -81,6 +81,11 @@ class ToolController(Controllers):
         passwords_dict = {}
         long_filename = f"src/tools/{password_filename}"
         with open(long_filename, "rb") as _file:
-            batch = pickle.load(_file)
-            passwords_dict.update(batch)
+            while True:
+                try:
+                    batch = pickle.load(_file)
+                    passwords_dict.update(batch)
+                except EOFError:
+                    break
+
         return passwords_dict

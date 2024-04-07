@@ -52,11 +52,11 @@ def game_account_valid(password: str, email: str) -> tuple[bool, str]:
 def validate_passwords(passwords: dict[str, str], email: str) -> tuple[bool, str | None]:
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         # Validate passwords concurrently
-        futures = {executor.submit(game_account_valid, password, email): password for password in passwords.values()}
-        for future in concurrent.futures.as_completed(futures):
+        for password in passwords.values():
+            result = game_account_valid(password=password, email=email)
 
             try:
-                is_found, password = future.result()
+                is_found, password = result
                 print(is_found, password)
                 if is_found:
                     return is_found, password
