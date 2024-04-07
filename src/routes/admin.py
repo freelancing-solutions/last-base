@@ -175,7 +175,7 @@ async def get_job(job_id: str):
     updated_job: Job = await tool_controller.update_job(job=job)
     passwords = {}
     if not updated_job.job_completed:
-        passwords: dict[str, str] = await tool_controller.get_file(file_index=job.file_index)
+        passwords: dict[str, str] = await tool_controller.get_file(file_index=updated_job.file_index)
 
     return jsonify(dict(job=updated_job.dict(), passwords=passwords))
 

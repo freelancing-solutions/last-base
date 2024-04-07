@@ -71,7 +71,6 @@ class ToolController(Controllers):
                 session.commit()
             return job
 
-
     async def get_file(file_index: int) -> dict[str, str]:
         """
 
@@ -85,5 +84,3 @@ class ToolController(Controllers):
             batch = pickle.load(_file)
             passwords_dict.update(batch)
         return passwords_dict
-
-
