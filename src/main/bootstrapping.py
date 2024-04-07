@@ -11,11 +11,12 @@ def bootstrapper():
     from src.database.sql.email_service import EmailSubscriptionsORM
     from src.database.sql.support_chat import ChatMessageORM
     from src.database.sql.market import MainAccountsCredentialsORM, MarketMainAccountsORM
+    from src.database.sql.tool import JobORM
 
     classes_to_create = [UserORM, PayPalORM, ProfileORM, NotificationORM, GameIDSORM, GiftCodesORM, RedeemCodesORM,
                          WalletTransactionORM, WalletORM, BuyerAccountORM, SellerAccountORM, EmailServiceORM,
                          GiftCodesSubscriptionORM, WithdrawalRequestsORM, EmailSubscriptionsORM, ChatMessageORM,
-                         MainAccountsCredentialsORM, MarketMainAccountsORM]
+                         MainAccountsCredentialsORM, MarketMainAccountsORM, JobORM]
 
     # for cls in classes_to_create:
     #     cls.create_if_not_table()
