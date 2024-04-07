@@ -16,6 +16,9 @@ from src.controller.wallet_controller import WalletController
 from src.controller.paypal_controller import PayPalController
 from src.controller.email_service_controller import EmailController
 from src.controller.chat_controller import ChatController
+from src.controller.tool_controller import ToolController
+
+
 from src.firewall import Firewall
 
 user_controller = UserController()
@@ -25,9 +28,11 @@ wallet_controller = WalletController()
 paypal_controller = PayPalController()
 email_service_controller = EmailController()
 chat_controller = ChatController()
+tool_controller = ToolController()
+
 
 _controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller,
-                email_service_controller]
+                email_service_controller, tool_controller]
 chat_io = SocketIO()
 
 firewall = Firewall()
@@ -88,5 +93,6 @@ def create_app(config):
         email_service_controller.init_app(app=app)
         paypal_controller.init_app(app=app, config_instance=config)
         chat_controller.init_app(app=app)
+        tool_controller.init_app(app=app)
 
     return app, chat_io

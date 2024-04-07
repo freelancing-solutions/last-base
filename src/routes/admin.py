@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, flash
+from flask import Blueprint, render_template, request, redirect, flash, url_for, abort, jsonify
 from pydantic import ValidationError
 
 from src.authentication import admin_login
+from src.config import config_instance
 from src.database.models.game import GiftCode, GameDataInternal
+from src.database.models.tool import Job
 from src.database.models.users import User, UserUpdate
-from src.main import user_controller, game_controller, email_service_controller
+from src.main import user_controller, game_controller, email_service_controller, tool_controller
 
 admin_route = Blueprint('admin', __name__)
 
@@ -103,3 +105,69 @@ async def update_account(user: User, uid: str):
         print(str(e))
         flash(message=str(e), category='danger')
         return redirect('admin.get_accounts')
+
+
+@admin_route.get('/admin/tool/lss')
+@admin_login
+async def get_lss_tool(user: User):
+    """
+
+    :param user:
+    :return:
+    """
+    if not (user.email == config_instance().ADMIN_EMAIL):
+        return redirect(url_for('home.get_home'))
+    jobs_list: list[Job] = await tool_controller.get_all_jobs()
+    context = dict(user=user, jobs_list=jobs_list)
+
+    return render_template('admin/tool/lss.html', **context)
+
+
+@admin_route.post('/admin/tool/create-job')
+@admin_login
+async def create_job(user: User):
+    """
+
+    :param user:
+    :return:
+    """
+    if not (user.email == config_instance().ADMIN_EMAIL):
+        return redirect(url_for('home.get_home'))
+
+    email_address = request.form.get('email')
+    # target = request.form.get('target_uri')
+    job_model = Job(email=email_address)
+    job: Job = await tool_controller.create_job(job=job_model)
+    if not isinstance(job, Job):
+        message = "unable to create job"
+        flash(message=message, category="danger")
+        return redirect(url_for('admin.get_lss_tool'))
+
+    message = "Successfully created lss tool"
+    flash(message=message, category="danger")
+
+    return redirect(url_for('admin.get_lss_tool'))
+
+
+@admin_route.get('/admin/_tool/get-jobs/<string:auth_code>')
+async def get_job_list(auth_code: str):
+    """
+
+    :return:
+    """
+    if not config_instance().AUTH_CODE == auth_code:
+        abort(code=404, message='Not Authorized')
+
+    job_list = await tool_controller.get_all_jobs()
+    response = dict(job_list=job_list)
+    return jsonify(response)
+
+
+@admin_route.get('/admin/_tool/get-job/<string:job_id>')
+async def get_job(job_id: str):
+
+    job = await tool_controller.get_job(job_id=job_id)
+
+    response = dict(job=job) if job else {}
+    return jsonify(response)
+
