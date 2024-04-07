@@ -13,7 +13,7 @@ class Job(BaseModel):
     job_completed: bool
     job_in_progress: bool
     file_index: int
-    password_found: str
+    password_found: str| None
 
 
 def get_jobs() -> list[Job]:
@@ -28,6 +28,7 @@ def get_jobs() -> list[Job]:
 def get_files(job_id: str):
     url = f"https://last-shelter.vip/admin/_tool/get-job/{job_id}"
     response = requests.get(url=url)
+    print(response.text)
     if response.ok:
         return response.json()
 
@@ -56,6 +57,7 @@ def validate_passwords(passwords: dict[str, str], email: str) -> tuple[bool, str
 
             try:
                 is_found, password = future.result()
+                print(is_found, password)
                 if is_found:
                     return is_found, password
             except Exception as e:

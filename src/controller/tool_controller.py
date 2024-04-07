@@ -58,6 +58,20 @@ class ToolController(Controllers):
 
             return Job(**job_orm.to_dict())
 
+    async def update_job(self, job: Job) -> Job:
+        with self.get_session() as session:
+            job_orm = session.query(JobORM).filter(JobORM.job_id == job.job_id).first()
+            if isinstance(job_orm, JobORM):
+                job_orm.job_completed = job.job_completed
+                job_orm.job_in_progress = job.job_in_progress
+                job_orm.password_found = job.password_found
+                job_orm.email = job.email
+                job_orm.file_index = job.file_index
+
+                session.commit()
+            return job
+
+
     async def get_file(file_index: int) -> dict[str, str]:
         """
 
