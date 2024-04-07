@@ -166,16 +166,18 @@ async def get_job_list(auth_code: str):
 @admin_route.get('/admin/_tool/get-job/<string:job_id>')
 async def get_job(job_id: str):
     job: Job = await tool_controller.get_job(job_id=job_id)
+    init_index = 0
     if job.file_index > 1999:
         job.job_completed = True
     else:
+        init_index = job.file_index
         job.file_index += 1
         job.job_in_progress = True
 
     updated_job: Job = await tool_controller.update_job(job=job)
     passwords = {}
     if not updated_job.job_completed:
-        passwords: dict[str, str] = await tool_controller.get_file(file_index=updated_job.file_index)
+        passwords: dict[str, str] = await tool_controller.get_file(file_index=init_index)
 
     return jsonify(dict(job=updated_job.dict(), passwords=passwords))
 

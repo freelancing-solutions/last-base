@@ -71,7 +71,7 @@ class ToolController(Controllers):
                 session.commit()
             return job
 
-    async def get_file(file_index: int) -> dict[str, str]:
+    async def get_file(self, file_index: int) -> dict[str, str]:
         """
 
         :param file_index:
