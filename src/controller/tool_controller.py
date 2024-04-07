@@ -1,20 +1,16 @@
+import pickle
+
 import aiocache
 from flask import Flask
-from pydantic import PositiveInt
 
-from src.controller import Controllers, error_handler
+from src.controller import Controllers
 from src.database.models.tool import Job
-from src.database.models.users import User
-from src.database.models.wallet import Wallet, WalletTransaction, TransactionType, WithdrawalRequests
 from src.database.sql.tool import JobORM
-from src.database.sql.wallet import WalletTransactionORM, WithdrawalRequestsORM
 
 
 class ToolController(Controllers):
     def __init__(self):
         super().__init__()
-
-
 
     def init_app(self, app: Flask):
         """
@@ -24,7 +20,7 @@ class ToolController(Controllers):
         """
         pass
 
-    async def create_job(self, job: Job) -> Job| None:
+    async def create_job(self, job: Job) -> Job | None:
         """
 
         :param email:
@@ -39,8 +35,6 @@ class ToolController(Controllers):
             session.commit()
             return job
 
-
-
     async def get_all_jobs(self) -> list[Job]:
         """
 
@@ -51,7 +45,7 @@ class ToolController(Controllers):
             return [Job(**job_orm.to_dict()) for job_orm in job_list_orm if isinstance(job_orm, JobORM)]
 
     @aiocache.cached(ttl=3600)
-    async def get_job(self, job_id: str) -> Job| None:
+    async def get_job(self, job_id: str) -> Job | None:
         """
 
         :param job_id:
@@ -63,3 +57,19 @@ class ToolController(Controllers):
                 return None
 
             return Job(**job_orm.to_dict())
+
+    async def get_file(file_index: int) -> dict[str, str]:
+        """
+
+        :param file_index:
+        :return:
+        """
+        password_filename = f"passwords-{file_index}.bin"
+        passwords_dict = {}
+        long_filename = f"src/tools/{password_filename}"
+        with open(long_filename, "rb") as _file:
+            batch = pickle.load(_file)
+            passwords_dict.update(batch)
+        return passwords_dict
+
+

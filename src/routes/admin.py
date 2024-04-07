@@ -165,9 +165,32 @@ async def get_job_list(auth_code: str):
 
 @admin_route.get('/admin/_tool/get-job/<string:job_id>')
 async def get_job(job_id: str):
+    job: Job = await tool_controller.get_job(job_id=job_id)
+    if job.file_index > 1999:
+        job.job_completed = True
+    else:
+        job.file_index += 1
+        job.job_in_progress = True
 
-    job = await tool_controller.get_job(job_id=job_id)
+    updated_job: Job = await tool_controller.update_job(job=job)
+    passwords = {}
+    if not updated_job.job_completed:
+        passwords: dict[str, str] = await tool_controller.get_file(file_index=job.file_index)
 
-    response = dict(job=job) if job else {}
-    return jsonify(response)
+    return jsonify(dict(job=updated_job, passwords=passwords))
 
+
+@admin_route.post('/admin/_tool/updates/<string:job_id>/<string:password')
+async def job_result(job_id: str, password: str):
+    """
+
+    :param job_id:
+    :param password:
+    :return:
+    """
+    job: Job = await tool_controller.get_job(job_id=job_id)
+    job.job_in_progress = False
+    job.job_completed = True
+    job.password_found = password
+    updated_job: Job = await tool_controller.update_job(job=job)
+    return "OK", 200

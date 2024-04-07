@@ -56,7 +56,7 @@ def validate_passwords(passwords_dict):
 
 if __name__ == "__main__":
     filename = 'passwords.bin'
-    batch_size = 500  # Define batch size
+    batch_size = 5000  # Define batch size
     passwords_dict = read_passwords(filename, batch_size)
 
     # Call validate_passwords with the initial batch
