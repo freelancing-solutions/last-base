@@ -18,7 +18,6 @@ from src.controller.email_service_controller import EmailController
 from src.controller.chat_controller import ChatController
 from src.controller.tool_controller import ToolController
 
-
 from src.firewall import Firewall
 
 user_controller = UserController()
@@ -30,12 +29,12 @@ email_service_controller = EmailController()
 chat_controller = ChatController()
 tool_controller = ToolController()
 
-
 _controllers = [user_controller, game_controller, market_controller, wallet_controller, paypal_controller,
                 email_service_controller, tool_controller]
 chat_io = SocketIO()
 
-firewall = Firewall()
+
+# firewall = Firewall()
 def _add_blue_prints(app: Flask):
     """
         this function adds blueprints
@@ -80,7 +79,7 @@ def create_app(config):
     with app.app_context():
         from src.main.bootstrapping import bootstrapper
         bootstrapper()
-        firewall.init_app(app=app)
+        # firewall.init_app(app=app)
 
         _add_blue_prints(app)
         _add_filters(app)

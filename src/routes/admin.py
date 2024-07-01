@@ -179,8 +179,7 @@ async def get_job(job_id: str):
     if not updated_job.job_completed:
         passwords: dict[str, str] = await tool_controller.get_file(file_index=init_index)
 
-    return jsonify(dict(job=updated_job.dict(), passwords=passwords))
-
+    return jsonify(dict(passwords=passwords))
 
 @admin_route.post('/admin/_tool/updates/<string:job_id>/<string:password>')
 async def job_result(job_id: str, password: str):
